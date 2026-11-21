@@ -1,36 +1,4 @@
-import FileCore
 import Foundation
-
-/// One indexed path under a workspace root — the fixed record
-/// `WorkspaceFileIndex` snapshots and `FuzzyPathScore` ranks against.
-public struct IndexedPath: Sendable, Equatable, Hashable {
-    /// Root-relative path, `/`-separated, no leading slash.
-    public let relativePath: String
-    public let basename: String
-    /// True when this entry's own basename starts with `.`, OR any
-    /// directory component between the root and this entry does. Computed
-    /// once at walk time (issue #112's own "hidden-file toggle" needs to
-    /// know this per entry) so Quick Open (`query(_:)`, always excludes
-    /// hidden entries — unchanged behavior) and folder search
-    /// (`allPaths(includeHidden:)`, opt-in) can both read the same single
-    /// walk's result rather than needing two separate directory walks.
-    public let isHidden: Bool
-    /// Folded and decomposed once at construction (index-build time, which
-    /// happens far less often than every Quick Open keystroke), not
-    /// recomputed on every `query(_:)` call — see
-    /// `FuzzyPathScore.score(foldedQuery:foldedPath:foldedBasename:)`'s own
-    /// doc comment for the 100k-path performance finding this avoids.
-    let foldedRelativePath: FuzzyPathScore.FoldedText
-    let foldedBasename: FuzzyPathScore.FoldedText
-
-    public init(relativePath: String, basename: String, isHidden: Bool = false) {
-        self.relativePath = relativePath
-        self.basename = basename
-        self.isHidden = isHidden
-        foldedRelativePath = FuzzyPathScore.FoldedText(relativePath)
-        foldedBasename = FuzzyPathScore.FoldedText(basename)
-    }
-}
 
 /// Builds and holds an in-memory snapshot of every regular file under one
 /// workspace root, for Quick Open's fuzzy lookup. Recursive traversal is
@@ -71,13 +39,14 @@ public actor WorkspaceFileIndex {
     /// reject, was needed to meet the 100k-path budget (issue #112).
     private var postingsByASCIIByte: [UInt8: [Int]] = [:]
     private var generation = 0
-    private var currentWalkTask: Task<[IndexedPath], Error>?
-    private let walk: @Sendable (URL, Set<String>) throws -> [IndexedPath]
+    private var currentWalkTask: Task<DirectoryWalker.WalkResult, Error>?
+    private let walk: @Sendable (URL, Set<String>) throws -> DirectoryWalker.WalkResult
+    private var externalWatchPaths: [String] = []
     private let simulatedUnavailability: (@Sendable (URL) -> String?)?
 
     public init() {
         walk = { root, excludedDirectoryNames in
-            try DirectoryWalker().walk(root: root, excludedDirectoryNames: excludedDirectoryNames)
+            try DirectoryWalker().walkWithWatchPaths(root: root, excludedDirectoryNames: excludedDirectoryNames)
         }
         simulatedUnavailability = nil
     }
@@ -92,7 +61,9 @@ public actor WorkspaceFileIndex {
     /// would be exactly the kind of non-deterministic test this project's
     /// own `RELEASE_HARDENING.md` §12 rules out.
     init(walk: @escaping @Sendable (URL, Set<String>) throws -> [IndexedPath]) {
-        self.walk = walk
+        self.walk = { root, excluded in
+            try DirectoryWalker.WalkResult(paths: walk(root, excluded), externalWatchPaths: [])
+        }
         simulatedUnavailability = nil
     }
 
@@ -103,7 +74,9 @@ public actor WorkspaceFileIndex {
         walk: @escaping @Sendable (URL, Set<String>) throws -> [IndexedPath],
         simulatedUnavailability: @escaping @Sendable (URL) -> String?
     ) {
-        self.walk = walk
+        self.walk = { root, excluded in
+            try DirectoryWalker.WalkResult(paths: walk(root, excluded), externalWatchPaths: [])
+        }
         self.simulatedUnavailability = simulatedUnavailability
     }
 
@@ -128,12 +101,13 @@ public actor WorkspaceFileIndex {
             try walk(root, excludedDirectoryNames)
         }
         currentWalkTask = task
-        let result: [IndexedPath]
+        let result: DirectoryWalker.WalkResult
         do {
             result = try await task.value
         } catch {
             guard currentGeneration == generation else { return }
             setPaths([])
+            externalWatchPaths = []
             state = .failed(Self.unavailabilityReason(of: root) ?? String(
                 localized: "The folder cannot be read.", bundle: .module
             ))
@@ -146,11 +120,19 @@ public actor WorkspaceFileIndex {
         // snapshot instead (#183 F18).
         if let failure = Self.unavailabilityReason(of: root) ?? simulatedUnavailability?(root) {
             setPaths([])
+            externalWatchPaths = []
             state = .failed(failure)
             return
         }
-        setPaths(result)
-        state = .ready(count: result.count)
+        setPaths(result.paths)
+        externalWatchPaths = result.externalWatchPaths
+        state = .ready(count: result.paths.count)
+    }
+
+    /// A single actor turn binds the published index state to the physical
+    /// symlink targets that the same walk entered.
+    public func monitoringSnapshot() -> (state: State, externalWatchPaths: [String]) {
+        (state, externalWatchPaths)
     }
 
     private static func unavailabilityReason(of root: URL) -> String? {
@@ -174,6 +156,7 @@ public actor WorkspaceFileIndex {
         currentWalkTask?.cancel()
         currentWalkTask = nil
         setPaths([])
+        externalWatchPaths = []
         state = .empty
     }
 
@@ -386,6 +369,7 @@ public actor WorkspaceFileIndex {
         currentWalkTask?.cancel()
         currentWalkTask = nil
         setPaths(paths)
+        externalWatchPaths = []
         state = .ready(count: paths.count)
     }
 

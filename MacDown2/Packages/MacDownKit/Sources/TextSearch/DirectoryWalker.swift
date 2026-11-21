@@ -20,6 +20,12 @@ struct DirectoryWalker: Sendable {
         case metadataUnavailable
         case pathBudgetExceeded
         case directoryBudgetExceeded
+        case externalWatchBudgetExceeded
+    }
+
+    struct WalkResult: Sendable {
+        let paths: [IndexedPath]
+        let externalWatchPaths: [String]
     }
 
     private let listChildren: @Sendable (URL) throws -> [URL]
@@ -73,15 +79,18 @@ struct DirectoryWalker: Sendable {
     /// separate parameters (SwiftLint's `function_parameter_count` limit).
     private struct WalkContext {
         let root: URL
+        let physicalRoot: URL
         let excludedDirectoryNames: Set<String>
         let maximumPaths: Int
         let maximumDirectories: Int
+        let maximumExternalWatchRoots: Int
     }
 
     /// Mutable walk bookkeeping: the ancestor chain (symlink-loop guard) and how many directories were entered.
     private struct WalkState {
         var visited: Set<PhysicalFileIdentity.FileObjectID> = []
         var directoriesEntered = 0
+        var externalWatchRoots: Set<String> = []
     }
 
     /// A link such as `docs -> /` is followed on purpose (a linked directory is part of the project), so the
@@ -92,6 +101,7 @@ struct DirectoryWalker: Sendable {
     /// a tree of links to empty directories grows multiplicatively without ever adding a path. Directory entries
     /// are budgeted too.
     static let defaultMaximumDirectories = 100_000
+    static let defaultMaximumExternalWatchRoots = 256
 
     func walk(
         root: URL,
@@ -99,13 +109,30 @@ struct DirectoryWalker: Sendable {
         maximumPaths: Int = DirectoryWalker.defaultMaximumPaths,
         maximumDirectories: Int = DirectoryWalker.defaultMaximumDirectories
     ) throws -> [IndexedPath] {
+        try walkWithWatchPaths(
+            root: root,
+            excludedDirectoryNames: excludedDirectoryNames,
+            maximumPaths: maximumPaths,
+            maximumDirectories: maximumDirectories
+        ).paths
+    }
+
+    func walkWithWatchPaths(
+        root: URL,
+        excludedDirectoryNames: Set<String>,
+        maximumPaths: Int = DirectoryWalker.defaultMaximumPaths,
+        maximumDirectories: Int = DirectoryWalker.defaultMaximumDirectories,
+        maximumExternalWatchRoots: Int = DirectoryWalker.defaultMaximumExternalWatchRoots
+    ) throws -> WalkResult {
         var results: [IndexedPath] = []
         var state = WalkState()
         let context = WalkContext(
             root: root.standardizedFileURL,
+            physicalRoot: root.resolvingSymlinksInPath().standardizedFileURL,
             excludedDirectoryNames: excludedDirectoryNames,
             maximumPaths: maximumPaths,
-            maximumDirectories: maximumDirectories
+            maximumDirectories: maximumDirectories,
+            maximumExternalWatchRoots: maximumExternalWatchRoots
         )
         try walk(
             directory: context.root,
@@ -114,7 +141,7 @@ struct DirectoryWalker: Sendable {
             state: &state,
             into: &results
         )
-        return results
+        return WalkResult(paths: results, externalWatchPaths: state.externalWatchRoots.sorted())
     }
 
     private static let resourceKeys: Set<URLResourceKey> = [
@@ -190,6 +217,9 @@ struct DirectoryWalker: Sendable {
             }
             if isDirectory {
                 guard !context.excludedDirectoryNames.contains(name) else { continue }
+                try recordExternalWatchTargetIfLinked(
+                    child, isSymbolicLink: own.symbolicLink, context: context, state: &state
+                )
                 try walk(
                     directory: lexicalChild,
                     context: context,
@@ -211,6 +241,22 @@ struct DirectoryWalker: Sendable {
                 ))
             }
         }
+    }
+
+    private func recordExternalWatchTargetIfLinked(
+        _ link: URL,
+        isSymbolicLink: Bool,
+        context: WalkContext,
+        state: inout WalkState
+    ) throws {
+        guard isSymbolicLink else { return }
+        let targetPath = link.resolvingSymlinksInPath().standardizedFileURL.path
+        let rootPath = context.physicalRoot.path
+        guard targetPath != rootPath, !targetPath.hasPrefix(rootPath + "/") else { return }
+        guard state.externalWatchRoots.contains(targetPath)
+            || state.externalWatchRoots.count < context.maximumExternalWatchRoots
+        else { throw WalkFailure.externalWatchBudgetExceeded }
+        state.externalWatchRoots.insert(targetPath)
     }
 
     private func relativePath(of url: URL, relativeTo root: URL) -> String {

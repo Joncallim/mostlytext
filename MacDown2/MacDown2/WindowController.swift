@@ -72,12 +72,13 @@ final class WindowController: NSWindowController, NSWindowDelegate {
     var pendingFolderSearchRootGeneration: UInt?
     var workspaceEventSource: (any WorkspaceEventSource)?
     var workspaceEventRoot: URL?
+    var workspaceEventPaths: [String] = []
     var workspaceEventTask: Task<Void, Never>?
     var workspaceEventDebounceTask: Task<Void, Never>?
     /// Test seam for deterministic event ordering; production creates one
     /// recursive FSEvents stream for the selected folder.
-    var makeWorkspaceEventSource: @Sendable (String) throws -> any WorkspaceEventSource = {
-        try WorkspaceFileEvents(path: $0)
+    var makeWorkspaceEventSource: @Sendable ([String]) throws -> any WorkspaceEventSource = {
+        try WorkspaceFileEvents(paths: $0)
     }
 
     init(

@@ -52,12 +52,13 @@ extension WindowController {
               let root = fileTreeModel.rootAccessURL
         else { return }
         guard fileTreeModel.selectedRootIsCurrent else {
+            stopWorkspaceEvents()
             retireWorkspaceResults()
             return
         }
         if workspaceEventRoot != root {
             stopWorkspaceEvents()
-            startWorkspaceEvents(root: root, request: request)
+            _ = startWorkspaceEvents(paths: [root.path], root: root, request: request)
         }
         if minInterval > 0, lastWorkspaceIndexRefreshGeneration == request,
            lastWorkspaceIndexRefreshRoot == root,
@@ -66,13 +67,7 @@ extension WindowController {
         }
         workspaceIndexBuildGeneration &+= 1
         let build = workspaceIndexBuildGeneration
-        await workspaceFileIndex.rebuild(root: root)
-        guard !isClosed, workspaceRootRequestGeneration == request,
-              workspaceIndexBuildGeneration == build, fileTreeModel.rootAccessURL == root
-        else { return }
-        let indexState = await workspaceFileIndex.state
-        guard !isClosed, workspaceRootRequestGeneration == request,
-              workspaceIndexBuildGeneration == build, fileTreeModel.rootAccessURL == root
+        guard let indexState = await rebuildWorkspaceIndexWithMonitoring(root: root, request: request, build: build)
         else { return }
         if case .ready = indexState {
             lastWorkspaceIndexRefresh = Date()
@@ -96,6 +91,43 @@ extension WindowController {
         } else {
             folderSearchModel.indexDidRefresh(root: root)
         }
+    }
+
+    private func rebuildWorkspaceIndexWithMonitoring(root: URL, request: UInt, build: UInt) async
+        -> WorkspaceFileIndex.State? {
+        var monitoringRescans = 0
+        while true {
+            await workspaceFileIndex.rebuild(root: root)
+            guard ownsWorkspaceIndexBuild(root: root, request: request, build: build) else { return nil }
+            let monitoring = await workspaceFileIndex.monitoringSnapshot()
+            guard ownsWorkspaceIndexBuild(root: root, request: request, build: build) else { return nil }
+            guard case .ready = monitoring.state else {
+                if workspaceEventPaths != [root.path] {
+                    stopWorkspaceEvents()
+                    _ = startWorkspaceEvents(paths: [root.path], root: root, request: request)
+                }
+                return monitoring.state
+            }
+            let paths = [root.path] + monitoring.externalWatchPaths
+            guard workspaceEventPaths != paths else { return monitoring.state }
+            stopWorkspaceEvents()
+            guard startWorkspaceEvents(paths: paths, root: root, request: request) else { return monitoring.state }
+            // The target could change after the walk but before the expanded
+            // stream starts. Keep old rows inert and scan once under the new
+            // coverage before publishing an actionable result.
+            retireWorkspaceResults()
+            monitoringRescans += 1
+            if monitoringRescans < 3 {
+                continue
+            }
+            scheduleWorkspaceMonitoringRetry(root: root, request: request)
+            return nil
+        }
+    }
+
+    private func ownsWorkspaceIndexBuild(root: URL, request: UInt, build: UInt) -> Bool {
+        !isClosed && workspaceRootRequestGeneration == request
+            && workspaceIndexBuildGeneration == build && fileTreeModel.rootAccessURL == root
     }
 
     /// Reserve a root request at the user's choice, before an unstructured
@@ -167,7 +199,7 @@ extension WindowController {
         guard !isClosed, workspaceRootRequestGeneration == request else { return }
         workspaceTreeRootAppliedGeneration = request
         if let root = fileTreeModel.rootAccessURL {
-            startWorkspaceEvents(root: root, request: request)
+            _ = startWorkspaceEvents(paths: [root.path], root: root, request: request)
         }
         // Closes Quick Open (Slice 6b) if it's open against this window —
         // an independent hostile review of that slice found the panel's
@@ -229,22 +261,26 @@ extension WindowController {
         workspaceEventSource?.cancel()
         workspaceEventSource = nil
         workspaceEventRoot = nil
+        workspaceEventPaths = []
     }
 
-    private func startWorkspaceEvents(root: URL, request: UInt) {
-        guard let source = try? makeWorkspaceEventSource(root.path) else {
+    @discardableResult
+    private func startWorkspaceEvents(paths: [String], root: URL, request: UInt) -> Bool {
+        guard let source = try? makeWorkspaceEventSource(paths) else {
             // The key-window refresh remains a fallback when the OS cannot
             // establish the recursive stream for a selected folder.
-            return
+            return false
         }
         workspaceEventSource = source
         workspaceEventRoot = root
+        workspaceEventPaths = paths
         workspaceEventTask = Task { @MainActor [weak self] in
             for await event in source.events {
                 guard !Task.isCancelled, let self else { return }
                 observedWorkspaceEvent(event, root: root, request: request)
             }
         }
+        return true
     }
 
     private func observedWorkspaceEvent(_ event: WorkspaceFileChange, root: URL, request: UInt) {
@@ -259,6 +295,19 @@ extension WindowController {
             guard !Task.isCancelled, let self, !isClosed,
                   workspaceRootRequestGeneration == request,
                   fileTreeModel.rootAccessURL == root else { return }
+            workspaceEventDebounceTask = nil
+            await refreshWorkspaceIndex()
+        }
+    }
+
+    private func scheduleWorkspaceMonitoringRetry(root: URL, request: UInt) {
+        workspaceEventDebounceTask?.cancel()
+        workspaceEventDebounceTask = Task { @MainActor [weak self] in
+            try? await Task.sleep(for: .milliseconds(250))
+            guard !Task.isCancelled, let self, !isClosed,
+                  workspaceRootRequestGeneration == request,
+                  fileTreeModel.rootAccessURL == root else { return }
+            workspaceEventDebounceTask = nil
             await refreshWorkspaceIndex()
         }
     }

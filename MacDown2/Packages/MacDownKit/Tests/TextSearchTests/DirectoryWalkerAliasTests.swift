@@ -125,4 +125,46 @@ struct DirectoryWalkerAliasTests {
 
         #expect(paths.isEmpty)
     }
+
+    @Test func externalSymlinkTargetsAreIncludedInMonitoringCoverage() throws {
+        let root = try makeRoot()
+        let external = try makeRoot()
+        defer {
+            try? FileManager.default.removeItem(at: root)
+            try? FileManager.default.removeItem(at: external)
+        }
+        let internalDirectory = root.appendingPathComponent("internal", isDirectory: true)
+        try FileManager.default.createDirectory(at: internalDirectory, withIntermediateDirectories: true)
+        try Data().write(to: external.appendingPathComponent("outside.md"))
+        try FileManager.default.createSymbolicLink(
+            at: root.appendingPathComponent("linked"), withDestinationURL: external
+        )
+        try FileManager.default.createSymbolicLink(
+            at: root.appendingPathComponent("inside"), withDestinationURL: internalDirectory
+        )
+
+        let result = try DirectoryWalker().walkWithWatchPaths(root: root, excludedDirectoryNames: [])
+
+        #expect(result.paths.map(\.relativePath).contains("linked/outside.md"))
+        #expect(result.externalWatchPaths == [external.path])
+    }
+
+    @Test func excessExternalWatchRootsFailInsteadOfPublishingAnUnmonitoredIndex() throws {
+        let root = try makeRoot()
+        let first = try makeRoot()
+        let second = try makeRoot()
+        defer {
+            for url in [root, first, second] {
+                try? FileManager.default.removeItem(at: url)
+            }
+        }
+        try FileManager.default.createSymbolicLink(at: root.appendingPathComponent("a"), withDestinationURL: first)
+        try FileManager.default.createSymbolicLink(at: root.appendingPathComponent("b"), withDestinationURL: second)
+
+        #expect(throws: (any Error).self) {
+            try DirectoryWalker().walkWithWatchPaths(
+                root: root, excludedDirectoryNames: [], maximumExternalWatchRoots: 1
+            )
+        }
+    }
 }

@@ -18,6 +18,24 @@ struct WorkspaceFileEventsTests {
         #expect(received == .changed)
     }
 
+    @Test func aChangeInAnAdditionalPhysicalRootReachesTheSameStream() async throws {
+        let root = FileManager.default.temporaryDirectory
+            .appendingPathComponent("workspace-events-\(UUID().uuidString)", isDirectory: true)
+        let external = FileManager.default.temporaryDirectory
+            .appendingPathComponent("workspace-events-\(UUID().uuidString)", isDirectory: true)
+        try FileManager.default.createDirectory(at: root, withIntermediateDirectories: true)
+        try FileManager.default.createDirectory(at: external, withIntermediateDirectories: true)
+        defer {
+            try? FileManager.default.removeItem(at: root)
+            try? FileManager.default.removeItem(at: external)
+        }
+        let source = try WorkspaceFileEvents(paths: [root.path, external.path])
+        defer { source.cancel() }
+
+        try Data("external".utf8).write(to: external.appendingPathComponent("new.md"))
+        #expect(await firstEvent(from: source) == .changed)
+    }
+
     private func firstEvent(from source: WorkspaceFileEvents) async -> WorkspaceFileChange? {
         await withTaskGroup(of: WorkspaceFileChange?.self) { group in
             group.addTask {

@@ -14,7 +14,8 @@ public protocol WorkspaceEventSource: Sendable {
     func cancel()
 }
 
-/// One FSEvents stream per open workspace, regardless of directory count.
+/// One FSEvents stream per open workspace, even when the index follows a
+/// bounded number of symlinked directories outside the physical root.
 /// The stream's C lifetime is confined to its serial queue; cancellation
 /// retains its callback receiver until that queue has stopped the stream.
 public final class WorkspaceFileEvents: @unchecked Sendable, WorkspaceEventSource {
@@ -24,7 +25,12 @@ public final class WorkspaceFileEvents: @unchecked Sendable, WorkspaceEventSourc
     private var state: StreamState?
     private var stopped = false
 
-    public init(path: String) throws {
+    public convenience init(path: String) throws {
+        try self.init(paths: [path])
+    }
+
+    public init(paths: [String]) throws {
+        guard !paths.isEmpty else { throw CocoaError(.fileReadUnknown) }
         let pair = AsyncStream<WorkspaceFileChange>.makeStream(bufferingPolicy: .bufferingNewest(1))
         events = pair.stream
         let receiver = Receiver(continuation: pair.continuation)
@@ -48,7 +54,7 @@ public final class WorkspaceFileEvents: @unchecked Sendable, WorkspaceEventSourc
                     flags[$0] & FSEventStreamEventFlags(kFSEventStreamEventFlagRootChanged) != 0
                 }
                 receiver.continuation.yield(rootChanged ? .rootChanged : .changed)
-            }, &context, [path] as CFArray, FSEventStreamEventId(kFSEventStreamEventIdSinceNow), 0.1, flags
+            }, &context, paths as CFArray, FSEventStreamEventId(kFSEventStreamEventIdSinceNow), 0.1, flags
         ) else { throw CocoaError(.fileReadUnknown) }
         FSEventStreamSetDispatchQueue(stream, queue)
         guard FSEventStreamStart(stream) else {

@@ -10,7 +10,7 @@ extension WorkspaceIndexRefreshBehaviorTests {
         let fixture = try await makeController(root: root)
         defer { fixture.retire() }
         let controller = fixture.controller
-        controller.makeWorkspaceEventSource = { try WorkspaceFileEvents(path: $0) }
+        controller.makeWorkspaceEventSource = { try WorkspaceFileEvents(paths: $0) }
         await controller.setFileTreeRoot(root)
 
         let nested = root.appendingPathComponent("nested", isDirectory: true)
@@ -24,6 +24,66 @@ extension WorkspaceIndexRefreshBehaviorTests {
             }
         }
         #expect(found)
+    }
+
+    @Test func aRealExternalSymlinkTargetEditRefreshesTheOpenIndex() async throws {
+        let root = try tempRoot(["a.md"])
+        let external = try tempRoot(["first.md"])
+        defer {
+            try? FileManager.default.removeItem(at: root)
+            try? FileManager.default.removeItem(at: external)
+        }
+        try FileManager.default.createSymbolicLink(
+            at: root.appendingPathComponent("linked"), withDestinationURL: external
+        )
+        let fixture = try await makeController(root: root)
+        defer { fixture.retire() }
+        let controller = fixture.controller
+        controller.makeWorkspaceEventSource = { try WorkspaceFileEvents(paths: $0) }
+        await controller.setFileTreeRoot(root)
+        #expect(controller.workspaceEventPaths == [root.path, external.path])
+        #expect(await Set(controller.workspaceFileIndex.allPaths().map(\.relativePath)).contains("linked/first.md"))
+
+        try Data("second".utf8).write(to: external.appendingPathComponent("second.md"))
+        var found = false
+        for _ in 0 ..< 500 where !found {
+            found = await Set(controller.workspaceFileIndex.allPaths().map(\.relativePath))
+                .contains("linked/second.md")
+            if !found {
+                try await Task.sleep(for: .milliseconds(10))
+            }
+        }
+        #expect(found)
+    }
+
+    @Test func aNewExternalSymlinkBecomesMonitoredAfterTheRootChanges() async throws {
+        let root = try tempRoot(["a.md"])
+        let external = try tempRoot(["first.md"])
+        defer {
+            try? FileManager.default.removeItem(at: root)
+            try? FileManager.default.removeItem(at: external)
+        }
+        let fixture = try await makeController(root: root)
+        defer { fixture.retire() }
+        let controller = fixture.controller
+        controller.makeWorkspaceEventSource = { try WorkspaceFileEvents(paths: $0) }
+        await controller.setFileTreeRoot(root)
+        #expect(controller.workspaceEventPaths == [root.path])
+
+        try FileManager.default.createSymbolicLink(
+            at: root.appendingPathComponent("linked"), withDestinationURL: external
+        )
+        var expanded = false
+        for _ in 0 ..< 500 where !expanded {
+            expanded = controller.workspaceEventPaths == [root.path, external.path]
+            if !expanded {
+                try await Task.sleep(for: .milliseconds(10))
+            }
+        }
+        #expect(expanded)
+
+        try Data("second".utf8).write(to: external.appendingPathComponent("second.md"))
+        #expect(await fixture.waitForIndexedPath("linked/second.md"))
     }
 
     @Test func aRecursiveExternalChangeRefreshesTheOpenIndexAndFolderSearch() async throws {
@@ -93,8 +153,8 @@ extension WorkspaceIndexRefreshBehaviorTests {
         let fixture = try await makeController(root: first, eventSource: oldEvents)
         defer { fixture.retire() }
         let controller = fixture.controller
-        controller.makeWorkspaceEventSource = { path in
-            path == second.path ? newEvents : oldEvents
+        controller.makeWorkspaceEventSource = { paths in
+            paths.first == second.path ? newEvents : oldEvents
         }
         await controller.setFileTreeRoot(second)
         #expect(await Set(controller.workspaceFileIndex.allPaths().map(\.relativePath)) == ["new.md"])
@@ -131,5 +191,10 @@ extension WorkspaceIndexRefreshBehaviorTests {
             try await Task.sleep(for: .milliseconds(10))
         }
         #expect(controller.folderSearchModel.rootUnavailable)
+        for _ in 0 ..< 200 where controller.workspaceEventSource != nil {
+            try await Task.sleep(for: .milliseconds(10))
+        }
+        #expect(controller.workspaceEventSource == nil)
+        #expect(controller.workspaceEventPaths.isEmpty)
     }
 }
