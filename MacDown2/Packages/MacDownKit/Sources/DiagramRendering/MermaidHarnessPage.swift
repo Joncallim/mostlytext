@@ -153,8 +153,7 @@ final class MermaidHarnessPage: NSObject, WKNavigationDelegate, WKUIDelegate {
             throw MermaidRenderError.outputTooLarge(byteCount: byteCount)
         }
         guard succeeded else {
-            let message = (dict["message"] as? String) ?? "unknown error"
-            throw MermaidRenderError.invalidSyntax(message)
+            throw MermaidWebRenderer.failure(for: dict["message"] as? String)
         }
         guard let svg = dict["svg"] as? String else {
             throw MermaidRenderError.rendererUnavailable

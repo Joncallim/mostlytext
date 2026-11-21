@@ -9,5 +9,8 @@ struct GraphvizFailureClassificationTests {
         #expect(GraphvizWebRenderer.failure(for: observed) == .rendererUnavailable)
         #expect(GraphvizWebRenderer.failure(for: "syntax error in line 1") ==
             .invalidSyntax("syntax error in line 1"))
+        #expect(GraphvizWebRenderer.failure(for: "") == .rendererUnavailable)
+        #expect(GraphvizWebRenderer.failure(for: nil) == .rendererUnavailable)
+        #expect(GraphvizWebRenderer.failure(for: " \n") == .rendererUnavailable)
     }
 }

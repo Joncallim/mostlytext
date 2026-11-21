@@ -107,18 +107,7 @@ public actor D2WebRenderer: D2DiagramRendering {
             throw D2RenderError.outputTooLarge(byteCount: byteCount)
         }
         guard result.succeeded else {
-            let message = result.message ?? "unknown error"
-            // D2's compile call also runs layout. Its Dagre failure can
-            // therefore arrive in the compile phase for valid authored D2.
-            if result.failurePhase == "compile", message.hasPrefix("failed to dagre layout:") {
-                throw D2RenderError.rendererUnavailable
-            }
-            if result.failurePhase == "compile" {
-                throw D2RenderError.invalidSyntax(message)
-            }
-            // Layout/runtime failures may occur for syntactically valid D2.
-            // Do not tell the user that their authored source is malformed.
-            throw D2RenderError.rendererUnavailable
+            throw Self.failure(for: result.message, phase: result.failurePhase)
         }
         guard let svg = result.svg else {
             throw D2RenderError.rendererUnavailable
@@ -127,6 +116,19 @@ public actor D2WebRenderer: D2DiagramRendering {
             throw D2RenderError.rendererUnavailable
         }
         return RenderedD2Diagram(svg: svg, naturalWidth: result.width, naturalHeight: result.height)
+    }
+
+    static func failure(for message: String?, phase: String?) -> D2RenderError {
+        guard let message, !message.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty else {
+            return .rendererUnavailable
+        }
+        // D2's compile call also runs layout. A Dagre failure can therefore
+        // arrive in the compile phase for valid authored D2.
+        if phase == "compile", message.hasPrefix("failed to dagre layout:") {
+            return .rendererUnavailable
+        }
+        // Layout/runtime failures may occur for syntactically valid source.
+        return phase == "compile" ? .invalidSyntax(message) : .rendererUnavailable
     }
 
     /// Maps the shared pool's generic errors to this language's own

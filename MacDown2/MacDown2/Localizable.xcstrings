@@ -13651,6 +13651,35 @@
         }
       }
     },
+    "⚠ invalid math": {
+      "comment": "Preview fallback for a malformed math expression. The surrounding Markdown code markers are added after localization; translated wording needs native review.",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "⚠ invalid math"
+          }
+        },
+        "fr": {
+          "stringUnit": {
+            "state": "needs_review",
+            "value": "⚠ expression mathématique invalide"
+          }
+        },
+        "ja": {
+          "stringUnit": {
+            "state": "needs_review",
+            "value": "⚠ 無効な数式"
+          }
+        },
+        "pl": {
+          "stringUnit": {
+            "state": "needs_review",
+            "value": "⚠ nieprawidłowe wyrażenie matematyczne"
+          }
+        }
+      }
+    },
     "✓ Editor Only": {
       "localizations": {
         "fr": {
