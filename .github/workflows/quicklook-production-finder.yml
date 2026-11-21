@@ -118,6 +118,17 @@ jobs:
           a -> b
           ```
           MARKDOWN
+          cat > "$RUNNER_TEMP/mostlytext-production-mixed-d2.md" <<'MARKDOWN'
+          # MOSTLYTEXT_MIXED_D2_QUICKLOOK
+
+          ```dot
+          digraph G { GAMMA_D2_CONTROL -> DELTA; }
+          ```
+
+          ```d2
+          {{{ not valid d2 ][
+          ```
+          MARKDOWN
           cat > "$RUNNER_TEMP/mostlytext-production-two-graphviz.md" <<'MARKDOWN'
           # MOSTLYTEXT_TWO_GRAPHVIZ_QUICKLOOK
 

@@ -63,6 +63,7 @@ final class ProductionFinderTests: XCTestCase {
         assertStaticGraphviz(in: finder, beside: source)
         assertStaticMermaid(in: finder, beside: source)
         assertStaticD2(in: finder, beside: source)
+        assertMixedD2Failure(in: finder, beside: source)
         assertTwoGraphvizFences(in: finder, beside: source)
         assertMixedGraphvizFailure(in: finder, beside: source)
         assertOversizedGraphvizFallback(in: finder, beside: source)
@@ -251,6 +252,33 @@ final class ProductionFinderTests: XCTestCase {
 }
 
 private extension ProductionFinderTests {
+    func assertMixedD2Failure(in finder: XCUIApplication, beside source: URL) {
+        let mixed = source.deletingLastPathComponent()
+            .appendingPathComponent("mostlytext-production-mixed-d2.md")
+        NSWorkspace.shared.activateFileViewerSelecting([mixed])
+        let item = finder.descendants(matching: .any)
+            .matching(identifier: mixed.lastPathComponent).firstMatch
+        XCTAssertTrue(item.waitForExistence(timeout: 5), "Finder must select the mixed D2 fixture")
+        item.click()
+        finder.typeKey(.space, modifierFlags: [])
+        let heading = finder.staticTexts["MOSTLYTEXT_MIXED_D2_QUICKLOOK"].firstMatch
+        let renderedControl = finder.staticTexts["GAMMA_D2_CONTROL"].firstMatch
+        let visible = heading.waitForExistence(timeout: 15)
+            && renderedControl.waitForExistence(timeout: 5)
+        let tree = XCTAttachment(string: String(finder.debugDescription.prefix(65536)))
+        tree.name = "Mixed D2 Finder accessibility tree"
+        tree.lifetime = .keepAlways
+        add(tree)
+        let image = XCTAttachment(screenshot: XCUIScreen.main.screenshot())
+        image.name = "Mixed D2 Finder Quick Look window"
+        image.lifetime = .keepAlways
+        add(image)
+        XCTAssertTrue(visible, "A malformed D2 fence must not suppress the earlier Graphviz diagram")
+        XCTAssertTrue(NSRunningApplication.runningApplications(withBundleIdentifier: "app.mostlytext.MostlyText")
+            .isEmpty)
+        finder.typeKey(.escape, modifierFlags: [])
+    }
+
     func assertStaticD2(in finder: XCUIApplication, beside source: URL) {
         let diagram = source.deletingLastPathComponent()
             .appendingPathComponent("mostlytext-production-d2.md")

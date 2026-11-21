@@ -622,9 +622,11 @@ extraction recipe and synchronized compliance inventory.
 If the hosted renderer proof passes, the same branch adds D2 to the disposable
 Quick Look source worker. It scans selected Markdown, renders D2 only when a D2
 fence exists, and publishes each successful SVG through the already bounded
-passive composer. Math retains its first snapshot; D2 runs before Graphviz and
-Mermaid so a D2-only file has a chance to fit the worker's existing deadline.
-A failed D2 fence leaves its authored text in the source fallback. The worker
+passive composer. Math retains its first snapshot; existing fast Graphviz
+publication precedes D2, then Mermaid runs if time remains. A D2-only file
+still gets the worker's full remaining deadline. A failed or unpublishably
+large D2 fence leaves its authored text in the source fallback and cannot
+poison a later snapshot. The worker
 does not acquire a new file, network, reply-time or output-size privilege.
 The installed Finder probe must show a real D2 SVG node; a heading or authored
 fence alone is insufficient. A clean Release build and the existing mixed
