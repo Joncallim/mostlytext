@@ -13,6 +13,7 @@ import TextSearch
 /// back up via `onMatchesChanged` so the caller can push highlight ranges to
 /// the text view and reveal the current match.
 struct FindBarView: View {
+    @Environment(\.locale) private var locale
     @Bindable var model: EditorFindModel
     let recentQueries: [String]
     let onRememberQuery: (String) -> Void
@@ -289,10 +290,13 @@ struct FindBarView: View {
                 .foregroundStyle(.secondary)
                 .accessibilityIdentifier("findBarStatus")
         } else {
-            Text("\((model.currentIndex ?? 0) + 1) of \(model.matchCount)")
-                .font(.caption)
-                .foregroundStyle(.secondary)
-                .accessibilityIdentifier("findBarStatus")
+            Text(verbatim: String(
+                localized: "\((model.currentIndex ?? 0) + 1) of \(model.matchCount)",
+                locale: locale
+            ))
+            .font(.caption)
+            .foregroundStyle(.secondary)
+            .accessibilityIdentifier("findBarStatus")
         }
     }
 

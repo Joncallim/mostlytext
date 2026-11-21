@@ -137,7 +137,9 @@ struct FolderSearchView: View {
             if model.isReplacing {
                 Button("Stop") { model.cancelReplace() }
                     .accessibilityIdentifier("folderReplaceStop")
-                Text("Replacing \(model.replaceCompleted) of \(model.replaceTotal)…")
+                Text(verbatim: FolderSearchCountCopy.replaceProgress(
+                    completed: model.replaceCompleted, total: model.replaceTotal
+                ).message(locale: locale))
                     .font(.caption)
                     .foregroundStyle(.secondary)
                     .accessibilityIdentifier("folderReplaceProgress")
@@ -268,6 +270,7 @@ private struct FolderSearchResultRow: View {
 }
 
 private struct FolderReplacePreviewView: View {
+    @Environment(\.locale) private var locale
     let preview: ReplacementFilePreview?
 
     var body: some View {
@@ -292,7 +295,9 @@ private struct FolderReplacePreviewView: View {
                     .accessibilityLabel("Line \(line.lineNumber): \(line.before) becomes \(line.after)")
                 }
                 if total > lines.count {
-                    Text("and \(total - lines.count) more")
+                    Text(verbatim: FolderSearchCountCopy.previewRemaining(
+                        matches: total - lines.count
+                    ).message(locale: locale))
                         .font(.caption)
                         .foregroundStyle(.secondary)
                 }

@@ -8,6 +8,8 @@ enum FolderSearchCountCopy {
     case unsearched(files: Int)
     case skipped(files: Int)
     case result(path: String, matches: Int)
+    case replaceProgress(completed: Int, total: Int)
+    case previewRemaining(matches: Int)
 
     func message(bundle: Bundle = .main, locale: Locale = .current) -> String {
         switch self {
@@ -23,6 +25,10 @@ enum FolderSearchCountCopy {
         case let .result(path, matches):
             let count = String(localized: "\(matches) matches", bundle: bundle, locale: locale)
             return String(localized: "Matches in \(path): \(count)", bundle: bundle, locale: locale)
+        case let .replaceProgress(completed, total):
+            return String(localized: "Replacing \(completed) of \(total)…", bundle: bundle, locale: locale)
+        case let .previewRemaining(matches):
+            return String(localized: "and \(matches) more", bundle: bundle, locale: locale)
         }
     }
 }
