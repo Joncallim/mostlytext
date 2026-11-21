@@ -192,6 +192,7 @@ struct ViewportDisplayBudgetBenchmarkTests {
             let total = milliseconds(input, displayReadback)
             results.append([
                 "case": edit.name,
+                "input_uptime_ns": input,
                 "source_utf8_bytes": expectedSource.utf8.count,
                 "source_utf16_units": (expectedSource as NSString).length,
                 "input_to_storage_return_ms": milliseconds(input, storageReturned),

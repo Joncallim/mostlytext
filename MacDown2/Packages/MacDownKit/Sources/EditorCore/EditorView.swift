@@ -1,4 +1,5 @@
 import AppKit
+import Dispatch
 import FileCore
 import SwiftUI
 
@@ -124,6 +125,14 @@ public struct EditorView: NSViewRepresentable {
     }
 
     public func updateNSView(_ scrollView: NSScrollView, context: Context) {
+        let phaseStart = DispatchTime.now().uptimeNanoseconds
+        defer {
+            if ProcessInfo.processInfo.environment["MACDOWN_VIEWPORT_DISPLAY_BENCH"] == "1" {
+                let phaseEnd = DispatchTime.now().uptimeNanoseconds
+                print("VIEWPORT-EDITOR-PHASE kind=updateNSView start_ns=\(phaseStart) " +
+                    "end_ns=\(phaseEnd) duration_ms=\(Double(phaseEnd - phaseStart) / 1_000_000)")
+            }
+        }
         guard let system = context.coordinator.system else { return }
 
         context.coordinator.onSelectionChange = onSelectionChange

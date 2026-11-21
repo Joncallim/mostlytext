@@ -338,6 +338,7 @@ private extension MarkdownViewportSession {
     private func emitPublicationWait(_ resolvedAt: UInt64) {
         guard ProcessInfo.processInfo.environment["MACDOWN_VIEWPORT_DISPLAY_BENCH"] == "1" else { return }
         let enteredAt = DispatchTime.now().uptimeNanoseconds
-        print("VIEWPORT-PUBLICATION-PHASE actor_wait_ms=\(Double(enteredAt - resolvedAt) / 1_000_000)")
+        print("VIEWPORT-PUBLICATION-PHASE resolved_ns=\(resolvedAt) entered_ns=\(enteredAt) " +
+            "actor_wait_ms=\(Double(enteredAt - resolvedAt) / 1_000_000)")
     }
 }
