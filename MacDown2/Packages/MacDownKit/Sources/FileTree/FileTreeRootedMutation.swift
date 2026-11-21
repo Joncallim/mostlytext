@@ -78,31 +78,38 @@ final class FileTreeRootedDirectory {
         return try body(parent, url.lastPathComponent)
     }
 
+    func requireExclusiveRename() throws {
+        var attributes = attrlist()
+        attributes.bitmapcount = UInt16(ATTR_BIT_MAP_COUNT)
+        attributes.volattr = UInt32(ATTR_VOL_CAPABILITIES)
+        var reply = (length: UInt32(0), capabilities: vol_capabilities_attr_t())
+        let size = MemoryLayout.size(ofValue: reply)
+        let result = withUnsafeMutablePointer(to: &reply) { buffer in
+            Darwin.fgetattrlist(descriptor, &attributes, buffer, size, 0)
+        }
+        let flag = UInt32(VOL_CAP_INT_RENAME_EXCL)
+        guard result == 0, reply.length >= UInt32(size),
+              reply.capabilities.valid.1 & flag != 0,
+              reply.capabilities.capabilities.1 & flag != 0
+        else { throw POSIXError(.ENOTSUP) }
+    }
+
     func createFile(at url: URL, beforePublication: (() throws -> Void)?) throws {
         let destination = try relativePath(of: url)
-        // Keep the private stage at the selected root. A stage in a child
-        // directory could itself move outside before publication. A nested
-        // mount on another volume fails closed at rename.
-        let stage = ".mostlytext-create-\(UUID().uuidString)"
+        try beforePublication?()
         let file = Darwin.openat(
-            descriptor, stage, O_CREAT | O_EXCL | O_WRONLY | O_CLOEXEC | O_NOFOLLOW, 0o666
+            descriptor, destination, O_CREAT | O_EXCL | O_WRONLY | O_CLOEXEC | O_NOFOLLOW_ANY, 0o666
         )
         guard file >= 0 else { throw Self.failure() }
-        defer { _ = Darwin.close(file) }
-        do {
-            try beforePublication?()
-            guard Darwin.renameatx_np(
-                descriptor, stage, descriptor, destination,
-                UInt32(RENAME_EXCL | RENAME_NOFOLLOW_ANY)
-            ) == 0 else { throw Self.failure() }
-        } catch {
-            _ = Darwin.unlinkat(descriptor, stage, 0)
-            throw error
-        }
+        _ = Darwin.close(file)
     }
 
     func createDirectory(at url: URL, beforePublication: (() throws -> Void)?) throws {
         let destination = try relativePath(of: url)
+        try requireExclusiveRename()
+        // mkdirat has no no-follow-any option. Stage under the selected root,
+        // then resolve the destination from that root in one exclusive rename.
+        // A nested mount on another volume fails closed at rename.
         let stage = ".mostlytext-create-\(UUID().uuidString)"
         guard Darwin.mkdirat(descriptor, stage, 0o777) == 0 else { throw Self.failure() }
         do {
@@ -120,6 +127,7 @@ final class FileTreeRootedDirectory {
     func move(_ source: URL, to destination: URL, beforePublication: (() throws -> Void)?) throws {
         let sourceName = try relativePath(of: source)
         let destinationName = try relativePath(of: destination)
+        try requireExclusiveRename()
         try beforePublication?()
         guard Darwin.renameatx_np(
             descriptor, sourceName, descriptor, destinationName,

@@ -112,7 +112,7 @@ struct FileTreeMovedParentMutationTests {
         #expect(try root.withParent(of: child) { _, name in name } == "\u{0301}note.md")
     }
 
-    @Test func aReadOnlySelectedRootFailsClosedEvenWhenAChildIsWritable() async throws {
+    @Test func fileCreationStillWorksInAWritableChildOfAReadOnlyRoot() async throws {
         let fixture = try fixture()
         defer {
             _ = Darwin.chmod(fixture.root.path, 0o700)
@@ -120,9 +120,7 @@ struct FileTreeMovedParentMutationTests {
         }
         #expect(Darwin.chmod(fixture.root.path, 0o500) == 0)
         let destination = fixture.child.appendingPathComponent("new.md")
-        await #expect(throws: Error.self) {
-            try await FileSystemMutator().mutate(.createFile(destination), authority: fixture.authority)
-        }
-        #expect(!FileManager.default.fileExists(atPath: destination.path))
+        try await FileSystemMutator().mutate(.createFile(destination), authority: fixture.authority)
+        #expect(try Data(contentsOf: destination).isEmpty)
     }
 }
