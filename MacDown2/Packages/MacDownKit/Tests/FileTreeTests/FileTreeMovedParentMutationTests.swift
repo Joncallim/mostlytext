@@ -102,4 +102,27 @@ struct FileTreeMovedParentMutationTests {
         #expect(try Data(contentsOf: source) == Data("source".utf8))
         #expect(try noPrivateStage(in: fixture.root))
     }
+
+    @Test func aSeparatorBeforeACombiningMarkRemainsAPathBoundary() throws {
+        let fixture = try fixture()
+        defer { try? FileManager.default.removeItem(at: fixture.base) }
+        let root = try FileTreeRootedDirectory(fixture.authority)
+        let child = fixture.child.appendingPathComponent("\u{0301}note.md")
+        #expect(try root.relativePath(of: child) == "dir/\u{0301}note.md")
+        #expect(try root.withParent(of: child) { _, name in name } == "\u{0301}note.md")
+    }
+
+    @Test func aReadOnlySelectedRootFailsClosedEvenWhenAChildIsWritable() async throws {
+        let fixture = try fixture()
+        defer {
+            _ = Darwin.chmod(fixture.root.path, 0o700)
+            try? FileManager.default.removeItem(at: fixture.base)
+        }
+        #expect(Darwin.chmod(fixture.root.path, 0o500) == 0)
+        let destination = fixture.child.appendingPathComponent("new.md")
+        await #expect(throws: Error.self) {
+            try await FileSystemMutator().mutate(.createFile(destination), authority: fixture.authority)
+        }
+        #expect(!FileManager.default.fileExists(atPath: destination.path))
+    }
 }

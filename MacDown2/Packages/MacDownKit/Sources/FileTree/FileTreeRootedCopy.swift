@@ -1,36 +1,37 @@
 import Darwin
 import Foundation
 
-/// Builds a private copy beneath an opened destination parent, then publishes
-/// it without replacing a file another writer created in the meantime.
+/// Builds a private copy directly beneath the selected root, then resolves
+/// the final destination from that root in one no-following rename. A child
+/// directory moved outside the root during copying cannot redirect the write.
 enum FileTreeRootedCopy {
     static func copy(
         _ source: URL, to destination: URL, root: FileTreeRootedDirectory,
         beforePublication: (@Sendable () throws -> Void)? = nil
     ) throws {
+        let destinationPath = try root.relativePath(of: destination)
         try root.withReadableParent(of: source) { sourceParent, sourceName in
-            try root.withParent(of: destination) { destinationParent, destinationName in
-                let stage = ".mostlytext-copy-\(UUID().uuidString)"
-                var created = false
-                do {
-                    try sourceName.withCString { sourcePointer in
-                        try stage.withCString { stagePointer in
-                            try copyNode(
-                                sourceParent, sourcePointer, destinationParent, stagePointer,
-                                created: &created
-                            )
-                        }
+            let stage = ".mostlytext-copy-\(UUID().uuidString)"
+            var created = false
+            do {
+                try sourceName.withCString { sourcePointer in
+                    try stage.withCString { stagePointer in
+                        try copyNode(
+                            sourceParent, sourcePointer, root.descriptor, stagePointer,
+                            created: &created
+                        )
                     }
-                    try beforePublication?()
-                    guard Darwin.renameatx_np(
-                        destinationParent, stage, destinationParent, destinationName, UInt32(RENAME_EXCL)
-                    ) == 0 else { throw FileTreeRootedDirectory.failure() }
-                } catch {
-                    if created {
-                        try stage.withCString { try removeNode(destinationParent, $0) }
-                    }
-                    throw error
                 }
+                try beforePublication?()
+                guard Darwin.renameatx_np(
+                    root.descriptor, stage, root.descriptor, destinationPath,
+                    UInt32(RENAME_EXCL | RENAME_NOFOLLOW_ANY)
+                ) == 0 else { throw FileTreeRootedDirectory.failure() }
+            } catch {
+                if created {
+                    try stage.withCString { try removeNode(root.descriptor, $0) }
+                }
+                throw error
             }
         }
     }
