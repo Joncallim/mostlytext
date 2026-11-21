@@ -19,7 +19,7 @@ let browser = original.toString('utf8');
 const edits = [
   [
     'async function Bf(){let r=await fetch("./d2.wasm");return new Uint8Array(await r.arrayBuffer())}',
-    'async function Bf(){return WebAssembly.compileStreaming(fetch("./d2.wasm"))}',
+    'async function Bf(){return WebAssembly.compileStreaming(fetch("./d2.wasm").then(r=>new Response(r.body,{headers:{"Content-Type":"application/wasm"}})))}',
   ],
   [
     'go.run(result.instance);',

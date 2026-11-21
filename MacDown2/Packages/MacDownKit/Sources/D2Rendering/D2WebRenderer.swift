@@ -90,20 +90,8 @@ public actor D2WebRenderer: D2DiagramRendering {
 
     @MainActor
     private static func prepare(_ page: DiagramHarnessPage) async throws {
-        do {
-            let result = try await page.evaluate("return await window.__macdownPrepareD2();", arguments: [:])
-            #if DIAGRAM_BUDGET_PROBE
-            if !result.succeeded {
-                NSLog("D2 preparation failed: %@", result.message ?? "<no JavaScript message>")
-            }
-            #endif
-            guard result.succeeded else { throw D2RenderError.rendererUnavailable }
-        } catch {
-            #if DIAGRAM_BUDGET_PROBE
-            NSLog("D2 preparation threw: %@", String(describing: error))
-            #endif
-            throw error
-        }
+        let result = try await page.evaluate("return await window.__macdownPrepareD2();", arguments: [:])
+        guard result.succeeded else { throw D2RenderError.rendererUnavailable }
     }
 
     @MainActor
