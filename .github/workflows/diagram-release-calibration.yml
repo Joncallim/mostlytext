@@ -80,7 +80,7 @@ jobs:
           MOSTLYTEXT_117_FIXTURE_DIR: ${{ runner.temp }}/diagram-budget-probe/svg-ownership
         run: |
           swift test -c release --skip-build --force-resolved-versions --no-parallel \
-            --filter RealSVGNamespaceTests/ownedRendererOutputsRemainAdmissibleAndD2FallsBack
+            --filter RealSVGNamespaceTests/ownedRendererOutputsRemainAdmissible
       - name: Record exact checkout and locked input identity
         if: always()
         run: |

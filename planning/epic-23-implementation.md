@@ -645,3 +645,20 @@ The immutable receipt is retained at
 This run proves renderer viability, not installed Finder timing or Quick Look
 acceptance. The symlink-negative check and Quick Look integration are later
 branch changes and require their own exact-head validation.
+
+The first installed-provider [Finder run](https://github.com/Joncallim/mostlytext/actions/runs/44920270190)
+failed its D2 case on `af250161`: the worker returned 358 HTML bytes without
+SVG and Finder showed the authored D2 fence. Earlier math, Graphviz and
+Mermaid controls reached their expected static content. The failure is retained
+as evidence, not counted as D2 acceptance. The later hosted
+[ownership capture](https://github.com/Joncallim/mostlytext/actions/runs/44922624795)
+saved the real D2 `a -> b -> c` SVG (16,062 bytes, SHA-256
+`c295ed492349c4f448de2cd23894479ef0bd3ec9946491a1002a731791149601`).
+Its two undeclared `streaks` paint IDs appear in 36 generated
+`sketch-overlay` CSS rules, while no element uses those classes. Strict SVG
+namespacing correctly refused the fragment to prevent those URLs binding to
+another diagram after composition. The D2 output adapter now removes only
+that exact dormant generated rule form when no sketch class is used. Active
+sketch rules and any unknown unresolved reference keep the existing fallback.
+The full renderer, export ownership and installed Finder paths must be rerun
+on the repaired source before a D2 Quick Look criterion can be checked.
