@@ -78,6 +78,7 @@ jobs:
         run: |
           set -o pipefail
           swift build --build-tests -c release --force-resolved-versions \
+            -Xswiftc -enable-testing \
             2>&1 | tee "$RUNNER_TEMP/viewport-budget/build.log"
       - name: Profile one timed mounted edit after its oracle is ready
         run: python3 .github/scripts/profile-viewport-one-edit.py
