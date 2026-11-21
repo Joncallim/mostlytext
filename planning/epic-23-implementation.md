@@ -618,3 +618,28 @@ merge candidate. A failure at either stage is preserved and the experiment
 is removed from the merge path. The original compressed bytes and font/source
 evidence remain in Git history; any shipped split requires a deterministic
 extraction recipe and synchronized compliance inventory.
+
+If the hosted renderer proof passes, the same branch adds D2 to the disposable
+Quick Look source worker. It scans selected Markdown, renders D2 only when a D2
+fence exists, and publishes each successful SVG through the already bounded
+passive composer. Math retains its first snapshot; D2 runs before Graphviz and
+Mermaid so a D2-only file has a chance to fit the worker's existing deadline.
+A failed D2 fence leaves its authored text in the source fallback. The worker
+does not acquire a new file, network, reply-time or output-size privilege.
+The installed Finder probe must show a real D2 SVG node; a heading or authored
+fence alone is insufficient. A clean Release build and the existing mixed
+math/Graphviz/Mermaid Finder cases must still pass on the same source tree.
+
+The first hosted [Release renderer run](https://github.com/Joncallim/mostlytext/actions/runs/44918563658)
+passed on source `9d850f11`, tree `1ff65633`, macOS 26.7.2/Xcode 26.6. Its
+ordinary cold D2 input-to-SVG result was 1.858 s; the 256-edge chain/star
+rendered in 2.718/3.149 s. Source, output and deadline refusal controls
+passed. Sixteen real D2 renderer tests and the exact-resource/remote-denial
+WebKit test passed. The sampler observed a provisional 679 MB peak in newly
+seen WebKit helpers for the ordinary case, compared with 919 MB in the earlier
+current-main calibration; neither is an enforceable per-request memory cap.
+The immutable receipt is retained at
+`/Volumes/Fast SSD/CORTANA-Builds/diagram-d2-scheme-44918563658/`.
+This run proves renderer viability, not installed Finder timing or Quick Look
+acceptance. The symlink-negative check and Quick Look integration are later
+branch changes and require their own exact-head validation.

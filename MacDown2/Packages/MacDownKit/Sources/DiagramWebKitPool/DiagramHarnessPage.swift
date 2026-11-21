@@ -80,13 +80,13 @@ public struct DiagramHarnessResult: Sendable {
 /// directory and evaluate script against it (epic-21-implementation.md
 /// §3.1).
 ///
-/// Security containment, identical to `MermaidHarnessPage`'s own (layered,
-/// not any one relied on alone):
+/// Security containment is layered; no single control is relied on alone:
 /// - `websiteDataStore = .nonPersistent()`: no cookies/storage survive.
-/// - `loadFileURL(_:allowingReadAccessTo:)` scopes file reads to the
-///   bundled resource directory; it does not restrict network requests.
+/// - File-backed pages use `loadFileURL(_:allowingReadAccessTo:)` to scope
+///   reads to the bundled resource directory. A D2 scheme page instead
+///   serves only an explicit set of bundled resource names.
 /// - A `WKNavigationDelegate` that cancels any navigation whose
-///   destination is not inside that same directory.
+///   destination is outside the page's one approved harness location.
 /// - A `WKUIDelegate` that denies any popup/new-window request.
 /// - The harness page's own Content-Security-Policy (each language's own
 ///   harness HTML) additionally blocks network `fetch`/`XHR`/`WebSocket`.
@@ -112,9 +112,8 @@ public final class DiagramHarnessPage: NSObject, WKNavigationDelegate, WKUIDeleg
     /// `NSObject` does not permit an `async`/`throws` designated
     /// initializer, so construction is split exactly like
     /// `MermaidHarnessPage`'s own: this factory resolves the bundled
-    /// harness and performs the async page load, while
-    /// `init(allowedDirectory:)` stays a normal, synchronous designated
-    /// initializer.
+    /// harness and performs the async page load, while the designated
+    /// initializer stays synchronous.
     public static func make(
         harnessResourceName: String,
         bundle: Bundle,

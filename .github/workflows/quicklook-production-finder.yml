@@ -109,6 +109,15 @@ jobs:
             A[MERMAID_RENDERED_NODE] --> B[DESTINATION]
           ```
           MARKDOWN
+          cat > "$RUNNER_TEMP/mostlytext-production-d2.md" <<'MARKDOWN'
+          # MOSTLYTEXT_D2_QUICKLOOK
+
+          ```d2
+          a: D2_RENDERED_NODE
+          b: DESTINATION
+          a -> b
+          ```
+          MARKDOWN
           cat > "$RUNNER_TEMP/mostlytext-production-two-graphviz.md" <<'MARKDOWN'
           # MOSTLYTEXT_TWO_GRAPHVIZ_QUICKLOOK
 
