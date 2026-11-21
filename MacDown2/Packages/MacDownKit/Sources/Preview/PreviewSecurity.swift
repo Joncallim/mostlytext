@@ -93,8 +93,8 @@ public enum PreviewSecurity {
                 scanTagState(quoted: quoted, characters: characters, state: &state, index: &index)
             case .comment:
                 scanCommentState(characters: characters, state: &state, index: &index)
-            case .rawtext:
-                scanRawtextState(characters: characters, state: &state, index: &index)
+            case let .rawtext(name):
+                scanRawtextState(name: name, characters: characters, state: &state, index: &index)
             }
         }
         return nil
@@ -119,8 +119,8 @@ public enum PreviewSecurity {
             index += 4
             return nil
         }
-        if rawtextTagName(at: index, in: characters) != nil {
-            state = .rawtext
+        if let name = rawtextTagName(at: index, in: characters) {
+            state = .rawtext(name: name)
             index += 2
             return nil
         }
@@ -173,14 +173,17 @@ public enum PreviewSecurity {
 
     /// One step in the rawtext state: only the matching `</name` ends it.
     private static func scanRawtextState(
+        name: String,
         characters: [Character],
         state: inout ScanState,
         index: inout Int
     ) {
-        // Rawtext ends at the matching `</name`; resume at the `<` so the
-        // close tag is scanned as a normal tag.
+        // Rawtext ends only at its own matching `</name>`. A different
+        // closing tag is inert text, including a fake `<head>` after it.
+        // HTML `plaintext` consumes the rest of the document even if authored
+        // text contains `</plaintext>`.
         if characters[index] == "<",
-           let name = rawtextCloseTagName(at: index, in: characters) {
+           name != "plaintext", rawtextCloseTagName(name, at: index, in: characters) {
             state = .tag(quoted: nil)
             index += name.count + 2
         } else {
@@ -199,9 +202,9 @@ public enum PreviewSecurity {
         rawtextTagNames.first { matchesTagName($0, at: start, in: characters) }
     }
 
-    private static func rawtextCloseTagName(at start: Int, in characters: [Character]) -> String? {
-        guard start + 1 < characters.count, characters[start + 1] == "/" else { return nil }
-        return rawtextTagNames.first { matchesTagName($0, at: start + 1, in: characters) }
+    private static func rawtextCloseTagName(_ name: String, at start: Int, in characters: [Character]) -> Bool {
+        guard start + 1 < characters.count, characters[start + 1] == "/" else { return false }
+        return matchesTagName(name, at: start + 1, in: characters)
     }
 
     /// Whether `characters[start...]` begins with a `<` followed by `name`
@@ -259,6 +262,6 @@ public enum PreviewSecurity {
         case data
         case tag(quoted: Character?)
         case comment
-        case rawtext
+        case rawtext(name: String)
     }
 }

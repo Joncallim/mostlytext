@@ -60,17 +60,18 @@ public enum PreviewLinkDefinitions {
         var index = 0
 
         while index <= length {
-            if index == length || buffer[index] == Self.newline {
-                // A CRLF document's lines end in `\r`, which is a terminator, not free text after the destination.
-                var lineEnd = index
-                if lineEnd > lineStart, buffer[lineEnd - 1] == 0x0D {
-                    lineEnd -= 1
-                }
-                if isDefinitionLine(buffer, from: lineStart, to: lineEnd) {
+            if index == length || buffer[index] == Self.newline || buffer[index] == Self.carriageReturn {
+                if isDefinitionLine(buffer, from: lineStart, to: index) {
                     definitions.append(nsText.substring(with: NSRange(
                         location: lineStart,
-                        length: lineEnd - lineStart
+                        length: index - lineStart
                     )))
+                }
+                // Treat CRLF as one break while also admitting CR-only and
+                // mixed-break source. The original line bytes stay unchanged.
+                if index < length, buffer[index] == Self.carriageReturn,
+                   index + 1 < length, buffer[index + 1] == Self.newline {
+                    index += 1
                 }
                 lineStart = index + 1
             }
@@ -83,6 +84,7 @@ public enum PreviewLinkDefinitions {
     private static let space = unichar(0x20)
     private static let tab = unichar(0x09)
     private static let newline = unichar(0x0A)
+    private static let carriageReturn = unichar(0x0D)
     private static let openBracket = unichar(0x5B) // [
     private static let closeBracket = unichar(0x5D) // ]
     private static let colon = unichar(0x3A) // :
