@@ -83,9 +83,8 @@ public struct DiagramHarnessResult: Sendable {
 /// Security containment, identical to `MermaidHarnessPage`'s own (layered,
 /// not any one relied on alone):
 /// - `websiteDataStore = .nonPersistent()`: no cookies/storage survive.
-/// - `loadFileURL(_:allowingReadAccessTo:)` scoped exactly to the
-///   bundled resource directory: no network access at all, not merely
-///   unused.
+/// - `loadFileURL(_:allowingReadAccessTo:)` scopes file reads to the
+///   bundled resource directory; it does not restrict network requests.
 /// - A `WKNavigationDelegate` that cancels any navigation whose
 ///   destination is not inside that same directory.
 /// - A `WKUIDelegate` that denies any popup/new-window request.

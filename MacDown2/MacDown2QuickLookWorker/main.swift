@@ -10,7 +10,10 @@ private func hasRequiredSandbox() -> Bool {
     guard let task = SecTaskCreateFromSelf(nil) else { return false }
     let sandbox = SecTaskCopyValueForEntitlement(task, "com.apple.security.app-sandbox" as CFString, nil) as? Bool
     let network = SecTaskCopyValueForEntitlement(task, "com.apple.security.network.client" as CFString, nil)
-    return sandbox == true && network == nil
+    // Internal WebKit cannot load its process in the installed sandbox without
+    // this grant. The bundled harness CSP and navigation policy still refuse
+    // document-driven remote resources.
+    return sandbox == true && (network as? Bool) == true
 }
 
 private func writeAll(_ descriptor: Int32, bytes: Data) -> Bool {

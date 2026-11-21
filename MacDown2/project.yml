@@ -306,6 +306,10 @@ targets:
       product: GraphvizRendering
     - package: MacDownKit
       product: DiagramWebKitPool
+    - package: MacDownKit
+      product: Diagrams
+    - package: MacDownKit
+      product: DiagramRendering
     settings:
       base:
         PRODUCT_BUNDLE_IDENTIFIER: app.mostlytext.MostlyText.QuickLook.Worker
@@ -322,6 +326,7 @@ targets:
       path: MacDown2QuickLookWorker/Worker.entitlements
       properties:
         com.apple.security.app-sandbox: true
+        com.apple.security.network.client: true
   MostlyTextCommand:
     type: tool
     settings:

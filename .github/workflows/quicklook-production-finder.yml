@@ -66,7 +66,10 @@ jobs:
               'com.apple.security.app-sandbox': True,
               'com.apple.security.files.user-selected.read-only': True,
           }, provider
-          assert worker == {'com.apple.security.app-sandbox': True}, worker
+          assert worker == {
+              'com.apple.security.app-sandbox': True,
+              'com.apple.security.network.client': True,
+          }, worker
           PY
           cp -R .github/quicklook-production-probe "$RUNNER_TEMP/production-quicklook/fixture"
           cd "$RUNNER_TEMP/production-quicklook/fixture"
@@ -96,6 +99,14 @@ jobs:
 
           ```dot
           digraph G { ALPHA -> BETA; }
+          ```
+          MARKDOWN
+          cat > "$RUNNER_TEMP/mostlytext-production-mermaid.md" <<'MARKDOWN'
+          # MOSTLYTEXT_MERMAID_QUICKLOOK
+
+          ```mermaid
+          flowchart LR
+            A[MERMAID_RENDERED_NODE] --> B[DESTINATION]
           ```
           MARKDOWN
           cat > "$RUNNER_TEMP/mostlytext-production-two-graphviz.md" <<'MARKDOWN'
@@ -165,8 +176,11 @@ jobs:
       - name: Preserve first Finder outcome
         if: always()
         run: |
-          log show --last 5m --style compact --predicate 'subsystem == "app.mostlytext.quicklook.worker"' \
+          log show --last 5m --style compact --predicate 'subsystem == "app.mostlytext.quicklook.worker" || subsystem == "app.mostlytext.diagram"' \
             > "$RUNNER_TEMP/production-quicklook-worker.log" 2>&1 || true
+          log show --last 3m --style compact --predicate \
+            '(process CONTAINS "WebContent" || process == "sandboxd") && (eventMessage CONTAINS[c] "MostlyText" || eventMessage CONTAINS[c] "WebContent" || eventMessage CONTAINS[c] "deny" || eventMessage CONTAINS[c] "kill")' \
+            > "$RUNNER_TEMP/production-quicklook-webcontent.log" 2>&1 || true
       - name: Upload Finder outcome
         if: always()
         uses: actions/upload-artifact@v4
