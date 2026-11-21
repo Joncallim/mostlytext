@@ -8,9 +8,12 @@ import io
 import json
 import subprocess
 import tarfile
+import tempfile
 from pathlib import Path, PurePosixPath
 
 PINNED_BASE_SHA = '07de46d856b3e7bbc1d455651fe7045be73083e1d072530e8a1cca99a7b65c02'
+PRE_SPLIT_BROWSER_REVISION = '2f349bd6e28dd50b6921cadd41945912d6466768'
+RESOURCE_PATH = 'MacDown2/Packages/MacDownKit/Sources/D2Rendering/Resources/'
 EXTRA_INPUTS = {
     'elkjs-0.8.2-source.tar.gz': ('upstream/elkjs-0.8.2-source.tar.gz', 'b711d4b94005ae4a8deeeec5ccb8e3eab1ef9017991e613ce9a93ccd4453af10'),
     'elk-java-v0.8.1-source.tar.gz': ('upstream/elk-java-v0.8.1-source.tar.gz', '248af2867977e08eb9d91ebb90fbb7b0a1b71f4e8ec020bfc04fe81e44f5dcdd'),
@@ -52,6 +55,8 @@ REPO_FILES = {
     'compliance/generated/THIRD_PARTY_NOTICES.md': 'distribution-snapshot/THIRD_PARTY_NOTICES.md',
     'compliance/generated/sbom.cdx.json': 'distribution-snapshot/sbom.cdx.json',
     'MacDown2/Packages/MacDownKit/Sources/D2Rendering/Resources/NOTICE.txt': 'notices/NOTICE.txt',
+    'compliance/evidence/d2-runtime-resource/README.md': 'evidence/d2-runtime-resource.txt',
+    'compliance/evidence/d2-runtime-resource/repack_d2_browser.mjs': 'build/repack_d2_browser.mjs',
 }
 
 
@@ -154,9 +159,30 @@ def members(root, inputs, base, publisher_browser):
             or elk_receipt['history'][-1]['file_blob_sha1'] != elk_receipt['member_git_blob_sha1']):
         raise ValueError('D2 ELK source does not match modification-history receipt')
     report = json.loads(result['evidence/browser-payload-replacement.json'])
-    current_resource = root / 'MacDown2/Packages/MacDownKit/Sources/D2Rendering/Resources/d2-browser.js'
-    if sha(current_resource.read_bytes()) != report['output_browser_sha256']:
-        raise ValueError('current D2 browser resource does not match source-review build report')
+    reviewed = subprocess.run(
+        ['git', 'show', f'{PRE_SPLIT_BROWSER_REVISION}:{RESOURCE_PATH}d2-browser.js'],
+        cwd=root, check=True, stdout=subprocess.PIPE
+    ).stdout
+    if sha(reviewed) != report['output_browser_sha256']:
+        raise ValueError('reviewed pre-split D2 browser does not match source-review build report')
+    current_browser = (root / (RESOURCE_PATH + 'd2-browser.js')).read_bytes()
+    current_wasm = (root / (RESOURCE_PATH + 'd2.wasm')).read_bytes()
+    if sha(current_wasm) != report['replacement_wasm_sha256']:
+        raise ValueError('split D2 WASM does not match the reviewed replacement build')
+    with tempfile.TemporaryDirectory() as temporary:
+        work = Path(temporary)
+        original = work / 'reviewed.js'
+        browser = work / 'd2-browser.js'
+        wasm = work / 'd2.wasm'
+        original.write_bytes(reviewed)
+        subprocess.run(['node', str(root / 'compliance/evidence/d2-runtime-resource/repack_d2_browser.mjs'),
+                        str(original), str(browser), str(wasm)],
+                       check=True, stdout=subprocess.DEVNULL)
+        if browser.read_bytes() != current_browser or wasm.read_bytes() != current_wasm:
+            raise ValueError('split D2 runtime does not reproduce the distribution resources')
+    result['distribution-snapshot/d2-browser-pre-split.js'] = reviewed
+    result['distribution-snapshot/d2-browser.js'] = current_browser
+    result['distribution-snapshot/d2.wasm'] = current_wasm
     result['README.txt'] = (
         'MostlyText D2 local source-review package.\n'
         'This package contains the pinned D2 source, npm input, 16 Go module ZIPs,\n'
@@ -168,6 +194,11 @@ def members(root, inputs, base, publisher_browser):
         'and pinned D2 ELK JavaScript modification history,\n'
         'and exact resource/build digests. The GitHub export tar is preserved\n'
         'separately: its export rules omit js/ and it is not sufficient alone.\n'
+        'The distribution snapshot includes the reviewed pre-split browser,\n'
+        'the exact split browser and WASM, and build/repack_d2_browser.mjs.\n'
+        'The split is a packaging transform, not a new D2 source build.\n'
+        'Run node build/repack_d2_browser.mjs on the pre-split browser into\n'
+        'fresh output files and compare with the two distribution snapshots.\n'
         'ELK Java/GWT historical correspondence, Brotli historical copy, Go JS\n'
         'runtime historical copy/behavior and further per-file rights review remain open.\n'
         'This is not an approved complete corresponding-source offer and is not\n'
@@ -201,7 +232,9 @@ def package_contents(bodies):
     entries = [{'path': name, 'sha256': sha(data), 'size': len(data)} for name, data in sorted(bodies.items())]
     report = json.loads(bodies['evidence/browser-payload-replacement.json'])
     manifest = json.dumps({'schema': 1, 'status': 'local-review-only; source and rights approval pending',
-                           'distribution_resource_sha256': report['output_browser_sha256'],
+                           'distribution_resource_sha256': sha(bodies['distribution-snapshot/d2-browser.js']),
+                           'distribution_pre_split_browser_sha256': report['output_browser_sha256'],
+                           'distribution_wasm_sha256': sha(bodies['distribution-snapshot/d2.wasm']),
                            'replacement_wasm_sha256': report['replacement_wasm_sha256'],
                            'official_ttf_sha256': '816a2a46416a2d3550b401ff8d0c084ba7e8138782f7057b1e537446012f769a',
                            'files': entries}, indent=2).encode() + b'\n'
