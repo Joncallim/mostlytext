@@ -1,3 +1,4 @@
+import CoreServices
 import Foundation
 import Testing
 @testable import TextSearch
@@ -9,6 +10,15 @@ struct WorkspaceFileEventsTests {
         #expect(priority.merge(.changed) == .changed)
         #expect(priority.merge(.rootChanged) == .rootChanged)
         #expect(priority.merge(.changed) == .rootChanged)
+    }
+
+    @Test func aRootMoveBeyondTheFirstThousandEventsIsStillClassified() throws {
+        var flags = Array(repeating: FSEventStreamEventFlags(0), count: 1025)
+        flags[1024] = FSEventStreamEventFlags(kFSEventStreamEventFlagRootChanged)
+        let change = try flags.withUnsafeBufferPointer { buffer in
+            try WorkspaceFileChange.classify(#require(buffer.baseAddress), count: buffer.count)
+        }
+        #expect(change == .rootChanged)
     }
 
     @Test func aNestedFileChangeReachesTheRootStream() async throws {

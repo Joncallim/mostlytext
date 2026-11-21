@@ -7,6 +7,12 @@ import Foundation
 public enum WorkspaceFileChange: Sendable, Equatable {
     case changed
     case rootChanged
+
+    static func classify(_ flags: UnsafePointer<FSEventStreamEventFlags>, count: Int) -> Self {
+        (0 ..< count).contains {
+            flags[$0] & FSEventStreamEventFlags(kFSEventStreamEventFlagRootChanged) != 0
+        } ? .rootChanged : .changed
+    }
 }
 
 /// The stream keeps only its newest queued delivery. Once a watched root has
@@ -63,10 +69,7 @@ public final class WorkspaceFileEvents: @unchecked Sendable, WorkspaceEventSourc
             nil, { _, info, count, _, flags, _ in
                 guard let info else { return }
                 let receiver = Unmanaged<Receiver>.fromOpaque(info).takeUnretainedValue()
-                let rootChanged = (0 ..< min(count, 1024)).contains {
-                    flags[$0] & FSEventStreamEventFlags(kFSEventStreamEventFlagRootChanged) != 0
-                }
-                receiver.yield(rootChanged ? .rootChanged : .changed)
+                receiver.yield(WorkspaceFileChange.classify(flags, count: count))
             }, &context, paths as CFArray, FSEventStreamEventId(kFSEventStreamEventIdSinceNow), 0.1, flags
         ) else { throw CocoaError(.fileReadUnknown) }
         FSEventStreamSetDispatchQueue(stream, queue)
