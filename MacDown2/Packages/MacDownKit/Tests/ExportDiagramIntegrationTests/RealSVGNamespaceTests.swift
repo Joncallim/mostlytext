@@ -61,6 +61,13 @@ struct RealSVGNamespaceTests {
 
     private func checkStrictD2Fallback(_ svg: String) throws {
         let d2Sanitized = DerivedHTMLSanitizer.sanitized(svg)
+        if let directory = ProcessInfo.processInfo.environment["MOSTLYTEXT_117_FIXTURE_DIR"] {
+            let folder = URL(fileURLWithPath: directory, isDirectory: true)
+            try FileManager.default.createDirectory(at: folder, withIntermediateDirectories: true)
+            try svg.write(to: folder.appending(path: "D2.svg"), atomically: true, encoding: .utf8)
+            try d2Sanitized.write(to: folder.appending(path: "D2-sanitized.svg"),
+                                  atomically: true, encoding: .utf8)
+        }
         #expect(SVGIDNamespace.rewrite(d2Sanitized, occurrence: 0) == nil)
         // This D2 fixture emits a paint URL without a matching local ID. The
         // opt-in path retains the authored fence until renderer output can

@@ -15,6 +15,7 @@ on:
       - 'MacDown2/Packages/MacDownKit/Sources/D2Rendering/**'
       - 'MacDown2/Packages/MacDownKit/Sources/GraphvizRendering/**'
       - 'MacDown2/Packages/MacDownKit/Tests/ExportDiagramIntegrationTests/DiagramBudgetProbeTests.swift'
+      - 'MacDown2/Packages/MacDownKit/Tests/ExportDiagramIntegrationTests/RealSVGNamespaceTests.swift'
 
 jobs:
   release-diagrams:
@@ -73,6 +74,13 @@ jobs:
             --filter D2HarnessResourcePolicyTests
           swift test -c release --skip-build --force-resolved-versions --no-parallel \
             --filter D2WebRendererTests
+      - name: Capture real SVG ownership compatibility
+        working-directory: MacDown2/Packages/MacDownKit
+        env:
+          MOSTLYTEXT_117_FIXTURE_DIR: ${{ runner.temp }}/diagram-budget-probe/svg-ownership
+        run: |
+          swift test -c release --skip-build --force-resolved-versions --no-parallel \
+            --filter RealSVGNamespaceTests/ownedRendererOutputsRemainAdmissibleAndD2FallsBack
       - name: Record exact checkout and locked input identity
         if: always()
         run: |
