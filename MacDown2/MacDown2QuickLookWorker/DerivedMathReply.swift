@@ -77,6 +77,8 @@ enum DerivedMathReply {
     ) async -> [ContributionResult] {
         let fences = D2FenceScanner.scan(document, sourceText: source)
         guard !fences.isEmpty, ProcessInfo.processInfo.systemUptime < publishDeadline - 0.25 else { return [] }
+        let started = ProcessInfo.processInfo.systemUptime
+        derivedLogger.notice("Static D2 started; reply budget remaining: \(publishDeadline - started)")
         let renderer = D2WebRenderer(poolSize: 1, timeout: .seconds(2.25))
         var results: [ContributionResult] = []
         for fence in fences {
@@ -91,8 +93,14 @@ enum DerivedMathReply {
                     ),
                     sourceGeneration: 1
                 )
-                if publishSnapshot(source: source, results: priorResults + results + [candidate],
-                                   onSnapshot: onSnapshot) {
+                let published = publishSnapshot(source: source, results: priorResults + results + [candidate],
+                                                onSnapshot: onSnapshot)
+                let elapsed = ProcessInfo.processInfo.systemUptime - started
+                let remaining = publishDeadline - ProcessInfo.processInfo.systemUptime
+                derivedLogger.notice(
+                    "Static D2 published: \(published), elapsed: \(elapsed), reply budget remaining: \(remaining)"
+                )
+                if published {
                     results.append(candidate)
                 }
             } catch {

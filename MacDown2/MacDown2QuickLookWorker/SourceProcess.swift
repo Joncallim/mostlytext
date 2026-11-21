@@ -1,7 +1,10 @@
 import Darwin
 import Dispatch
 import Foundation
+import OSLog
 import QuickLookBoundary
+
+private let sourceProcessLogger = Logger(subsystem: "app.mostlytext.quicklook.worker", category: "source-process")
 
 /// One selected descriptor, one child, one monotonic deadline and one reaper.
 /// A blocked regular-file read cannot retain an extension reply or service
@@ -29,6 +32,7 @@ enum SourceProcess {
     private static let childSlots = ChildSlots()
 
     static func run(selectedDescriptor: Int32, executable: URL? = Bundle.main.executableURL) -> Result {
+        let started = ProcessInfo.processInfo.systemUptime
         guard let executable,
               executable.path.hasSuffix("/MostlyTextQuickLookWorker")
         else { return Result(data: nil, status: .failed) }
@@ -46,7 +50,15 @@ enum SourceProcess {
             childSlots.release()
             return Result(data: nil, status: .failed)
         }
-        return awaitChild(child, outputs: outputs)
+        let result = awaitChild(child, outputs: outputs)
+        let hasSVG = result.data?.range(of: Data("<svg".utf8)) != nil
+        let elapsed = ProcessInfo.processInfo.systemUptime - started
+        let byteCount = result.data?.count ?? 0
+        let status = String(describing: result.status)
+        sourceProcessLogger.notice(
+            "Selected reply bytes: \(byteCount), SVG: \(hasSVG), status: \(status), elapsed: \(elapsed)"
+        )
+        return result
     }
 
     private static func makeOutput() -> Int32? {
@@ -112,6 +124,7 @@ enum SourceProcess {
             var status: Int32 = 0
             let waited = waitpid(child, &status, WNOHANG)
             if waited == child {
+                sourceProcessLogger.notice("Source child exited with status: \(status)")
                 childSlots.release()
                 if status == 0 {
                     if let preferred = completedDerived(outputs) {
@@ -139,6 +152,7 @@ enum SourceProcess {
             }
             let remaining = deadline - ProcessInfo.processInfo.systemUptime
             if remaining <= 0 {
+                sourceProcessLogger.notice("Source child reached the three-second deadline")
                 killAndReap(child)
                 return completedDerived(outputs)
                     ?? completedFallback(outputs)
