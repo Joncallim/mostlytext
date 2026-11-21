@@ -1,8 +1,6 @@
 import Contributions
-import D2Rendering
 import DiagramRendering
 import Diagrams
-import DiagramsD2
 import DiagramsGraphviz
 import ExportService
 import Foundation
@@ -14,7 +12,7 @@ import QuickLookSource
 
 private let derivedLogger = Logger(subsystem: "app.mostlytext.quicklook.worker", category: "derived")
 
-/// Selected-source static math, D2, Graphviz and Mermaid. The parent already owns a complete
+/// Selected-source static math, Graphviz and Mermaid. The parent already owns a complete
 /// source fallback; each accepted snapshot is complete before a later renderer runs.
 @MainActor
 enum DerivedMathReply {
@@ -57,58 +55,13 @@ enum DerivedMathReply {
                     }
                 )
             }
-            let completedBeforeD2 = completedMath + graphvizResults
-            let d2Results = await renderD2(
-                document: document, source: source, priorResults: completedBeforeD2,
-                publishDeadline: publishDeadline, onSnapshot: onSnapshot
-            )
             await renderMermaid(
-                document: document, source: source, priorResults: completedBeforeD2 + d2Results,
+                document: document, source: source, priorResults: completedMath + graphvizResults,
                 publishDeadline: publishDeadline, onSnapshot: onSnapshot
             )
         } catch {
             return
         }
-    }
-
-    private static func renderD2(
-        document: MarkdownDocument, source: String, priorResults: [ContributionResult],
-        publishDeadline: Double, onSnapshot: @MainActor (Data) -> Bool
-    ) async -> [ContributionResult] {
-        let fences = D2FenceScanner.scan(document, sourceText: source)
-        guard !fences.isEmpty, ProcessInfo.processInfo.systemUptime < publishDeadline - 0.25 else { return [] }
-        let started = ProcessInfo.processInfo.systemUptime
-        derivedLogger.notice("Static D2 started; reply budget remaining: \(publishDeadline - started)")
-        let renderer = D2WebRenderer(poolSize: 1, timeout: .seconds(2.25))
-        var results: [ContributionResult] = []
-        for fence in fences {
-            guard ProcessInfo.processInfo.systemUptime < publishDeadline - 0.25 else { break }
-            do {
-                let diagram = try await renderer.render(fence, context: .neutralLight)
-                let candidate = ContributionResult(
-                    contributionID: "d2",
-                    content: ContributionContent(
-                        sourceRange: fence.sourceRange, placement: .block,
-                        representation: .html(diagram.svg)
-                    ),
-                    sourceGeneration: 1
-                )
-                let published = publishSnapshot(source: source, results: priorResults + results + [candidate],
-                                                onSnapshot: onSnapshot)
-                let elapsed = ProcessInfo.processInfo.systemUptime - started
-                let remaining = publishDeadline - ProcessInfo.processInfo.systemUptime
-                derivedLogger.notice(
-                    "Static D2 published: \(published), elapsed: \(elapsed), reply budget remaining: \(remaining)"
-                )
-                if published {
-                    results.append(candidate)
-                }
-            } catch {
-                derivedLogger.error("Static D2 unavailable; preserving source: \(String(describing: error))")
-            }
-        }
-        await renderer.shutdown()
-        return results
     }
 
     private static func renderMermaid(
@@ -123,18 +76,15 @@ enum DerivedMathReply {
             guard ProcessInfo.processInfo.systemUptime < publishDeadline - 0.25 else { break }
             do {
                 let diagram = try await renderer.render(fence, context: .neutralLight)
-                let candidate = ContributionResult(
+                results.append(ContributionResult(
                     contributionID: "mermaid",
                     content: ContributionContent(
                         sourceRange: fence.sourceRange, placement: .block,
                         representation: .html(diagram.svg)
                     ),
                     sourceGeneration: 1
-                )
-                if publishSnapshot(source: source, results: priorResults + results + [candidate],
-                                   onSnapshot: onSnapshot) {
-                    results.append(candidate)
-                }
+                ))
+                publishSnapshot(source: source, results: priorResults + results, onSnapshot: onSnapshot)
             } catch {
                 derivedLogger.error("Static Mermaid unavailable; preserving source: \(String(describing: error))")
             }
@@ -142,25 +92,23 @@ enum DerivedMathReply {
         await renderer.shutdown()
     }
 
-    @discardableResult
     private static func publishSnapshot(
         source: String, results: [ContributionResult], onSnapshot: @MainActor (Data) -> Bool
-    ) -> Bool {
+    ) {
         let items = results.compactMap(adapt)
-        guard !items.isEmpty else { return false }
+        guard !items.isEmpty else { return }
         guard let html = QuickLookSourceFallback.renderedReplyHTML(
             forSource: source, contributions: items, sourceGeneration: 1
         ) else {
             derivedLogger.notice("Passive composition refused; previous snapshot retained")
-            return false
+            return
         }
         guard onSnapshot(html) else {
             derivedLogger.notice("Derived reply exceeds publication budget; previous snapshot retained")
-            return false
+            return
         }
         let hasSVG = html.range(of: Data("<svg".utf8)) != nil
         derivedLogger.notice("Derived reply bytes: \(html.count), SVG present: \(hasSVG)")
-        return true
     }
 
     private static func adapt(_ result: ContributionResult) -> ExportDerivedContribution? {

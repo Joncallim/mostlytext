@@ -660,5 +660,22 @@ namespacing correctly refused the fragment to prevent those URLs binding to
 another diagram after composition. The D2 output adapter now removes only
 that exact dormant generated rule form when no sketch class is used. Active
 sketch rules and any unknown unresolved reference keep the existing fallback.
-The full renderer, export ownership and installed Finder paths must be rerun
-on the repaired source before a D2 Quick Look criterion can be checked.
+The repaired [Release renderer and ownership run](https://github.com/Joncallim/mostlytext/actions/runs/44924336445)
+passed all five measured cases, 16 D2 renderer tests and real D2 SVG
+sanitizing, namespacing, composition and pixel comparison. Its saved D2 SVG
+has no unresolved paint reference. The [second Finder run](https://github.com/Joncallim/mostlytext/actions/runs/44924336777)
+still showed source even though one worker logged a 17,350-byte SVG snapshot;
+that snapshot alone did not prove which reply Finder consumed. The instrumented
+[third Finder run](https://github.com/Joncallim/mostlytext/actions/runs/44927075381)
+resolved this for its cold D2 request: D2 started with 2.744 seconds left in
+the child publishing window, did not publish before that window ended, and the
+source process selected 358 fallback bytes after 2.835 seconds. The provider
+received and supplied those same 358 bytes. The separate package renderer
+timing is therefore insufficient to prove cold installed Quick Look timing.
+
+The D2 Quick Look worker/probe activation and temporary tracing are removed
+from this merge candidate. The exact WASM split, contained D2 resource loader
+and dormant-CSS repair remain as independently tested app/Export changes.
+Static D2 in production Quick Look and its broader E23 checkbox remain open;
+the three-second source-process bound is unchanged. Any later attempt needs a
+new latency or architecture result on the installed provider before activation.

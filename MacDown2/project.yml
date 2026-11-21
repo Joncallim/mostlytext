@@ -310,10 +310,6 @@ targets:
       product: Diagrams
     - package: MacDownKit
       product: DiagramRendering
-    - package: MacDownKit
-      product: DiagramsD2
-    - package: MacDownKit
-      product: D2Rendering
     settings:
       base:
         PRODUCT_BUNDLE_IDENTIFIER: app.mostlytext.MostlyText.QuickLook.Worker
