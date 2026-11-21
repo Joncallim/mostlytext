@@ -255,7 +255,10 @@ public enum PreviewSecurity {
     }
 
     private static func isTagNameBoundary(_ character: Character) -> Bool {
-        character == ">" || character == "/" || character.isWhitespace
+        // HTML tokenization recognizes ASCII whitespace here. Swift's broader
+        // `isWhitespace` would accept NBSP and end rawtext before the browser.
+        character == ">" || character == "/" || character == " " || character == "\t"
+            || character == "\n" || character == "\r" || character == "\u{000C}"
     }
 
     private enum ScanState: Equatable {

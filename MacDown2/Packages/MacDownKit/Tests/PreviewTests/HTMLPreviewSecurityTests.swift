@@ -281,6 +281,14 @@ struct HTMLPreviewSecurityTests {
         #expect(out.hasPrefix("<html><head><meta http-equiv=\"Content-Security-Policy\""))
         #expect(out.contains("<plaintext></plaintext><head>inert text"))
     }
+
+    @Test func nonHTMLWhitespaceDoesNotCloseRawtext() {
+        let html = "<html><script>\"</script\u{00A0}><head>\"</script><body>content</body></html>"
+        let out = PreviewSecurity.hardenedHTMLDocument(from: html)
+
+        #expect(out.hasPrefix("<html><head><meta http-equiv=\"Content-Security-Policy\""))
+        #expect(out.contains("<script>\"</script\u{00A0}><head>\"</script>"))
+    }
 }
 
 // MARK: - Response headers (the enforcement boundary)
