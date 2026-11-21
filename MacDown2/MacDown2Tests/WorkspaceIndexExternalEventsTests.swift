@@ -42,6 +42,7 @@ extension WorkspaceIndexRefreshBehaviorTests {
         controller.makeWorkspaceEventSource = { try WorkspaceFileEvents(paths: $0) }
         await controller.setFileTreeRoot(root)
         #expect(controller.workspaceEventPaths == [root.path, external.path])
+        #expect(controller.currentQuickOpenOrigin != nil)
         #expect(await Set(controller.workspaceFileIndex.allPaths().map(\.relativePath)).contains("linked/first.md"))
 
         try Data("second".utf8).write(to: external.appendingPathComponent("second.md"))

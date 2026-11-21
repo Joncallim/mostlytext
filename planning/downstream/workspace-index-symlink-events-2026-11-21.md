@@ -8,8 +8,9 @@ files beneath those links could be indexed without their later changes reaching
 the stream. This change binds the same index walk to its physical watch set.
 
 `DirectoryWalker` returns indexed paths and the distinct external directory
-targets it entered in one result. The window installs one FSEvents stream with
-the selected physical root plus those targets. A changed target causes the
+targets it entered in one result. Both initial folder opening and later
+refreshes install one FSEvents stream with the selected physical root plus
+those targets. A changed target causes the
 same coalesced, bounded rebuild as a root change. When the set of targets
 changes, the window restarts that one stream, makes the prior results inert,
 and scans again under the new coverage before restoring actionable results.
@@ -43,9 +44,10 @@ it does not infer correctness from individual event paths.
   `WorkspaceFileIndexTests`: 29 tests / three suites passed in Debug. These
   include external-target discovery, the watch-root cap and a real multi-path
   FSEvents delivery on disposable folders.
-- Locked `MacDown2` build-for-testing passed after the final app test was
-  added; it compiled app and UI-test bundles without launching MostlyText on
-  the owner desktop.
+- Locked `MacDown2` build-for-testing compiled the app and UI-test bundles
+  without launching MostlyText on the owner desktop. The initial folder-open
+  path was then corrected to use the same monitored rebuild as refresh; the
+  final source needs a fresh hosted app pass.
 - Strict SwiftLint, SwiftFormat, `git diff --check`, ordinary compliance and
   the 68-route plain-string sink audit pass. The reviewed sink ledger changed
   only for two unchanged localized `Untitled` routes shifted by new fields.

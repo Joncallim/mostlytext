@@ -223,15 +223,9 @@ extension WindowController {
         pendingFolderSearchRootGeneration = request
         workspaceIndexBuildGeneration &+= 1
         let build = workspaceIndexBuildGeneration
-        await workspaceFileIndex.rebuild(root: indexRoot)
-        guard !isClosed, workspaceRootRequestGeneration == request,
-              workspaceIndexBuildGeneration == build,
-              fileTreeModel.rootAccessURL == indexRoot
-        else { return }
-        let indexState = await workspaceFileIndex.state
-        guard !isClosed, workspaceRootRequestGeneration == request,
-              workspaceIndexBuildGeneration == build,
-              fileTreeModel.rootAccessURL == indexRoot
+        guard let indexState = await rebuildWorkspaceIndexWithMonitoring(
+            root: indexRoot, request: request, build: build
+        )
         else { return }
         if case .ready = indexState {
             lastWorkspaceIndexRefresh = Date()
