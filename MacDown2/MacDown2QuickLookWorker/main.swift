@@ -10,7 +10,8 @@ private func hasRequiredSandbox() -> Bool {
     guard let task = SecTaskCreateFromSelf(nil) else { return false }
     let sandbox = SecTaskCopyValueForEntitlement(task, "com.apple.security.app-sandbox" as CFString, nil) as? Bool
     let network = SecTaskCopyValueForEntitlement(task, "com.apple.security.network.client" as CFString, nil)
-    return sandbox == true && network == nil
+    // Diagnostic only: the worker and its child must admit the exact permission under test.
+    return sandbox == true && (network as? Bool) == true
 }
 
 private func writeAll(_ descriptor: Int32, bytes: Data) -> Bool {
