@@ -7,6 +7,25 @@ import Foundation
 public enum WorkspaceFileChange: Sendable, Equatable {
     case changed
     case rootChanged
+
+    static func classify(_ flags: UnsafePointer<FSEventStreamEventFlags>, count: Int) -> Self {
+        (0 ..< count).contains {
+            flags[$0] & FSEventStreamEventFlags(kFSEventStreamEventFlagRootChanged) != 0
+        } ? .rootChanged : .changed
+    }
+}
+
+/// The stream keeps only its newest queued delivery. Once a watched root has
+/// moved, later ordinary callbacks must not replace that stronger signal.
+struct WorkspaceChangePriority {
+    private var rootChanged = false
+
+    mutating func merge(_ change: WorkspaceFileChange) -> WorkspaceFileChange {
+        if change == .rootChanged {
+            rootChanged = true
+        }
+        return rootChanged ? .rootChanged : .changed
+    }
 }
 
 public protocol WorkspaceEventSource: Sendable {
@@ -14,7 +33,8 @@ public protocol WorkspaceEventSource: Sendable {
     func cancel()
 }
 
-/// One FSEvents stream per open workspace, regardless of directory count.
+/// One FSEvents stream per open workspace, even when the index follows a
+/// bounded number of symlinked directories outside the physical root.
 /// The stream's C lifetime is confined to its serial queue; cancellation
 /// retains its callback receiver until that queue has stopped the stream.
 public final class WorkspaceFileEvents: @unchecked Sendable, WorkspaceEventSource {
@@ -24,7 +44,12 @@ public final class WorkspaceFileEvents: @unchecked Sendable, WorkspaceEventSourc
     private var state: StreamState?
     private var stopped = false
 
-    public init(path: String) throws {
+    public convenience init(path: String) throws {
+        try self.init(paths: [path])
+    }
+
+    public init(paths: [String]) throws {
+        guard !paths.isEmpty else { throw CocoaError(.fileReadUnknown) }
         let pair = AsyncStream<WorkspaceFileChange>.makeStream(bufferingPolicy: .bufferingNewest(1))
         events = pair.stream
         let receiver = Receiver(continuation: pair.continuation)
@@ -44,11 +69,8 @@ public final class WorkspaceFileEvents: @unchecked Sendable, WorkspaceEventSourc
             nil, { _, info, count, _, flags, _ in
                 guard let info else { return }
                 let receiver = Unmanaged<Receiver>.fromOpaque(info).takeUnretainedValue()
-                let rootChanged = (0 ..< min(count, 1024)).contains {
-                    flags[$0] & FSEventStreamEventFlags(kFSEventStreamEventFlagRootChanged) != 0
-                }
-                receiver.continuation.yield(rootChanged ? .rootChanged : .changed)
-            }, &context, [path] as CFArray, FSEventStreamEventId(kFSEventStreamEventIdSinceNow), 0.1, flags
+                receiver.yield(WorkspaceFileChange.classify(flags, count: count))
+            }, &context, paths as CFArray, FSEventStreamEventId(kFSEventStreamEventIdSinceNow), 0.1, flags
         ) else { throw CocoaError(.fileReadUnknown) }
         FSEventStreamSetDispatchQueue(stream, queue)
         guard FSEventStreamStart(stream) else {
@@ -76,10 +98,20 @@ public final class WorkspaceFileEvents: @unchecked Sendable, WorkspaceEventSourc
         queue.async { closing?.stop() }
     }
 
-    private final class Receiver: Sendable {
+    private final class Receiver: @unchecked Sendable {
         let continuation: AsyncStream<WorkspaceFileChange>.Continuation
+        private let lock = NSLock()
+        private var priority = WorkspaceChangePriority()
+
         init(continuation: AsyncStream<WorkspaceFileChange>.Continuation) {
             self.continuation = continuation
+        }
+
+        func yield(_ change: WorkspaceFileChange) {
+            lock.lock()
+            let delivery = priority.merge(change)
+            lock.unlock()
+            continuation.yield(delivery)
         }
     }
 
