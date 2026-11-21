@@ -1,4 +1,6 @@
 import Contributions
+import DiagramRendering
+import Diagrams
 import DiagramsGraphviz
 import ExportService
 import Foundation
@@ -10,7 +12,7 @@ import QuickLookSource
 
 private let derivedLogger = Logger(subsystem: "app.mostlytext.quicklook.worker", category: "derived")
 
-/// Selected-source static math and Graphviz. The parent already owns a complete
+/// Selected-source static math, Graphviz and Mermaid. The parent already owns a complete
 /// source fallback; each accepted snapshot is complete before a later renderer runs.
 @MainActor
 enum DerivedMathReply {
@@ -44,17 +46,50 @@ enum DerivedMathReply {
                 publishSnapshot(source: source, results: mathResults, onSnapshot: onSnapshot)
             }
             let completedMath = mathResults
+            var graphvizResults: [ContributionResult] = []
             if !GraphvizFenceScanner.scan(document, sourceText: source).isEmpty {
-                _ = QuickLookGraphvizJSC.render(
+                graphvizResults = QuickLookGraphvizJSC.render(
                     document: document, sourceText: source, generation: 1, publishDeadline: publishDeadline,
                     onAccepted: { diagrams in
                         publishSnapshot(source: source, results: completedMath + diagrams, onSnapshot: onSnapshot)
                     }
                 )
             }
+            await renderMermaid(
+                document: document, source: source, priorResults: completedMath + graphvizResults,
+                publishDeadline: publishDeadline, onSnapshot: onSnapshot
+            )
         } catch {
             return
         }
+    }
+
+    private static func renderMermaid(
+        document: MarkdownDocument, source: String, priorResults: [ContributionResult],
+        publishDeadline: Double, onSnapshot: @MainActor (Data) -> Bool
+    ) async {
+        let fences = MermaidFenceScanner.scan(document, sourceText: source)
+        guard !fences.isEmpty, ProcessInfo.processInfo.systemUptime < publishDeadline - 0.25 else { return }
+        let renderer = MermaidWebRenderer(poolSize: 1, timeout: .seconds(2), includeRaster: false)
+        var results: [ContributionResult] = []
+        for fence in fences {
+            guard ProcessInfo.processInfo.systemUptime < publishDeadline - 0.25 else { break }
+            do {
+                let diagram = try await renderer.render(fence, context: .neutralLight)
+                results.append(ContributionResult(
+                    contributionID: "mermaid",
+                    content: ContributionContent(
+                        sourceRange: fence.sourceRange, placement: .block,
+                        representation: .html(diagram.svg)
+                    ),
+                    sourceGeneration: 1
+                ))
+                publishSnapshot(source: source, results: priorResults + results, onSnapshot: onSnapshot)
+            } catch {
+                derivedLogger.error("Static Mermaid unavailable; preserving source: \(String(describing: error))")
+            }
+        }
+        await renderer.shutdown()
     }
 
     private static func publishSnapshot(

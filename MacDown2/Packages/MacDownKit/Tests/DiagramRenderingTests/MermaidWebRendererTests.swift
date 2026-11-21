@@ -98,6 +98,17 @@ struct MermaidWebRendererTests {
         await renderer.shutdown()
     }
 
+    @Test func passiveSVGModeSkipsRasterWithoutChangingTheVectorOutput() async throws {
+        let renderer = MermaidWebRenderer(poolSize: 1, includeRaster: false)
+        let diagram = try await renderer.render(Self.fence("graph TD; A-->B;"), context: Self.context)
+        #expect(diagram.svg.contains("<svg"))
+        #expect(diagram.svg.contains("</svg>"))
+        #expect(diagram.pngData == nil)
+        #expect(diagram.naturalWidth > 0)
+        #expect(diagram.naturalHeight > 0)
+        await renderer.shutdown()
+    }
+
     @Test func renderThrowsInvalidSyntaxForMalformedSource() async throws {
         let renderer = MermaidWebRenderer()
         await #expect(throws: MermaidRenderError.self) {
