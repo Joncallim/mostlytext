@@ -62,6 +62,7 @@ public final class JSONAnalysisSession {
     private var pendingGeneration = 0
     private var lastText = ""
     private var immediateAnalysisCount = 0
+    private var debouncedAnalysisCount = 0
 
     /// `debounce` is injectable so tests run fast; production uses the default.
     public init(debounce: Duration = .milliseconds(150)) {
@@ -100,6 +101,18 @@ public final class JSONAnalysisSession {
             } catch {
                 clearIfCurrent(generation: generation)
                 return
+            }
+            guard !Task.isCancelled else {
+                clearIfCurrent(generation: generation)
+                return
+            }
+            // Cancelling this task cannot stop a synchronous analyzer already
+            // running in a detached worker. Keep its physical work visible
+            // until the awaited result returns, even after a newer request wins.
+            debouncedAnalysisCount += 1
+            defer {
+                debouncedAnalysisCount -= 1
+                refreshAnalyzingState()
             }
             await analyzeAndPublish(text: text, generation: generation)
             clearIfCurrent(generation: generation)
@@ -171,10 +184,10 @@ public final class JSONAnalysisSession {
         refreshAnalyzingState()
     }
 
-    /// Actual immediate workers remain busy until they return, even when their
+    /// Actual workers remain busy until they return, even when their
     /// publication was cancelled or a newer generation already completed.
     private func refreshAnalyzingState() {
-        isAnalyzing = pendingTask != nil || immediateAnalysisCount > 0
+        isAnalyzing = pendingTask != nil || immediateAnalysisCount > 0 || debouncedAnalysisCount > 0
     }
 }
 
@@ -182,17 +195,29 @@ public final class JSONAnalysisSession {
 @MainActor
 public final class JSONAnalysisStore {
     private let debounce: Duration
+    private let analyzeOverride: (@Sendable (String) -> JSONAnalysisResult)?
     private var sessions: [String: JSONAnalysisSession] = [:]
 
     public init(debounce: Duration = .milliseconds(150)) {
         self.debounce = debounce
+        analyzeOverride = nil
+    }
+
+    /// Controlled completion order for store-eviction regressions.
+    init(debounce: Duration, analyze: @escaping @Sendable (String) -> JSONAnalysisResult) {
+        self.debounce = debounce
+        analyzeOverride = analyze
     }
 
     public func session(for identity: String) -> JSONAnalysisSession {
         if let session = sessions[identity] {
             return session
         }
-        let session = JSONAnalysisSession(debounce: debounce)
+        let session = if let analyzeOverride {
+            JSONAnalysisSession(debounce: debounce, analyze: analyzeOverride)
+        } else {
+            JSONAnalysisSession(debounce: debounce)
+        }
         sessions[identity] = session
         return session
     }
@@ -202,10 +227,13 @@ public final class JSONAnalysisStore {
     }
 
     public func evict(_ identity: String) {
-        sessions.removeValue(forKey: identity)
+        sessions.removeValue(forKey: identity)?.cancelPending()
     }
 
     public func evictAll() {
+        for session in sessions.values {
+            session.cancelPending()
+        }
         sessions.removeAll()
     }
 }

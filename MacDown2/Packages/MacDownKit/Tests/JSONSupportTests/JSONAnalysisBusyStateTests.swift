@@ -4,6 +4,74 @@ import Testing
 
 @MainActor
 struct JSONAnalysisBusyStateTests {
+    @Test func supersededDebouncedWorkKeepsTheSessionBusyUntilItDrains() async throws {
+        let gate = HeldJSONAnalysis()
+        defer { gate.open() }
+        let session = JSONAnalysisSession(debounce: .milliseconds(1)) {
+            $0 == "1" ? gate.analyze($0) : JSONAnalyzer.analyze($0)
+        }
+        session.textDidChange("1")
+        try #require(await gate.waitForEntry())
+        session.textDidChange("2")
+
+        let deadline = ContinuousClock.now + .seconds(5)
+        while session.result?.text != "2", ContinuousClock.now < deadline {
+            try await Task.sleep(for: .milliseconds(10))
+        }
+        #expect(session.result?.text == "2")
+        #expect(session.isAnalyzing, "The superseded parser is still consuming a worker")
+
+        gate.open()
+        while session.isAnalyzing, ContinuousClock.now < deadline {
+            try await Task.sleep(for: .milliseconds(10))
+        }
+        #expect(!session.isAnalyzing)
+        #expect(session.result?.text == "2")
+        #expect(!gate.timedOut)
+    }
+
+    @Test func evictingATabCancelsItsHeldDebouncedPublication() async throws {
+        let gate = HeldJSONAnalysis()
+        defer { gate.open() }
+        let store = JSONAnalysisStore(debounce: .milliseconds(1)) { gate.analyze($0) }
+        let session = store.session(for: "tab")
+        session.textDidChange("1")
+        try #require(await gate.waitForEntry())
+
+        store.evict("tab")
+        #expect(store.existingSession(for: "tab") == nil)
+        gate.open()
+        let deadline = ContinuousClock.now + .seconds(5)
+        while session.isAnalyzing, ContinuousClock.now < deadline {
+            try await Task.sleep(for: .milliseconds(10))
+        }
+        #expect(!session.isAnalyzing)
+        #expect(session.result == nil, "An evicted tab must not receive a late analysis")
+        #expect(session.completedAnalysisCount == 0)
+        #expect(!gate.timedOut)
+    }
+
+    @Test func evictingAllTabsCancelsAHeldDebouncedPublication() async throws {
+        let gate = HeldJSONAnalysis()
+        defer { gate.open() }
+        let store = JSONAnalysisStore(debounce: .milliseconds(1)) { gate.analyze($0) }
+        let session = store.session(for: "tab")
+        session.textDidChange("1")
+        try #require(await gate.waitForEntry())
+
+        store.evictAll()
+        #expect(store.existingSession(for: "tab") == nil)
+        gate.open()
+        let deadline = ContinuousClock.now + .seconds(5)
+        while session.isAnalyzing, ContinuousClock.now < deadline {
+            try await Task.sleep(for: .milliseconds(10))
+        }
+        #expect(!session.isAnalyzing)
+        #expect(session.result == nil)
+        #expect(session.completedAnalysisCount == 0)
+        #expect(!gate.timedOut)
+    }
+
     @Test func anOlderCompletionCannotHideANewerImmediateAnalysis() async throws {
         let olderGate = HeldJSONAnalysis()
         let newerGate = HeldJSONAnalysis()
