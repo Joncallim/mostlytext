@@ -5,15 +5,25 @@ import Foundation
 /// while its bytes and destination metadata are prepared. The directory is on
 /// the destination volume, so publication remains a same-volume rename or exchange.
 final class FileStorePrivateStageDirectory {
+    private struct OpenedParent {
+        let url: URL
+        let descriptor: Int32
+        let destinationName: String
+    }
+
     let url: URL
     let parent: Int32
     let directory: Int32
+    let destinationName: String
+    let rooted: Bool
     private let name: String
     private let identity: stat
 
-    init(for destination: URL) throws {
-        let parentURL = destination.deletingLastPathComponent()
-        let parentFD = open(parentURL.path, O_RDONLY | O_DIRECTORY | O_CLOEXEC)
+    init(for destination: URL, root: FileStoreRootAuthority? = nil) throws {
+        let openedParent = try Self.parent(for: destination, root: root)
+        let parentURL = openedParent.url
+        let parentFD = openedParent.descriptor
+        let destinationName = openedParent.destinationName
         guard parentFD >= 0 else { throw Self.posixFailure() }
         var retainParent = false
         defer {
@@ -42,13 +52,7 @@ final class FileStorePrivateStageDirectory {
 
         // A parent ACL can be inherited even when mkdir requests mode 0700.
         // Clear it before placing any authored bytes inside this directory.
-        let emptyACL = acl_init(0)
-        guard let emptyACL else { throw Self.posixFailure() }
-        defer { _ = acl_free(UnsafeMutableRawPointer(emptyACL)) }
-        if acl_set_fd_np(directory, emptyACL, ACL_TYPE_EXTENDED) != 0,
-           errno != ENOTSUP, errno != ENOATTR {
-            throw Self.posixFailure()
-        }
+        try Self.clearInheritedACL(in: directory)
 
         var opened = stat()
         var named = stat()
@@ -61,6 +65,8 @@ final class FileStorePrivateStageDirectory {
         }
         parent = parentFD
         self.directory = directory
+        self.destinationName = destinationName
+        rooted = root != nil
         name = entryName
         url = parentURL.appendingPathComponent(entryName, isDirectory: true)
         identity = opened
@@ -94,5 +100,26 @@ final class FileStorePrivateStageDirectory {
 
     private static func posixFailure() -> POSIXError {
         POSIXError(POSIXErrorCode(rawValue: errno) ?? .EIO)
+    }
+
+    private static func parent(for destination: URL, root: FileStoreRootAuthority?) throws -> OpenedParent {
+        let parentURL = root?.physicalRoot ?? destination.deletingLastPathComponent()
+        let destinationName = try root?.relativePath(of: destination) ?? destination.lastPathComponent
+        let parentFD = if let root {
+            fcntl(root.descriptor, F_DUPFD_CLOEXEC, 0)
+        } else {
+            open(parentURL.path, O_RDONLY | O_DIRECTORY | O_CLOEXEC)
+        }
+        return OpenedParent(url: parentURL, descriptor: parentFD, destinationName: destinationName)
+    }
+
+    private static func clearInheritedACL(in directory: Int32) throws {
+        let emptyACL = acl_init(0)
+        guard let emptyACL else { throw posixFailure() }
+        defer { _ = acl_free(UnsafeMutableRawPointer(emptyACL)) }
+        if acl_set_fd_np(directory, emptyACL, ACL_TYPE_EXTENDED) != 0,
+           errno != ENOTSUP, errno != ENOATTR {
+            throw posixFailure()
+        }
     }
 }

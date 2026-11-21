@@ -157,7 +157,7 @@ struct FolderReplaceModelTests {
                 ))
                 return .truncated(filesSearched: 1, filesSkipped: 0, matchCount: 1)
             },
-            performReplace: { _, _, _, _ in
+            performReplace: { _, _, _, _, _ in
                 await runs.increment()
                 return []
             }
@@ -215,6 +215,8 @@ struct FolderReplaceModelTests {
 
     @Test func changingTheRootCancelsARunningReplaceAndDiscardsItsLateSummary() async throws {
         let gate = ReplaceGate()
+        let oldTree = try TempTree(["a.txt": "x"])
+        let newTree = try TempTree(["a.txt": "x"])
         let model = FolderSearchModel(
             performSearch: { _, _, onMatch in
                 await onMatch(FolderSearchMatch(
@@ -224,13 +226,12 @@ struct FolderReplaceModelTests {
                 ))
                 return .completed(filesSearched: 1, filesSkipped: 0, matchCount: 1)
             },
-            performReplace: { _, plans, _, _ in
+            performReplace: { _, _, plans, _, _ in
                 await gate.enterAndWait()
                 return plans.map { ReplacementFileResult(relativePath: $0.relativePath, outcome: .replaced(count: 1)) }
             }
         )
-        let oldRoot = URL(fileURLWithPath: "/tmp/old-root")
-        model.setRoot(oldRoot)
+        model.setRoot(oldTree.root)
         model.query = "x"
         await waitUntil { model.outcome != nil }
         model.requestReplace()
@@ -238,7 +239,7 @@ struct FolderReplaceModelTests {
         await gate.waitUntilEntered()
         #expect(model.isReplacing)
 
-        model.setRoot(URL(fileURLWithPath: "/tmp/new-root"))
+        model.setRoot(newTree.root)
         await gate.release()
         try await Task.sleep(for: .milliseconds(100))
 
@@ -247,9 +248,9 @@ struct FolderReplaceModelTests {
         #expect(model.replaceTask == nil)
     }
 
-    @Test func settingTheSameRootAgainDoesNotRetireARunningReplace() async {
+    @Test func settingTheSameRootAgainDoesNotRetireARunningReplace() async throws {
         let gate = ReplaceGate()
-        let root = URL(fileURLWithPath: "/tmp/same-root")
+        let tree = try TempTree(["a.txt": "x"])
         let model = FolderSearchModel(
             performSearch: { _, _, onMatch in
                 await onMatch(FolderSearchMatch(
@@ -259,19 +260,19 @@ struct FolderReplaceModelTests {
                 ))
                 return .completed(filesSearched: 1, filesSkipped: 0, matchCount: 1)
             },
-            performReplace: { _, plans, _, _ in
+            performReplace: { _, _, plans, _, _ in
                 await gate.enterAndWait()
                 return plans.map { ReplacementFileResult(relativePath: $0.relativePath, outcome: .replaced(count: 1)) }
             }
         )
-        model.setRoot(root)
+        model.setRoot(tree.root)
         model.query = "x"
         await waitUntil { model.outcome != nil }
         model.requestReplace()
         model.confirmReplace()
         await gate.waitUntilEntered()
 
-        model.setRoot(root)
+        model.setRoot(tree.root)
         #expect(model.isReplacing)
         await gate.release()
         await waitUntil { model.replaceSummary != nil }

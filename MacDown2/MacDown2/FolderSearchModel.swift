@@ -1,3 +1,4 @@
+import FileCore
 import Foundation
 import Observation
 import TextSearch
@@ -60,6 +61,9 @@ final class FolderSearchModel {
     private(set) var isSearching = false
     private(set) var outcome: FolderSearchOutcome?
     private(set) var root: URL?
+    /// Retains the physical folder selected before a search and its replace
+    /// review. A later path reuse cannot silently authorize a different root.
+    @ObservationIgnored private(set) var publicationRoot: FileStoreRootAuthority?
     private(set) var rootUnavailable = false
     /// The folder as the user opened it (a symlink path stays a symlink path),
     /// used to name files that are opened from results so they carry the same
@@ -177,6 +181,7 @@ final class FolderSearchModel {
     func setRoot(_ root: URL?, lexicalRoot: URL? = nil) {
         if root != self.root {
             retireReplaceRun()
+            publicationRoot = root.flatMap { try? FileStoreRootAuthority(root: $0) }
         }
         self.root = root
         rootUnavailable = false
