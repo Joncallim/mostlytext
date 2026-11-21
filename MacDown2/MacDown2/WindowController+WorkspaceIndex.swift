@@ -287,6 +287,7 @@ extension WindowController {
         guard !isClosed, workspaceRootRequestGeneration == request,
               fileTreeModel.rootAccessURL == root else { return }
         if event == .rootChanged || !fileTreeModel.selectedRootIsCurrent {
+            stopWorkspaceEvents()
             retireWorkspaceResults()
         }
         workspaceEventDebounceTask?.cancel()

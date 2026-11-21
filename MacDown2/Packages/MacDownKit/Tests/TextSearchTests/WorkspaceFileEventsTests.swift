@@ -4,6 +4,13 @@ import Testing
 
 @Suite("Recursive workspace events")
 struct WorkspaceFileEventsTests {
+    @Test func aRootMoveSurvivesFollowingOrdinaryEventsInTheBoundedBuffer() {
+        var priority = WorkspaceChangePriority()
+        #expect(priority.merge(.changed) == .changed)
+        #expect(priority.merge(.rootChanged) == .rootChanged)
+        #expect(priority.merge(.changed) == .rootChanged)
+    }
+
     @Test func aNestedFileChangeReachesTheRootStream() async throws {
         let root = FileManager.default.temporaryDirectory
             .appendingPathComponent("workspace-events-\(UUID().uuidString)", isDirectory: true)

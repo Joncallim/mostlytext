@@ -9,6 +9,19 @@ public enum WorkspaceFileChange: Sendable, Equatable {
     case rootChanged
 }
 
+/// The stream keeps only its newest queued delivery. Once a watched root has
+/// moved, later ordinary callbacks must not replace that stronger signal.
+struct WorkspaceChangePriority {
+    private var rootChanged = false
+
+    mutating func merge(_ change: WorkspaceFileChange) -> WorkspaceFileChange {
+        if change == .rootChanged {
+            rootChanged = true
+        }
+        return rootChanged ? .rootChanged : .changed
+    }
+}
+
 public protocol WorkspaceEventSource: Sendable {
     var events: AsyncStream<WorkspaceFileChange> { get }
     func cancel()
@@ -53,7 +66,7 @@ public final class WorkspaceFileEvents: @unchecked Sendable, WorkspaceEventSourc
                 let rootChanged = (0 ..< min(count, 1024)).contains {
                     flags[$0] & FSEventStreamEventFlags(kFSEventStreamEventFlagRootChanged) != 0
                 }
-                receiver.continuation.yield(rootChanged ? .rootChanged : .changed)
+                receiver.yield(rootChanged ? .rootChanged : .changed)
             }, &context, paths as CFArray, FSEventStreamEventId(kFSEventStreamEventIdSinceNow), 0.1, flags
         ) else { throw CocoaError(.fileReadUnknown) }
         FSEventStreamSetDispatchQueue(stream, queue)
@@ -82,10 +95,20 @@ public final class WorkspaceFileEvents: @unchecked Sendable, WorkspaceEventSourc
         queue.async { closing?.stop() }
     }
 
-    private final class Receiver: Sendable {
+    private final class Receiver: @unchecked Sendable {
         let continuation: AsyncStream<WorkspaceFileChange>.Continuation
+        private let lock = NSLock()
+        private var priority = WorkspaceChangePriority()
+
         init(continuation: AsyncStream<WorkspaceFileChange>.Continuation) {
             self.continuation = continuation
+        }
+
+        func yield(_ change: WorkspaceFileChange) {
+            lock.lock()
+            let delivery = priority.merge(change)
+            lock.unlock()
+            continuation.yield(delivery)
         }
     }
 
