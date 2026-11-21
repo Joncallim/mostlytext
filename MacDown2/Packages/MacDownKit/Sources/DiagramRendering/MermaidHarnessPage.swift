@@ -53,7 +53,7 @@ final class MermaidHarnessNavigationCompletion {
 /// - `websiteDataStore = .nonPersistent()`: no cookies/storage survive.
 /// - `loadFileURL(_:allowingReadAccessTo:)` scoped exactly to the bundled
 ///   resource directory: the page can read only its own harness files, not
-///   the wider file system, and has no network access at all.
+///   the wider file system. Network requests are blocked by the harness CSP.
 /// - A `WKNavigationDelegate` that cancels any navigation whose destination
 ///   is not inside that same directory — Mermaid's own rendering call never
 ///   navigates anywhere; this guards against a hypothetical bug or a future

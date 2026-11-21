@@ -66,7 +66,10 @@ jobs:
               'com.apple.security.app-sandbox': True,
               'com.apple.security.files.user-selected.read-only': True,
           }, provider
-          assert worker == {'com.apple.security.app-sandbox': True}, worker
+          assert worker == {
+              'com.apple.security.app-sandbox': True,
+              'com.apple.security.network.client': True,
+          }, worker
           PY
           cp -R .github/quicklook-production-probe "$RUNNER_TEMP/production-quicklook/fixture"
           cd "$RUNNER_TEMP/production-quicklook/fixture"
