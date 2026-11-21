@@ -71,10 +71,11 @@ extension FileStore {
     /// 0600 file. ACL/xattr copying is skipped only when the volume does not
     /// support them (`ENOTSUP`/`ENOATTR`); any other failure is surfaced
     /// rather than silently dropping metadata.
-    func carryMetadata(from destination: URL, to stage: FileStoreStage,
+    func carryMetadata(from _: URL, to stage: FileStoreStage,
                        privateDirectory: FileStorePrivateStageDirectory) throws(FileStoreError) {
-        let source = openat(privateDirectory.parent, destination.lastPathComponent,
-                            O_RDONLY | O_NONBLOCK | O_CLOEXEC | O_NOFOLLOW)
+        let noFollow = privateDirectory.rooted ? O_NOFOLLOW_ANY : O_NOFOLLOW
+        let source = openat(privateDirectory.parent, privateDirectory.destinationName,
+                            O_RDONLY | O_NONBLOCK | O_CLOEXEC | noFollow)
         guard source >= 0 else { throw currentErrnoWriteError() }
         defer { _ = Darwin.close(source) }
         var info = stat()
@@ -129,7 +130,7 @@ extension FileStore {
         // instead of swapping either external version away.
         do {
             guard try stage.matchesOwnedFile(in: privateDirectory.parent,
-                                             name: destinationURL.lastPathComponent) else { return false }
+                                             name: privateDirectory.destinationName) else { return false }
             try hooks?.beforeRollbackSwap?(temporaryURL, destinationURL)
             try renameSwap(privateDirectory, destinationURL)
             // The destination can change after the pre-swap validation. In
@@ -147,7 +148,7 @@ extension FileStore {
 
     private func preserveDisplacedFile(at temporaryURL: URL, for destinationURL: URL,
                                        privateDirectory: FileStorePrivateStageDirectory) -> URL {
-        let recoveryURL = destinationURL.deletingLastPathComponent().appendingPathComponent(
+        let recoveryURL = privateDirectory.url.deletingLastPathComponent().appendingPathComponent(
             Self.companionName(for: destinationURL, infix: "external-recovery")
         )
         if renameatx_np(privateDirectory.directory, "stage", privateDirectory.parent,
@@ -184,9 +185,10 @@ extension FileStore {
 
     /// 0 on success, otherwise the errno of the failed exchange.
     private func attemptRenameSwap(_ privateDirectory: FileStorePrivateStageDirectory,
-                                   _ destination: URL) -> Int32 {
+                                   _: URL) -> Int32 {
+        let flags = UInt32(RENAME_SWAP | (privateDirectory.rooted ? RENAME_NOFOLLOW_ANY : 0))
         let result = renameatx_np(privateDirectory.directory, "stage", privateDirectory.parent,
-                                  destination.lastPathComponent, UInt32(RENAME_SWAP))
+                                  privateDirectory.destinationName, flags)
         return result == 0 ? 0 : errno
     }
 
@@ -209,6 +211,11 @@ extension FileStore {
         _ destinationURL: URL,
         expectedRevision: FileRevision
     ) throws(FileStoreError) {
+        // A path-based fallback cannot preserve the selected-root boundary
+        // atomically. Keep the stage private and refuse this volume instead.
+        if privateDirectory.rooted {
+            throw mapWriteError(POSIXError(.ENOTSUP))
+        }
         let current = try readRevision(from: destinationURL)
         guard matchesExpectedBaseline(current, expectedRevision) else { throw .fileChangedDuringRead }
         let result = renameat(privateDirectory.directory, "stage", privateDirectory.parent,

@@ -60,6 +60,29 @@ struct WorkspaceReplaceSafetyTests {
     }
 
     @Test
+    func aReviewedFileMovedOutsideTheRootBeforePublicationIsNotRewritten() async throws {
+        let tree = try WorkspaceSearchEngineTempTree()
+        try tree.write("dir/a.md", text: "foo original")
+        let results = await searchResults(tree, query: "foo")
+        let child = tree.root.appendingPathComponent("dir", isDirectory: true)
+        let outside = tree.root.deletingLastPathComponent()
+            .appendingPathComponent("moved-\(UUID().uuidString)", isDirectory: true)
+        defer { try? FileManager.default.removeItem(at: outside) }
+        var seams = WorkspaceReplaceEngine.TestSeams()
+        seams.beforeWrite = { _ in
+            try? FileManager.default.moveItem(at: child, to: outside)
+            try? FileManager.default.createSymbolicLink(at: child, withDestinationURL: outside)
+        }
+
+        let outcomes = await WorkspaceReplaceEngine(seams: seams).replace(
+            root: tree.root, plans: plans(results, replacement: "bar")
+        )
+
+        #expect(outcomes.first?.outcome != .replaced(count: 1))
+        #expect(try String(contentsOf: outside.appendingPathComponent("a.md"), encoding: .utf8) == "foo original")
+    }
+
+    @Test
     func symbolicLinkedFilesAreNeverRewrittenThroughTheLink() async throws {
         let tree = try WorkspaceSearchEngineTempTree()
         try tree.write("real.md", text: "foo target")

@@ -4,6 +4,7 @@ import TextSearch
 
 typealias FolderReplaceRunner = @Sendable (
     URL,
+    FileStoreRootAuthority,
     [ReplacementPlan],
     @escaping @Sendable (String) async -> Bool,
     @escaping @Sendable (ReplacementFileResult) async -> Void
@@ -29,8 +30,9 @@ extension FolderSearchModel {
     static func makeReplaceEngine() -> (run: FolderReplaceRunner, preview: FolderReplacePreviewBuilder) {
         let engine = WorkspaceReplaceEngine()
         return (
-            { root, plans, isProtected, onResult in
-                await engine.replace(root: root, plans: plans, isProtected: isProtected, onResult: onResult)
+            { root, publicationRoot, plans, isProtected, onResult in
+                await engine.replace(root: root, publicationRoot: publicationRoot,
+                                     plans: plans, isProtected: isProtected, onResult: onResult)
             },
             { root, plan in await engine.preview(root: root, plan: plan) }
         )
@@ -58,7 +60,8 @@ extension FolderSearchModel {
     }
 
     var canReplace: Bool {
-        guard !isReplacing, !isSearching, root != nil, !includedResults.isEmpty else { return false }
+        guard !isReplacing, !isSearching, root != nil, publicationRoot != nil,
+              !includedResults.isEmpty else { return false }
         if case .completed = outcome {
             return true
         }
@@ -121,7 +124,7 @@ extension FolderSearchModel {
 
     func confirmReplace() {
         isConfirmingReplace = false
-        guard canReplace, let root else { return }
+        guard canReplace, let root, let publicationRoot else { return }
         let plans = includedResults.map { ReplacementPlan($0, replacementText: replacement) }
         isReplacing = true
         replaceSummary = nil
@@ -134,6 +137,7 @@ extension FolderSearchModel {
             guard let self else { return }
             let results = await performReplace(
                 root,
+                publicationRoot,
                 plans,
                 { @MainActor path in hasUnsaved(root.appendingPathComponent(path)) },
                 { @MainActor [weak self] _ in

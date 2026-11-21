@@ -56,15 +56,18 @@ public actor WorkspaceReplaceEngine {
     /// abandoned half-written.
     public func replace(
         root: URL,
+        publicationRoot retainedRoot: FileStoreRootAuthority? = nil,
         plans: [ReplacementPlan],
         isProtected: @escaping @Sendable (String) async -> Bool = { _ in false },
         onResult: @escaping @Sendable (ReplacementFileResult) async -> Void = { _ in }
     ) async -> [ReplacementFileResult] {
         var results: [ReplacementFileResult] = []
         results.reserveCapacity(plans.count)
+        let publicationRoot = retainedRoot ?? (try? FileStoreRootAuthority(root: root))
         for plan in plans {
             await seams.beforeEachFile?()
-            let outcome = await outcome(for: plan, root: root, isProtected: isProtected)
+            let outcome = await outcome(for: plan, root: root,
+                                        publicationRoot: publicationRoot, isProtected: isProtected)
             let result = ReplacementFileResult(relativePath: plan.relativePath, outcome: outcome)
             results.append(result)
             await onResult(result)
@@ -79,6 +82,7 @@ public actor WorkspaceReplaceEngine {
     private func outcome(
         for plan: ReplacementPlan,
         root: URL,
+        publicationRoot: FileStoreRootAuthority?,
         isProtected: @Sendable (String) async -> Bool
     ) async -> ReplacementFileOutcome {
         if Task.isCancelled {
@@ -91,6 +95,7 @@ public actor WorkspaceReplaceEngine {
         return protected ? .skippedOpenDocumentWithUnsavedChanges : await apply(
             plan,
             root: root,
+            publicationRoot: publicationRoot,
             isProtected: isProtected
         )
     }
@@ -115,8 +120,10 @@ public actor WorkspaceReplaceEngine {
     private func apply(
         _ plan: ReplacementPlan,
         root: URL,
+        publicationRoot: FileStoreRootAuthority?,
         isProtected: @Sendable (String) async -> Bool
     ) async -> ReplacementFileOutcome {
+        guard let publicationRoot else { return .skippedUnreadable }
         let snapshot: FileSnapshot
         switch verifiedSnapshot(for: plan, root: root) {
         case let .success(value): snapshot = value
@@ -142,7 +149,8 @@ public actor WorkspaceReplaceEngine {
                 to: url,
                 encoding: snapshot.encoding,
                 bom: snapshot.bom,
-                expectedRevision: snapshot.revision
+                expectedRevision: snapshot.revision,
+                within: publicationRoot
             )
             return .replaced(count: count)
         } catch {

@@ -191,10 +191,14 @@ public struct FileStore: Sendable {
         encoding: String.Encoding = FileStore.defaultEncoding,
         bom: FileBOM = .none,
         expectedRevision: FileRevision? = nil,
-        destinationBaseline: DestinationBaseline? = nil
+        destinationBaseline: DestinationBaseline? = nil,
+        within root: FileStoreRootAuthority? = nil
     ) throws(FileStoreError) -> FileRevision {
         guard url.isFileURL else { throw .invalidURL }
         let (expectedRevision, requireAbsent) = Self.resolveBaseline(expectedRevision, destinationBaseline)
+        // Root-anchored publication is currently only used for a reviewed
+        // existing file. Its displaced revision must be verified after swap.
+        guard root == nil || expectedRevision != nil else { throw .fileChangedDuringRead }
 
         guard let data = encodedData(content, encoding: encoding, bom: bom) else {
             throw .textNotRepresentable(attempted: FileEncodingMetadata(encoding: encoding, bom: bom))
@@ -202,7 +206,8 @@ public struct FileStore: Sendable {
 
         do {
             return try FilePublicationLocks.shared.withLock(for: url.standardizedFileURL) {
-                try writeLocked(to: url, data: data, expectedRevision: expectedRevision, requireAbsent: requireAbsent)
+                try writeLocked(to: url, data: data, expectedRevision: expectedRevision,
+                                requireAbsent: requireAbsent, root: root)
             }
         } catch {
             throw mapWriteError(error)
@@ -220,7 +225,8 @@ public struct FileStore: Sendable {
         to url: URL,
         data: Data,
         expectedRevision: FileRevision?,
-        requireAbsent: Bool = false
+        requireAbsent: Bool = false,
+        root: FileStoreRootAuthority? = nil
     ) throws(FileStoreError) -> FileRevision {
         if let expectedRevision {
             let actual = try readRevision(from: url)
@@ -231,7 +237,7 @@ public struct FileStore: Sendable {
         try requireWritableIfExisting(url)
         let privateDirectory: FileStorePrivateStageDirectory
         do {
-            privateDirectory = try FileStorePrivateStageDirectory(for: url)
+            privateDirectory = try FileStorePrivateStageDirectory(for: url, root: root)
         } catch {
             throw mapWriteError(error)
         }
