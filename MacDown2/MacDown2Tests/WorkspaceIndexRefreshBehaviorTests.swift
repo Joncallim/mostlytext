@@ -18,7 +18,7 @@ struct WorkspaceIndexRefreshBehaviorTests {
         await Set(controller.workspaceFileIndex.allPaths().map(\.relativePath))
     }
 
-    private func tempRoot(_ files: [String]) throws -> URL {
+    func tempRoot(_ files: [String]) throws -> URL {
         let root = FileManager.default.temporaryDirectory
             .appendingPathComponent(UUID().uuidString, isDirectory: true)
         try FileManager.default.createDirectory(at: root, withIntermediateDirectories: true)
@@ -28,7 +28,7 @@ struct WorkspaceIndexRefreshBehaviorTests {
         return root
     }
 
-    private func waitForSearch(
+    func waitForSearch(
         _ model: FolderSearchModel,
         paths expectedPaths: Set<String>,
         outcome expectedOutcome: FolderSearchOutcome? = nil
@@ -89,7 +89,8 @@ struct WorkspaceIndexRefreshBehaviorTests {
         let root = try tempRoot(["a.md"])
         defer { try? FileManager.default.removeItem(at: root) }
         try "needle".write(to: root.appendingPathComponent("a.md"), atomically: true, encoding: .utf8)
-        let fixture = try await makeController(root: root)
+        let events = ManualWorkspaceEvents()
+        let fixture = try await makeController(root: root, eventSource: events)
         defer { fixture.retire() }
         let search = fixture.controller.folderSearchModel
         search.query = "needle"
@@ -97,6 +98,7 @@ struct WorkspaceIndexRefreshBehaviorTests {
 
         fixture.controller.fileTreeModel.tearDown()
 
+        #expect(events.wasCancelled)
         #expect(fixture.controller.fileTreeModel.rootAccessURL == nil)
         #expect(search.root == nil)
         #expect(search.results.isEmpty)
@@ -292,9 +294,10 @@ struct WorkspaceIndexRefreshBehaviorTests {
 }
 
 extension WorkspaceIndexRefreshBehaviorTests {
-    private func makeController(
+    func makeController(
         root: URL,
-        index: WorkspaceFileIndex = WorkspaceFileIndex()
+        index: WorkspaceFileIndex = WorkspaceFileIndex(),
+        eventSource: ManualWorkspaceEvents? = nil
     ) async throws -> ControllerFixture {
         let suiteName = "index-refresh-\(UUID().uuidString)"
         let defaults = try #require(UserDefaults(suiteName: suiteName))
@@ -322,6 +325,7 @@ extension WorkspaceIndexRefreshBehaviorTests {
             fileTreePreferences: preferences,
             workspaceFileIndex: index
         )
+        controller.makeWorkspaceEventSource = { _ in eventSource ?? ManualWorkspaceEvents() }
         coordinator.controllers = [controller]
         await controller.setFileTreeRoot(root)
         return ControllerFixture(

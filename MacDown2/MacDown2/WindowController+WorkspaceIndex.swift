@@ -1,4 +1,5 @@
 import Foundation
+import TextSearch
 
 /// Keeps `workspaceFileIndex` in sync with `fileTreeModel.root` (EPIC-22
 /// §6.15, Slice 6a). Split out of `WindowController.swift` for the same
@@ -16,6 +17,7 @@ extension WindowController {
               workspaceTreeRootAppliedGeneration == request,
               lastWorkspaceIndexRefreshGeneration == request,
               let lexicalRoot = fileTreeModel.root,
+              fileTreeModel.selectedRootIsCurrent,
               let accessRoot = fileTreeModel.rootAccessURL,
               lastWorkspaceIndexRefreshRoot == accessRoot
         else { return nil }
@@ -49,6 +51,14 @@ extension WindowController {
         guard workspaceTreeRootAppliedGeneration == request,
               let root = fileTreeModel.rootAccessURL
         else { return }
+        guard fileTreeModel.selectedRootIsCurrent else {
+            retireWorkspaceResults()
+            return
+        }
+        if workspaceEventRoot != root {
+            stopWorkspaceEvents()
+            startWorkspaceEvents(root: root, request: request)
+        }
         if minInterval > 0, lastWorkspaceIndexRefreshGeneration == request,
            lastWorkspaceIndexRefreshRoot == root,
            let last = lastWorkspaceIndexRefresh, Date().timeIntervalSince(last) < minInterval {
@@ -130,6 +140,7 @@ extension WindowController {
     }
 
     private func beginFileTreeRootRequest() -> UInt {
+        stopWorkspaceEvents()
         workspaceRootRequestGeneration &+= 1
         let request = workspaceRootRequestGeneration
         workspaceTreeRootAppliedGeneration = nil
@@ -155,6 +166,9 @@ extension WindowController {
         await fileTreeModel.setRoot(url, accessURL: accessURL)
         guard !isClosed, workspaceRootRequestGeneration == request else { return }
         workspaceTreeRootAppliedGeneration = request
+        if let root = fileTreeModel.rootAccessURL {
+            startWorkspaceEvents(root: root, request: request)
+        }
         // Closes Quick Open (Slice 6b) if it's open against this window —
         // an independent hostile review of that slice found the panel's
         // own results/selection could otherwise resolve against a folder
@@ -205,5 +219,55 @@ extension WindowController {
         folderSearchModel.setRoot(indexRoot, lexicalRoot: fileTreeModel.root)
         pendingFolderSearchRoot = nil
         pendingFolderSearchRootGeneration = nil
+    }
+
+    func stopWorkspaceEvents() {
+        workspaceEventDebounceTask?.cancel()
+        workspaceEventDebounceTask = nil
+        workspaceEventTask?.cancel()
+        workspaceEventTask = nil
+        workspaceEventSource?.cancel()
+        workspaceEventSource = nil
+        workspaceEventRoot = nil
+    }
+
+    private func startWorkspaceEvents(root: URL, request: UInt) {
+        guard let source = try? makeWorkspaceEventSource(root.path) else {
+            // The key-window refresh remains a fallback when the OS cannot
+            // establish the recursive stream for a selected folder.
+            return
+        }
+        workspaceEventSource = source
+        workspaceEventRoot = root
+        workspaceEventTask = Task { @MainActor [weak self] in
+            for await event in source.events {
+                guard !Task.isCancelled, let self else { return }
+                observedWorkspaceEvent(event, root: root, request: request)
+            }
+        }
+    }
+
+    private func observedWorkspaceEvent(_ event: WorkspaceFileChange, root: URL, request: UInt) {
+        guard !isClosed, workspaceRootRequestGeneration == request,
+              fileTreeModel.rootAccessURL == root else { return }
+        if event == .rootChanged || !fileTreeModel.selectedRootIsCurrent {
+            retireWorkspaceResults()
+        }
+        workspaceEventDebounceTask?.cancel()
+        workspaceEventDebounceTask = Task { @MainActor [weak self] in
+            try? await Task.sleep(for: .milliseconds(250))
+            guard !Task.isCancelled, let self, !isClosed,
+                  workspaceRootRequestGeneration == request,
+                  fileTreeModel.rootAccessURL == root else { return }
+            await refreshWorkspaceIndex()
+        }
+    }
+
+    private func retireWorkspaceResults() {
+        lastWorkspaceIndexRefresh = nil
+        lastWorkspaceIndexRefreshRoot = nil
+        lastWorkspaceIndexRefreshGeneration = nil
+        coordinator?.closeQuickOpenIfOrigin(self)
+        folderSearchModel.rootAccessWasRevoked()
     }
 }

@@ -21,7 +21,7 @@
     "MacDown2/MacDown2/ValidatedExportPanel.swift": "80a277a6cd22ba769f20ca731686dff72fc198150c49c522f0c115344853526a",
     "MacDown2/MacDown2/WindowController+Close.swift": "0af2d94c527de29dc79b6ef109fcd01fbd897322b7edd269dffa40e74dfbc825",
     "MacDown2/MacDown2/WindowController+Encoding.swift": "2ba41bc64d32efed071cfb053f578d94a9d0620cafb34277b985eaf13f609111",
-    "MacDown2/MacDown2/WindowController.swift": "0639326cfa7436117fa3990a4425d06d7862e441e15907400cec995e4bf98947",
+    "MacDown2/MacDown2/WindowController.swift": "55552e9db5d79963c8614c782173223a4a5786ff7fea40362ccd48b344676e50",
     "MacDown2/MacDown2/WindowCoordinator+FileTree.swift": "6566c11681693b5621358ff50c3e920b5bf83a745e82f41ba12a6d258d78aeb6",
     "MacDown2/MacDown2/WindowCoordinator+OpenFailure.swift": "d499c04d606c79f3ae844b211da4cb585bdfabf6de1d8a0f661381a7d0fb3242",
     "MacDown2/MacDown2/WindowCoordinator+OpenWithEncoding.swift": "032de76f1322ca9c960d8376e063ed54ed20e3064d3015f4865af445ee3e1331",
@@ -314,14 +314,14 @@
     },
     {
       "path": "MacDown2/MacDown2/WindowController.swift",
-      "line": 130,
+      "line": 139,
       "kind": "appkit_property",
       "literal": "\"Untitled\"",
       "route": "localized"
     },
     {
       "path": "MacDown2/MacDown2/WindowController.swift",
-      "line": 215,
+      "line": 224,
       "kind": "filename_fallback",
       "literal": "\"Untitled\"",
       "route": "localized"
