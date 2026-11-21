@@ -1,0 +1,35 @@
+[0/1] Planning build
+[1/1] Compiling plugin GenerateManual
+[2/2] Compiling plugin GenerateDoccReference
+Building for production...
+[2/8] Write sources
+[4/8] Write swift-version--58304C5D6DBC2206.txt
+[6/8] Compiling Highlighting BoundedMarkdownCacheRetirement.swift
+[7/9] Compiling HighlightingTests BoundedMarkdownCacheRetirementTests.swift
+[8/10] Compiling MacDownKitPackageTests runner.swift
+[8/10] Write Objects.LinkFileList
+[9/10] Linking MacDownKitPackageTests
+Build complete! (82.19s)
+Test Suite 'Selected tests' started at 2026-11-22 03:32:47.973.
+Test Suite 'MacDownKitPackageTests.xctest' started at 2026-11-22 03:32:47.980.
+Test Suite 'MacDownKitPackageTests.xctest' passed at 2026-11-22 03:32:47.980.
+	 Executed 0 tests, with 0 failures (0 unexpected) in 0.000 (0.000) seconds
+Test Suite 'Selected tests' passed at 2026-11-22 03:32:47.980.
+	 Executed 0 tests, with 0 failures (0 unexpected) in 0.000 (0.007) seconds
+◇ Test run started.
+↳ Testing Library Version: 1902
+↳ Target Platform: arm64e-apple-macos14.0
+◇ Suite MarkdownSectionCacheRichProseTests started.
+◇ Test boundedHeadingAndInlineEditsMatchFullParse() started.
+RICH_PROSE_SELECTION iterations=2000 first_ms=0.397458 elapsed_ms=536.363416
+✘ Test boundedHeadingAndInlineEditsMatchFullParse() recorded an issue at MarkdownSectionCacheRichProseTests.swift:158:13: Expectation failed: (selectionNanoseconds → 536363416) < (300_000_000 → 300000000)
+RICH_PROSE case=begin-word window=23 oldType=section rootChildren=1 newType=section
+RICH_PROSE case=middle-word window=25 oldType=section rootChildren=1 newType=section
+RICH_PROSE case=end-word window=1361 oldType=section rootChildren=1 newType=section
+RICH_PROSE case=begin-delete window=22 oldType=section rootChildren=1 newType=section
+RICH_PROSE case=word-boundary window=26 oldType=section rootChildren=1 newType=section
+RICH_PROSE case=replacement-shrink window=1344 oldType=section rootChildren=1 newType=section
+RICH_PROSE case=replacement-grow window=1361 oldType=section rootChildren=1 newType=section
+✘ Test boundedHeadingAndInlineEditsMatchFullParse() failed after 7.047 seconds with 1 issue.
+✘ Suite MarkdownSectionCacheRichProseTests failed after 7.047 seconds with 1 issue.
+✘ Test run with 1 test in 1 suite failed after 7.048 seconds with 1 issue.

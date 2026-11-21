@@ -90,8 +90,8 @@ struct MarkdownSectionCache {
         let entry = resolvedSection(at: editIndex)
         let node = entry.node
         let localEdit = NSRange(location: edit.location - entry.offset, length: edit.length)
-        if Self.paragraph(in: node, overlapping: localEdit) != nil {
-            guard Self.admitsParagraphEdit(entry: entry, localEdit: localEdit) else { return nil }
+        if let paragraph = Self.paragraph(in: node, overlapping: localEdit) {
+            guard Self.admitsParagraphEdit(entry: entry, localEdit: localEdit, paragraph: paragraph) else { return nil }
         } else {
             guard Self.isBoundedHeadingEdit(entry: entry, edit: edit, source: source) else { return nil }
         }
@@ -235,20 +235,13 @@ struct MarkdownSectionCache {
         }
     }
 
-    private static func paragraph(in node: Node, overlapping edit: NSRange) -> Node? {
-        guard !node.hasError else { return nil }
-        if node.nodeType == "paragraph" {
-            return node
-        }
-        guard node.nodeType == "section" else { return nil }
-        let paragraphs = (0 ..< node.childCount).compactMap { node.child(at: $0) }
-            .filter { $0.nodeType == "paragraph" && NSIntersectionRange($0.range, probe(edit)).length > 0 }
-        return paragraphs.count == 1 ? paragraphs[0] : nil
+    static func admitsParagraphEdit(entry: Section, localEdit: NSRange) -> Bool {
+        guard let paragraph = paragraph(in: entry.node, overlapping: localEdit) else { return false }
+        return admitsParagraphEdit(entry: entry, localEdit: localEdit, paragraph: paragraph)
     }
 
-    static func admitsParagraphEdit(entry: Section, localEdit: NSRange) -> Bool {
-        guard let paragraph = paragraph(in: entry.node, overlapping: localEdit),
-              localEdit.location > paragraph.range.location,
+    private static func admitsParagraphEdit(entry: Section, localEdit: NSRange, paragraph: Node) -> Bool {
+        guard localEdit.location > paragraph.range.location,
               NSMaxRange(localEdit) < NSMaxRange(paragraph.range),
               paragraph.range.length <= windowLimit
         else { return false }

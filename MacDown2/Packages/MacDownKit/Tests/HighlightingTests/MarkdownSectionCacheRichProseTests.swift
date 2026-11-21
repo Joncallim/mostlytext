@@ -135,6 +135,31 @@ struct MarkdownSectionCacheRichProseTests {
         let registry = GrammarRegistry()
         let first = try MarkdownSectionParser.snapshot(source: source, registry: registry)
         var cache = try MarkdownSectionCache(source: source, snapshot: first)
+        let original = source as NSString
+        let firstHeading = original.range(of: "alphaStart")
+        try #require(firstHeading.location != NSNotFound)
+        let selectedEdit = NSRange(location: firstHeading.location + 5, length: 0)
+        let selectedVisible = NSRange(location: firstHeading.location, length: firstHeading.length)
+        let selectionStart = DispatchTime.now().uptimeNanoseconds
+        var firstSelectionNanoseconds: UInt64 = 0
+        for index in 0 ..< 2000 {
+            try #require(cache.select(
+                source: original, edit: selectedEdit, replacement: "X", visible: selectedVisible
+            ) != nil)
+            if index == 0 {
+                firstSelectionNanoseconds = DispatchTime.now().uptimeNanoseconds - selectionStart
+            }
+        }
+        let selectionNanoseconds = DispatchTime.now().uptimeNanoseconds - selectionStart
+        let firstMilliseconds = Double(firstSelectionNanoseconds) / 1_000_000
+        let elapsedMilliseconds = Double(selectionNanoseconds) / 1_000_000
+        print("RICH_PROSE_SELECTION iterations=2000 first_ms=\(firstMilliseconds) " +
+            "elapsed_ms=\(elapsedMilliseconds)")
+        // This limits the synchronous selection loop alone, not the separate
+        // eight-millisecond viewport slice or input-to-visible-paint target.
+        #if !DEBUG
+            #expect(selectionNanoseconds < 300_000_000)
+        #endif
         let edits: [EditCase] = [
             .init(name: "begin-word", anchor: "alphaStart", offset: 5, length: 0, replacement: "X"),
             .init(name: "middle-word", anchor: "alphaMiddle", offset: 5, length: 0, replacement: "Y"),
