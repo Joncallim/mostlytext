@@ -20,7 +20,7 @@ struct DiagramHarnessOfflinePolicyTests {
               const blocked = new Set();
               const timer = setTimeout(() => resolve({ok: false, message: [...blocked].join(',')}), 1500);
               document.addEventListener('securitypolicyviolation', event => {
-                if (event.blockedURI.startsWith('http://127.0.0.1:9/')) {
+                if (event.blockedURI.startsWith('http://127.0.0.1:9')) {
                   blocked.add(event.violatedDirective);
                   if (blocked.has('connect-src') && blocked.has('img-src')) {
                     clearTimeout(timer);
