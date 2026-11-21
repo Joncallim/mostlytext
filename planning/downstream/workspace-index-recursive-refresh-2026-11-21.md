@@ -51,6 +51,10 @@ test exercises the real stream through the production window/index path.
 Other app tests inject controlled events for nested add, active Folder Search
 refresh, event burst coalescing, root switch and root replacement, alongside
 the existing index tests.
+The reviewed plain-string ledger records the unchanged two `Untitled` sinks in
+`WindowController.swift` at their shifted lines and the new file digest;
+its 68 selected routes still have zero unreviewed plain exceptions. Four wider
+localization areas remain deferred exactly as before.
 Compile the app and tests without owner-desktop launch; run the selected app
 tests on an authorized disposable hosted Mac, then the relevant Release and
 whole-app gates before integration. Final signed candidate and protected native
