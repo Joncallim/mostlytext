@@ -4,6 +4,68 @@ import Testing
 
 @MainActor
 struct ParseSessionBusyStateTests {
+    @Test func supersededDebouncedParseKeepsSessionBusyUntilItDrains() async {
+        let engine = GatedParseEngine()
+        let session = MarkdownParseSession(engine: engine, debounce: .milliseconds(1))
+
+        session.textDidChange("first")
+        await engine.waitUntilStarted(1)
+        session.textDidChange("second")
+        await engine.waitUntilStarted(2)
+
+        await engine.release(call: 2)
+        await Fixtures.wait(timeout: .seconds(5)) {
+            await MainActor.run { session.document?.body == "second" }
+        }
+        #expect(session.document?.body == "second")
+        #expect(session.isParsing, "The superseded parser has not returned")
+
+        await engine.release(call: 1)
+        await Fixtures.wait(timeout: .seconds(5)) {
+            await MainActor.run { !session.isParsing }
+        }
+        #expect(!session.isParsing)
+        #expect(session.document?.body == "second")
+    }
+
+    @Test func evictingATabRejectsItsHeldDebouncedParse() async {
+        let engine = GatedParseEngine()
+        let store = MarkdownParseStore(engine: engine, debounce: .milliseconds(1))
+        let session = store.session(for: "tab")
+        session.textDidChange("first")
+        await engine.waitUntilStarted(1)
+
+        store.evict("tab")
+        #expect(store.existingSession(for: "tab") == nil)
+        await engine.release(call: 1)
+        await Fixtures.wait(timeout: .seconds(5)) {
+            await MainActor.run { !session.isParsing }
+        }
+        #expect(!session.isParsing)
+        #expect(session.document == nil)
+        #expect(session.publishedText == nil)
+        #expect(session.completedParseCount == 0)
+    }
+
+    @Test func evictingAllTabsRejectsAHeldDebouncedParse() async {
+        let engine = GatedParseEngine()
+        let store = MarkdownParseStore(engine: engine, debounce: .milliseconds(1))
+        let session = store.session(for: "tab")
+        session.textDidChange("first")
+        await engine.waitUntilStarted(1)
+
+        store.evictAll()
+        #expect(store.existingSession(for: "tab") == nil)
+        await engine.release(call: 1)
+        await Fixtures.wait(timeout: .seconds(5)) {
+            await MainActor.run { !session.isParsing }
+        }
+        #expect(!session.isParsing)
+        #expect(session.document == nil)
+        #expect(session.publishedText == nil)
+        #expect(session.completedParseCount == 0)
+    }
+
     /// An older immediate parse completing while a newer one is still
     /// outstanding must not report the session idle.
     @Test func olderImmediateCompletionKeepsSessionBusyWhileNewerParseIsOutstanding() async {

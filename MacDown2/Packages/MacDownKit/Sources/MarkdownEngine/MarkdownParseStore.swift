@@ -26,10 +26,13 @@ public final class MarkdownParseStore {
     }
 
     public func evict(_ identity: String) {
-        sessions.removeValue(forKey: identity)
+        sessions.removeValue(forKey: identity)?.cancelPending()
     }
 
     public func evictAll() {
+        for session in sessions.values {
+            session.cancelPending()
+        }
         sessions.removeAll()
     }
 }

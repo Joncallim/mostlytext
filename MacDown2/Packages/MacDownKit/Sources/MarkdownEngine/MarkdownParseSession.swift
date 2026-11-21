@@ -32,6 +32,7 @@ public final class MarkdownParseSession {
     private var nextRevision: Int = 1
     private var lastText: String = ""
     private var immediateParseCount = 0
+    private var debouncedParseCount = 0
 
     /// `debounce` is injectable so tests run fast; production uses the default.
     public init(
@@ -70,6 +71,18 @@ public final class MarkdownParseSession {
             } catch {
                 clearIfCurrent(generation: generation)
                 return
+            }
+            guard !Task.isCancelled else {
+                clearIfCurrent(generation: generation)
+                return
+            }
+            // A cancelled request can still be inside an asynchronous engine
+            // that has not returned. Keep that physical work visible even if
+            // a newer parse publishes first.
+            debouncedParseCount += 1
+            defer {
+                debouncedParseCount -= 1
+                refreshParsingState()
             }
             await parse(text: text, revision: revision, generation: generation)
             clearIfCurrent(generation: generation)
@@ -151,11 +164,9 @@ public final class MarkdownParseSession {
         refreshParsingState()
     }
 
-    /// The session is busy exactly while a debounced parse is scheduled or
-    /// any immediate parse has not yet returned. Deriving it from that
-    /// outstanding work (rather than from whichever parse completed last)
-    /// keeps an older completion from reporting idle under a newer parse.
+    /// The session remains busy while scheduled or admitted parse work has not
+    /// returned, including a superseded debounced parse.
     private func refreshParsingState() {
-        isParsing = pendingTask != nil || immediateParseCount > 0
+        isParsing = pendingTask != nil || immediateParseCount > 0 || debouncedParseCount > 0
     }
 }
