@@ -370,6 +370,7 @@ private extension WindowController {
         model.setFolderAssociationWillChange(invalidate)
         fileTreeModel.setRootAccessWillChange { [weak self] in
             invalidate()
+            self?.stopWorkspaceEvents()
             // A vanished or replaced folder scope must retire the old
             // search rows synchronously, before a watcher or root rebuild
             // can leave them actionable against a different folder.

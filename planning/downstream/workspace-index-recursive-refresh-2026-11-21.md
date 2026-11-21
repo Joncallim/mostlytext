@@ -41,8 +41,9 @@ limit for the final F18 disposition.
    same-path replacement cannot revive the old result.
 4. A selected-root rename performed by the app rebinds the stream to the new
    access URL when the existing mutation refresh runs.
-5. Closing the window cancels the stream and debounce before the tree scope is
-   disposed. Failed stream creation leaves the existing activation refresh.
+5. Losing the folder access scope or closing the window cancels the stream and
+   debounce before the tree scope is disposed. Failed stream creation leaves
+   the existing activation refresh.
 
 ## Verification and remaining gates
 

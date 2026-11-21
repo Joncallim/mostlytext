@@ -14,27 +14,6 @@ import Workspace
 @MainActor
 @Suite("Workspace index refresh behavior")
 struct WorkspaceIndexRefreshBehaviorTests {
-    final class ManualWorkspaceEvents: @unchecked Sendable, WorkspaceEventSource {
-        let events: AsyncStream<WorkspaceFileChange>
-        private let continuation: AsyncStream<WorkspaceFileChange>.Continuation
-
-        init() {
-            // Unlike the production coalescing stream, retain every injected
-            // event so a burst test proves the controller combines them.
-            let pair = AsyncStream<WorkspaceFileChange>.makeStream(bufferingPolicy: .unbounded)
-            events = pair.stream
-            continuation = pair.continuation
-        }
-
-        func emit(_ change: WorkspaceFileChange) {
-            continuation.yield(change)
-        }
-
-        func cancel() {
-            continuation.finish()
-        }
-    }
-
     private func paths(_ controller: WindowController) async -> Set<String> {
         await Set(controller.workspaceFileIndex.allPaths().map(\.relativePath))
     }
@@ -110,7 +89,8 @@ struct WorkspaceIndexRefreshBehaviorTests {
         let root = try tempRoot(["a.md"])
         defer { try? FileManager.default.removeItem(at: root) }
         try "needle".write(to: root.appendingPathComponent("a.md"), atomically: true, encoding: .utf8)
-        let fixture = try await makeController(root: root)
+        let events = ManualWorkspaceEvents()
+        let fixture = try await makeController(root: root, eventSource: events)
         defer { fixture.retire() }
         let search = fixture.controller.folderSearchModel
         search.query = "needle"
@@ -118,6 +98,7 @@ struct WorkspaceIndexRefreshBehaviorTests {
 
         fixture.controller.fileTreeModel.tearDown()
 
+        #expect(events.wasCancelled)
         #expect(fixture.controller.fileTreeModel.rootAccessURL == nil)
         #expect(search.root == nil)
         #expect(search.results.isEmpty)

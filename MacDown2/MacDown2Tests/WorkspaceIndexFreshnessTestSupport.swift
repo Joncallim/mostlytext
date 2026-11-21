@@ -4,6 +4,38 @@ import Foundation
 @testable import TextSearch
 import Workspace
 
+final class ManualWorkspaceEvents: @unchecked Sendable, WorkspaceEventSource {
+    let events: AsyncStream<WorkspaceFileChange>
+    private let continuation: AsyncStream<WorkspaceFileChange>.Continuation
+    private let lock = NSLock()
+    private var cancelled = false
+
+    var wasCancelled: Bool {
+        lock.lock()
+        defer { lock.unlock() }
+        return cancelled
+    }
+
+    init() {
+        // Unlike the production coalescing stream, retain every injected
+        // event so a burst test proves the controller combines them.
+        let pair = AsyncStream<WorkspaceFileChange>.makeStream(bufferingPolicy: .unbounded)
+        events = pair.stream
+        continuation = pair.continuation
+    }
+
+    func emit(_ change: WorkspaceFileChange) {
+        continuation.yield(change)
+    }
+
+    func cancel() {
+        lock.lock()
+        cancelled = true
+        lock.unlock()
+        continuation.finish()
+    }
+}
+
 @MainActor
 struct ControllerFixture {
     let controller: WindowController

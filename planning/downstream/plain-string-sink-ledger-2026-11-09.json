@@ -21,7 +21,7 @@
     "MacDown2/MacDown2/ValidatedExportPanel.swift": "80a277a6cd22ba769f20ca731686dff72fc198150c49c522f0c115344853526a",
     "MacDown2/MacDown2/WindowController+Close.swift": "0af2d94c527de29dc79b6ef109fcd01fbd897322b7edd269dffa40e74dfbc825",
     "MacDown2/MacDown2/WindowController+Encoding.swift": "2ba41bc64d32efed071cfb053f578d94a9d0620cafb34277b985eaf13f609111",
-    "MacDown2/MacDown2/WindowController.swift": "56223ccfdd79947435a9c07939f0b8e8e2462bcb545fe8d6225fe0ac7b5c1d56",
+    "MacDown2/MacDown2/WindowController.swift": "55552e9db5d79963c8614c782173223a4a5786ff7fea40362ccd48b344676e50",
     "MacDown2/MacDown2/WindowCoordinator+FileTree.swift": "6566c11681693b5621358ff50c3e920b5bf83a745e82f41ba12a6d258d78aeb6",
     "MacDown2/MacDown2/WindowCoordinator+OpenFailure.swift": "d499c04d606c79f3ae844b211da4cb585bdfabf6de1d8a0f661381a7d0fb3242",
     "MacDown2/MacDown2/WindowCoordinator+OpenWithEncoding.swift": "032de76f1322ca9c960d8376e063ed54ed20e3064d3015f4865af445ee3e1331",
