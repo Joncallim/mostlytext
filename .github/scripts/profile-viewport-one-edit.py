@@ -60,12 +60,12 @@ def main():
     test_log = root / 'time-aligned-test.log'
     timing = {}
     with test_log.open('wb') as log:
-        test = subprocess.Popen(['swift', 'test', '-c', 'release', '--force-resolved-versions',
+        test = subprocess.Popen(['swift', 'test', '-c', 'release', '--skip-build', '--force-resolved-versions',
                                  '--filter', 'ViewportDisplayBudgetBenchmarkTests', '--no-parallel'],
                                 cwd=package, env=env, stdout=log, stderr=subprocess.STDOUT,
                                 start_new_session=True)
         try:
-            await_file(gate / 'ready.json', test, 600)
+            await_file(gate / 'ready.json', test, 180)
             ready = json.loads((gate / 'ready.json').read_text())
             if ready['case'] != 'begin-word' or ready['source_utf8_bytes'] < 1 << 20:
                 raise RuntimeError('wrong mounted source or timed case')

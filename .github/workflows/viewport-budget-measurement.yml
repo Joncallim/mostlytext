@@ -73,6 +73,12 @@ jobs:
             .github/scripts/profile-viewport-one-edit.py \
             .github/workflows/viewport-budget-measurement.yml \
             > "$RUNNER_TEMP/viewport-budget/input-sha256.txt"
+      - name: Compile the locked Release test bundle
+        working-directory: MacDown2/Packages/MacDownKit
+        run: |
+          set -o pipefail
+          swift build --build-tests -c release --force-resolved-versions \
+            2>&1 | tee "$RUNNER_TEMP/viewport-budget/build.log"
       - name: Profile one timed mounted edit after its oracle is ready
         run: python3 .github/scripts/profile-viewport-one-edit.py
       - name: Measure mounted session and public highlighter in Release
