@@ -159,4 +159,16 @@ struct PreviewLinkDefinitionsTests {
 
         #expect(PreviewLinkDefinitions.extract(from: text) == ["[a]: /url", "[b]: /other \"Title\""])
     }
+
+    @Test func definitionsInACROnlyDocumentAreFound() {
+        let text = "[a]: /url\r\r[b]: /other \"Title\"\rtext [a]\r"
+
+        #expect(PreviewLinkDefinitions.extract(from: text) == ["[a]: /url", "[b]: /other \"Title\""])
+    }
+
+    @Test func definitionsInAMixedLineEndingDocumentAreFound() {
+        let text = "[a]: /url\r[b]: /other\n[c]: /third\r\ntext [a]\r"
+
+        #expect(PreviewLinkDefinitions.extract(from: text) == ["[a]: /url", "[b]: /other", "[c]: /third"])
+    }
 }

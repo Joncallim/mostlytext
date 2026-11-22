@@ -263,6 +263,32 @@ struct HTMLPreviewSecurityTests {
         let out = PreviewSecurity.hardenedHTMLDocument(from: html)
         #expect(out.range(of: "<head><meta http-equiv=\"Content-Security-Policy\"") != nil)
     }
+
+    @Test(arguments: ["script", "style", "textarea", "title"])
+    func anUnrelatedRawtextCloseCannotExposeAFakeHead(tag: String) {
+        let other = tag == "script" ? "style" : "script"
+        let html = "<html><\(tag)>\"</\(other)><head>\"</\(tag)><body>content</body></html>"
+        let out = PreviewSecurity.hardenedHTMLDocument(from: html)
+
+        #expect(out.hasPrefix("<html><head><meta http-equiv=\"Content-Security-Policy\""))
+        #expect(out.contains("<\(tag)>\"</\(other)><head>\"</\(tag)>"))
+    }
+
+    @Test func plaintextCannotBeClosedByAuthoredMarkup() {
+        let html = "<html><plaintext></plaintext><head>inert text"
+        let out = PreviewSecurity.hardenedHTMLDocument(from: html)
+
+        #expect(out.hasPrefix("<html><head><meta http-equiv=\"Content-Security-Policy\""))
+        #expect(out.contains("<plaintext></plaintext><head>inert text"))
+    }
+
+    @Test func nonHTMLWhitespaceDoesNotCloseRawtext() {
+        let html = "<html><script>\"</script\u{00A0}><head>\"</script><body>content</body></html>"
+        let out = PreviewSecurity.hardenedHTMLDocument(from: html)
+
+        #expect(out.hasPrefix("<html><head><meta http-equiv=\"Content-Security-Policy\""))
+        #expect(out.contains("<script>\"</script\u{00A0}><head>\"</script>"))
+    }
 }
 
 // MARK: - Response headers (the enforcement boundary)
