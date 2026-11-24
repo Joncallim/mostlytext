@@ -63,7 +63,7 @@ extension CommandDescriptor {
         CommandDescriptor("Folder", .excluded(.menuContainer)),
         CommandDescriptor("Rename", .excluded(.notYetWired)),
         CommandDescriptor("Duplicate", .excluded(.notYetWired)),
-        CommandDescriptor("Move to Trash", .excluded(.notYetWired)),
+        CommandDescriptor("Reveal in Finder", .excluded(.notYetWired)),
         CommandDescriptor("Show Next Tab", .excluded(.notYetWired)),
         CommandDescriptor("Show Previous Tab", .excluded(.notYetWired)),
         CommandDescriptor("Select Tab \\(index)", .excluded(.dynamicItems)),

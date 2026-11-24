@@ -65,7 +65,7 @@ extension SidebarView {
                         Task { await coordinator?.documentWasRenamed(from: old, to: new) }
                     }, didMove: { old, new in
                         Task { await coordinator?.documentWasRenamed(from: old, to: new) }
-                    }, didDelete: { url in coordinator?.documentFileWasDeleted(at: url) }, didCreate: createdItem
+                    }, didCreate: createdItem
                 )
                 .tag(SidebarSelection.file(row.id))
                 // The row remains a discoverable accessibility container,

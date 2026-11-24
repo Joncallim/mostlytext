@@ -173,28 +173,6 @@ public extension FileTreeModel {
         return operationResult(moved, context: context)
     }
 
-    func moveToTrash(
-        _ url: URL,
-        context: FileTreeOperationContext? = nil
-    ) async throws(FileTreeOperationError) -> FileTreeOperationResult {
-        let context = context ?? beginOperation()
-        let source = url.standardizedFileURL
-        try validate(context, members: [source])
-        guard try await itemKind(at: source) != nil else { throw .sourceMissing }
-        let authority = try mutationAuthority(context, members: [source])
-        do { try await mutator.mutate(.trash(source), authority: authority) } catch {
-            throw operationError(error)
-        }
-        guard operationIsCurrent(context) else { return operationResult(source, context: context) }
-        evictSubtree(source)
-        await reload(
-            source.deletingLastPathComponent(),
-            isRoot: source.deletingLastPathComponent() == root,
-            expectedGeneration: generation
-        )
-        return operationResult(source, context: context)
-    }
-
     func itemWasRenamed(from old: URL, to new: URL) {
         let oldKey = old.standardizedFileURL; let newKey = new.standardizedFileURL
         let previousRoot = root

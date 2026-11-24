@@ -150,10 +150,9 @@ struct WorkspaceCommands: Commands {
             .keyboardShortcut("d", modifiers: .command)
             .disabled(coordinator?.keyFolderSelection == nil)
 
-            Button("Move to Trash", role: .destructive) {
-                coordinator?.trashKeyFolderSelection()
+            Button("Reveal in Finder") {
+                coordinator?.revealKeyFolderSelectionInFinder()
             }
-            .keyboardShortcut(.delete, modifiers: .command)
             .disabled(coordinator?.keyFolderSelection == nil)
         }
 

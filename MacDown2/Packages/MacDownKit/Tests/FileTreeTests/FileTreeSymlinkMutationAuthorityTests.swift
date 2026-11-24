@@ -62,9 +62,6 @@ struct FileTreeSymlinkMutationAuthorityTests {
             try await model.duplicate(throughLink)
         }
         await #expect(throws: FileTreeOperationError.outsideCurrentRoot) {
-            try await model.moveToTrash(throughLink)
-        }
-        await #expect(throws: FileTreeOperationError.outsideCurrentRoot) {
             try await model.move(fixture.insideFile, intoDirectory: fixture.link)
         }
         await #expect(throws: FileTreeOperationError.outsideCurrentRoot) {
@@ -231,9 +228,5 @@ private struct RedirectingBeforeMutation: FileSystemMutating {
 
     func copy(from source: URL, to destination: URL) async throws {
         try await base.copy(from: source, to: destination)
-    }
-
-    func trash(at url: URL) async throws {
-        try await base.trash(at: url)
     }
 }
