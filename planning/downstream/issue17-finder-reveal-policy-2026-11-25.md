@@ -10,8 +10,9 @@ in-app Trash operation. Finder owns any later deletion and recovery action.
 
 The Folder menu uses the same wording. Its old Command-Delete binding is gone,
 so that keystroke remains available to text editing. The context-menu action
-and Folder command check that the selected URL is still lexically under the
-current folder root before asking Finder to select it. This is a UI guard, not
+and Folder command check that the selected root still names its original
+directory and that the selected URL is lexically under it before asking Finder
+to select it. This is a UI guard, not
 a claim that Finder receives descriptor-bound authority.
 
 ## Scope and source disposition

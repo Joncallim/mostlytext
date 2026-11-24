@@ -152,7 +152,8 @@ struct FileTreeRowView: View {
                 }
             }
             Button("Reveal in Finder") {
-                guard let root = model.root?.standardizedFileURL,
+                guard model.selectedRootIsCurrent,
+                      let root = model.root?.standardizedFileURL,
                       row.entry.url.standardizedFileURL.pathComponents.starts(with: root.pathComponents)
                 else { return }
                 NSWorkspace.shared.activateFileViewerSelecting([row.entry.url])

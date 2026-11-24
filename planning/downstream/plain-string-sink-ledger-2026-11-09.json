@@ -13,7 +13,7 @@
     "MacDown2/MacDown2/FirstRunWindowController.swift": "b8737772a8974cab6944c2b6c63bd711d35b24d47d99f4179b14085b1ebf4dbf",
     "MacDown2/MacDown2/LegacyImportWindowController.swift": "d39f33bf027f93975ee61088ae362951ff651f32b35f7f99612a10c31763fc9f",
     "MacDown2/MacDown2/NSFilePanelProvider.swift": "4c271f2082313934cb2f9cf51a82407a04e203211dcf2698fa99bdce09184eb8",
-    "MacDown2/MacDown2/SidebarFileTreeSupport.swift": "ae85a0dafbb2e4aee4f78cfa9dcdea58c53b05af8e2b931c05a96cf942889558",
+    "MacDown2/MacDown2/SidebarFileTreeSupport.swift": "9545033163b356ed7def9fd59f9178997a00e6d2447886a9ab2b0c662e4e6d7c",
     "MacDown2/MacDown2/SidebarView+Folder.swift": "d92d80177cf269736f10c0c0ee613c57325b4949ce7cd3a17beeff676b1770ba",
     "MacDown2/MacDown2/TextFilterCommands.swift": "96f125183edbb097e7c97008088590c4c2f20f883a2755e58cb60cba0eb57991",
     "MacDown2/MacDown2/TextFilterCoordinator.swift": "c5de2d59e224e101231a3d02ff0b42790fcabb4b12514c372b2a15a693d6edff",
@@ -22,7 +22,7 @@
     "MacDown2/MacDown2/WindowController+Close.swift": "0af2d94c527de29dc79b6ef109fcd01fbd897322b7edd269dffa40e74dfbc825",
     "MacDown2/MacDown2/WindowController+Encoding.swift": "2ba41bc64d32efed071cfb053f578d94a9d0620cafb34277b985eaf13f609111",
     "MacDown2/MacDown2/WindowController.swift": "737bb902d52ba926d66004b934bf53678637316efa9830d871b7b6313e70d9b0",
-    "MacDown2/MacDown2/WindowCoordinator+FileTree.swift": "f0f1b670f5d566d66dd2f439c35df63bf87da359543ada5ef05cd287893a2dba",
+    "MacDown2/MacDown2/WindowCoordinator+FileTree.swift": "731b765e0784ffd3a435c9d157b6ffe803f15ccb60581c2c57cae544c9c2ee2b",
     "MacDown2/MacDown2/WindowCoordinator+OpenFailure.swift": "d499c04d606c79f3ae844b211da4cb585bdfabf6de1d8a0f661381a7d0fb3242",
     "MacDown2/MacDown2/WindowCoordinator+OpenWithEncoding.swift": "032de76f1322ca9c960d8376e063ed54ed20e3064d3015f4865af445ee3e1331",
     "MacDown2/MacDown2/WindowCoordinator+RevealActiveFile.swift": "c6212d87fbd3a285d198b7951bb0016da4245b9e9bff626c4e66017bf3dded01",
@@ -300,35 +300,35 @@
     },
     {
       "path": "MacDown2/MacDown2/WindowCoordinator+FileTree.swift",
-      "line": 251,
+      "line": 252,
       "kind": "appkit_property",
       "literal": "\"File Moved to Trash\"",
       "route": "localized"
     },
     {
       "path": "MacDown2/MacDown2/WindowCoordinator+FileTree.swift",
-      "line": 252,
+      "line": 253,
       "kind": "appkit_property",
       "literal": "\"This document has unsaved changes.\"",
       "route": "localized"
     },
     {
       "path": "MacDown2/MacDown2/WindowCoordinator+FileTree.swift",
-      "line": 253,
+      "line": 254,
       "kind": "appkit_button",
       "literal": "\"Save As…\"",
       "route": "localized"
     },
     {
       "path": "MacDown2/MacDown2/WindowCoordinator+FileTree.swift",
-      "line": 254,
+      "line": 255,
       "kind": "appkit_button",
       "literal": "\"Close Without Saving\"",
       "route": "localized"
     },
     {
       "path": "MacDown2/MacDown2/WindowCoordinator+FileTree.swift",
-      "line": 255,
+      "line": 256,
       "kind": "appkit_button",
       "literal": "\"Keep Open\"",
       "route": "localized"

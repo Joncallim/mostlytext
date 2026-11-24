@@ -77,6 +77,7 @@ extension WindowCoordinator {
     func revealKeyFolderSelectionInFinder() {
         guard let controller = keyFolderCommandController(),
               let selected = controller.fileTreeModel.selectedURL,
+              controller.fileTreeModel.selectedRootIsCurrent,
               let root = controller.fileTreeModel.root?.standardizedFileURL,
               selected.standardizedFileURL.pathComponents.starts(with: root.pathComponents)
         else { return }
