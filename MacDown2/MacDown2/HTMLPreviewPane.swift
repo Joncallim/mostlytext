@@ -18,6 +18,7 @@ struct HTMLPreviewPane: View {
     let text: String
 
     @Environment(\.windowCoordinator) private var coordinator
+    @Environment(\.locale) private var locale
 
     /// The pane's display mode: the per-tab choice when present, otherwise the
     /// format's default. HTML supports `.source` and `.rendered`.
@@ -51,7 +52,7 @@ struct HTMLPreviewPane: View {
     private var modePicker: some View {
         Picker("Preview Mode", selection: modeBinding) {
             ForEach(document.format.supportedPreviewModes, id: \.self) { mode in
-                Text(verbatim: modeLabel(mode)).tag(mode)
+                Text(verbatim: Self.modeLabel(mode, locale: locale)).tag(mode)
             }
         }
         .pickerStyle(.segmented)
@@ -70,11 +71,11 @@ struct HTMLPreviewPane: View {
         )
     }
 
-    private func modeLabel(_ mode: PreviewMode) -> String {
+    static func modeLabel(_ mode: PreviewMode, locale: Locale, bundle: Bundle = .main) -> String {
         switch mode {
-        case .source: String(localized: "Source")
-        case .rendered: String(localized: "Rendered")
-        case .outline: String(localized: "Outline")
+        case .source: String(localized: "Source", bundle: bundle, locale: locale)
+        case .rendered: String(localized: "Rendered", bundle: bundle, locale: locale)
+        case .outline: String(localized: "Outline", bundle: bundle, locale: locale)
         }
     }
 }

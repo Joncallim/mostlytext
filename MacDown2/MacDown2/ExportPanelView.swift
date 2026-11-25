@@ -13,11 +13,11 @@ enum ExportFormatOption: String, CaseIterable, Identifiable {
         rawValue
     }
 
-    var title: String {
+    func title(locale: Locale, bundle: Bundle = .main) -> String {
         switch self {
-        case .standaloneHTML: String(localized: "HTML")
-        case .selfContainedHTML: String(localized: "Self-contained HTML")
-        case .pdf: String(localized: "PDF")
+        case .standaloneHTML: String(localized: "HTML", bundle: bundle, locale: locale)
+        case .selfContainedHTML: String(localized: "Self-contained HTML", bundle: bundle, locale: locale)
+        case .pdf: String(localized: "PDF", bundle: bundle, locale: locale)
         }
     }
 
@@ -38,12 +38,15 @@ enum ExportFormatOption: String, CaseIterable, Identifiable {
     /// switching format replaces the extension instead of appending to it.
     static let knownExtensions = ["html", "htm", "pdf"]
 
-    var explanation: String? {
+    func explanation(locale: Locale, bundle: Bundle = .main) -> String? {
         switch self {
         case .standaloneHTML: nil
         case .selfContainedHTML:
-            String(localized: "Embeds the stylesheet and every image into one file that opens anywhere.")
-        case .pdf: String(localized: "Embeds every image and prints through the macOS render system.")
+            String(localized: "Embeds the stylesheet and every image into one file that opens anywhere.",
+                   bundle: bundle, locale: locale)
+        case .pdf:
+            String(localized: "Embeds every image and prints through the macOS render system.",
+                   bundle: bundle, locale: locale)
         }
     }
 }
@@ -66,6 +69,7 @@ final class ExportSelectionModel {
 /// hosted as the `NSSavePanel` accessory view, matching the legacy MacDown
 /// export panel accessory without importing any of its Objective-C.
 struct ExportPanelView: View {
+    @Environment(\.locale) private var locale
     @Bindable var model: ExportSelectionModel
     var allowsLinkedStyle = true
     /// Called when the format changes so the save panel's filename extension and
@@ -76,7 +80,7 @@ struct ExportPanelView: View {
         VStack(alignment: .leading, spacing: 12) {
             Picker("Format", selection: $model.format) {
                 ForEach(ExportFormatOption.allCases) { option in
-                    Text(verbatim: option.title).tag(option)
+                    Text(verbatim: option.title(locale: locale)).tag(option)
                 }
             }
             .pickerStyle(.segmented)
@@ -90,7 +94,7 @@ struct ExportPanelView: View {
                 }
                 .pickerStyle(.radioGroup)
                 .accessibilityLabel("Stylesheet delivery")
-            } else if let explanation = model.format.explanation {
+            } else if let explanation = model.format.explanation(locale: locale) {
                 Text(verbatim: explanation)
                     .font(.caption)
                     .foregroundStyle(.secondary)

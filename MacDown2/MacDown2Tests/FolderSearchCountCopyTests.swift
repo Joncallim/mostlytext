@@ -94,6 +94,7 @@ struct FolderSearchCountCopyTests {
         }
     }
 
+    @MainActor
     @Test func dynamicSearchCopyUsesThePresentedLocaleAndPreservesAuthoredFailures() throws {
         let root = FileManager.default.temporaryDirectory
             .appendingPathComponent("mostlytext-search-copy-\(UUID().uuidString)")
