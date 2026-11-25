@@ -103,6 +103,22 @@ struct MermaidExportRegistryTests {
         #expect(!prepared.bodyHTML.contains("fetch("))
     }
 
+    @Test func aWideVectorDiagramStillExportsWhenPreviewCannotRasterizeIt() async throws {
+        let source = "graph LR\n" + (0 ..< 64).map { "n\($0) --> n\($0 + 1)" }.joined(separator: "\n")
+        let text = "```mermaid\n\(source)\n```\n"
+        let parsed = try await ParseEngine().parse(text, revision: 0)
+        let registry = ContributionRegistry.standardForExport(theme: BundledThemes.light, isPrintTarget: false)
+        let results = try await registry.run(document: parsed, sourceText: text, sourceGeneration: 1)
+        let result = try #require(results.first)
+        #expect(result.diagnostics.isEmpty)
+        guard case let .html(svg) = result.content?.representation else {
+            Issue.record("expected vector diagram contribution")
+            return
+        }
+        #expect(svg.contains("<svg"))
+        #expect(!svg.contains("data:image/png"))
+    }
+
     /// A malformed diagram must not corrupt the exported document — the
     /// authored fence text is preserved and an error diagnostic is
     /// recorded, matching every other failed-contribution behavior

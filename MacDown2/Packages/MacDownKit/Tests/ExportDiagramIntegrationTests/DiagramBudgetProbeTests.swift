@@ -101,33 +101,29 @@
         @Test func measureMermaid() async throws {
             let directory = try verifyHost()
             let renderer = MermaidWebRenderer()
-            func source(_ edges: Int) -> String {
-                "graph TD\n" + (0 ..< edges).map {
-                    let child = $0 % 15 + 1
-                    return "n\((child - 1) / 2) --> n\(child)"
-                }.joined(separator: "\n")
-            }
             let ordinary = await measure(source: "graph TD; A-->B;") { text in
                 try await (renderer.render(MermaidFence(source: text, sourceRange: 0 ..< text.utf16.count),
                                            context: .neutralLight)).svg
             }
-            let stress = await measure(source: source(15)) { text in
+            let stress = await measure(source: mermaidDenseSource(edges: 15)) { text in
                 try await (renderer.render(MermaidFence(source: text, sourceRange: 0 ..< text.utf16.count),
                                            context: .neutralLight)).svg
             }
-            let dense = await measure(source: source(128)) { text in
+            let dense = await measure(source: mermaidDenseSource(edges: 128)) { text in
                 try await (renderer.render(MermaidFence(source: text, sourceRange: 0 ..< text.utf16.count),
                                            context: .neutralLight)).svg
             }
-            let wide = await measure(source: "graph LR\n" + (0 ..< 64).map {
+            let wideSource = "graph LR\n" + (0 ..< 64).map {
                 "n\($0) --> n\($0 + 1)"
-            }.joined(separator: "\n")) { text in
+            }.joined(separator: "\n")
+            let tallSource = "graph TD\n" + (0 ..< 64).map {
+                "n\($0) --> n\($0 + 1)"
+            }.joined(separator: "\n")
+            let wide = await measure(source: wideSource) { text in
                 try await (renderer.render(MermaidFence(source: text, sourceRange: 0 ..< text.utf16.count),
                                            context: .neutralLight)).svg
             }
-            let tall = await measure(source: "graph TD\n" + (0 ..< 64).map {
-                "n\($0) --> n\($0 + 1)"
-            }.joined(separator: "\n")) { text in
+            let tall = await measure(source: tallSource) { text in
                 try await (renderer.render(MermaidFence(source: text, sourceRange: 0 ..< text.utf16.count),
                                            context: .neutralLight)).svg
             }
@@ -136,12 +132,18 @@
                                            context: .neutralLight)).svg
             }
             await renderer.shutdown()
+            let vectorOnly = await mermaidVectorOnlyCases(wide: wideSource, tall: tallSource)
             var additional = ["wide": wide, "tall": tall, "sourceOverLimit": oversized]
+            additional.merge(vectorOnly) { _, latest in latest }
             let limits = await mermaidLimits()
             additional.merge(limits) { _, latest in latest }
             try write("mermaid", ordinary: ordinary, stress: stress, dense: dense,
                       additional: additional, to: directory)
             #expect(ordinary["outcome"] as? String == "rendered")
+            #expect(wide["outcome"] as? String == "rendered")
+            #expect(tall["outcome"] as? String == "rendered")
+            #expect(vectorOnly["vectorOnlyWide"]?["outcome"] as? String == "rendered")
+            #expect(vectorOnly["vectorOnlyTall"]?["outcome"] as? String == "rendered")
             #expect((oversized["error"] as? String)?.contains("sourceTooLarge") == true)
         }
 
@@ -264,6 +266,27 @@
     }
 
     private extension DiagramBudgetProbeTests {
+        func mermaidDenseSource(edges: Int) -> String {
+            "graph TD\n" + (0 ..< edges).map {
+                let child = $0 % 15 + 1
+                return "n\((child - 1) / 2) --> n\(child)"
+            }.joined(separator: "\n")
+        }
+
+        func mermaidVectorOnlyCases(wide: String, tall: String) async -> [String: [String: Any]] {
+            let renderer = MermaidWebRenderer(poolSize: 1, includeRaster: false)
+            let wideResult = await measure(source: wide) { text in
+                try await (renderer.render(MermaidFence(source: text, sourceRange: 0 ..< text.utf16.count),
+                                           context: .neutralLight)).svg
+            }
+            let tallResult = await measure(source: tall) { text in
+                try await (renderer.render(MermaidFence(source: text, sourceRange: 0 ..< text.utf16.count),
+                                           context: .neutralLight)).svg
+            }
+            await renderer.shutdown()
+            return ["vectorOnlyWide": wideResult, "vectorOnlyTall": tallResult]
+        }
+
         func mermaidLimits() async -> [String: [String: Any]] {
             let outputBounded = MermaidWebRenderer(poolSize: 1, maxOutputBytes: 128)
             let outputLimit = await measure(source: "graph TD; A-->B;") { text in

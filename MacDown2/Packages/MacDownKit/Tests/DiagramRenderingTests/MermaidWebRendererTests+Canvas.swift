@@ -8,6 +8,24 @@ import Testing
 /// Canvas rasterization and pie-palette cases of the `MermaidWebRenderer`
 /// suite, kept in an extension so the suite stays one Swift Testing suite.
 extension MermaidWebRendererTests {
+    @Test func wideAndTallDiagramsKeepVectorWhenPreviewRasterExceedsItsBudget() async throws {
+        let renderer = MermaidWebRenderer(poolSize: 1)
+        for direction in ["LR", "TD"] {
+            let source = "graph \(direction)\n" + (0 ..< 64).map {
+                "n\($0) --> n\($0 + 1)"
+            }.joined(separator: "\n")
+            do {
+                let diagram = try await renderer.render(Self.fence(source), context: .neutralLight)
+                #expect(diagram.svg.contains("<svg"))
+                #expect(diagram.pngData == nil)
+            } catch {
+                await renderer.shutdown()
+                throw error
+            }
+        }
+        await renderer.shutdown()
+    }
+
     @Test func explicitNodeColorsRemainAuthored() async throws {
         let renderer = MermaidWebRenderer()
         let source = "graph TD; A-->B; style A fill:#123456,stroke:#ABCDEF;"
@@ -79,6 +97,19 @@ extension MermaidWebRendererTests {
             _ = try await page.inspectSVGCanvasForTesting(
                 #"<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1e308 1"/>"#
             )
+        }
+    }
+
+    @Test @MainActor func vectorViewportHasItsOwnBoundIndependentOfRasterPixels() async throws {
+        let page = try await MermaidHarnessPage.make()
+        defer { page.teardown() }
+        let admitted = try await page.inspectVectorSizeForTesting(width: 65536, height: 1024)
+        #expect((admitted["width"] as? NSNumber)?.intValue == 65536)
+        #expect((admitted["height"] as? NSNumber)?.intValue == 1024)
+        for (width, height) in [(65536.1, 1000.0), (65536.0, 1024.1), (1e308, 1.0)] {
+            await #expect(throws: Error.self) {
+                _ = try await page.inspectVectorSizeForTesting(width: width, height: height)
+            }
         }
     }
 

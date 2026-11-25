@@ -100,13 +100,13 @@ public actor MermaidWebRenderer: MermaidDiagramRendering {
         }
     }
 
-    /// A completed SVG can exceed the bounded preview raster dimensions.
-    /// That is a renderer capacity refusal, not a Mermaid parse diagnostic.
+    /// Viewport capacity refusals are not Mermaid parse diagnostics.
     static func failure(for message: String?) -> MermaidRenderError {
         guard let message, !message.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty else {
             return .rendererUnavailable
         }
-        return message == "diagram exceeds raster pixel limit" ? .rendererUnavailable : .invalidSyntax(message)
+        return ["diagram exceeds raster pixel limit", "diagram exceeds vector viewport limit"].contains(message)
+            ? .rendererUnavailable : .invalidSyntax(message)
     }
 
     /// Closes admission to the current generation and waits for its pages

@@ -607,6 +607,39 @@ the previous policy and passes with the narrower one. Qualification must also
 exercise the real WebKit renderer paths and remote-request denial; a pure
 predicate test alone does not prove the page still loads.
 
+## Mermaid vector output beyond the preview raster budget
+
+**Owner summary.** Wide and tall Mermaid diagrams can have a safe, bounded SVG
+even when their two-times-scale preview image exceeds the existing canvas
+pixel limit. Keep the raster limit for native Preview, but retain the vetted
+SVG for Export and static Quick Look instead of treating the whole diagram as
+unrenderable. Preview keeps its existing explicit no-image state when no PNG
+can be produced; authored source remains available.
+
+At current main `0d6127c8`, the [Release diagram receipt](https://github.com/Joncallim/mostlytext/actions/runs/45607937069)
+records 64-edge wide and tall Mermaid cases as `rendererUnavailable` after
+0.123 and 0.118 seconds, while a 128-edge denser graph rendered and stayed
+under the two-megabyte SVG limit. `render.js` applies `checkedRasterSize` even
+when its caller sets `includeRaster=false`, and turns a raster pixel refusal
+into failure of the already-produced SVG. A real renderer regression and an
+expanded Release probe must first reproduce this boundary; the correction
+must not raise the existing 4,096-pixel side/8-Mpixel raster ceiling, source
+admission, SVG/PNG output byte cap or execution deadline.
+
+The bundled harness validates finite positive vector dimensions with a
+separate provisional 65,536-unit side and 64-million-square-unit viewport
+bound before returning SVG. This bounds display coordinates; it is not a
+per-request memory cap. It catches only the known
+raster-pixel-cap refusal after successful SVG generation and returns the SVG
+without PNG. Other parser, layout, WebKit and raster errors keep their existing
+failure/fallback behavior. The shared result/cache remain one render for
+Preview and Export; the nil-PNG Preview path already presents an explicit
+failure, while Export can use the vector. Static Quick Look requests vector
+only and should no longer consume a PNG-specific budget. Measure and record
+the resulting wide/tall dimensions, cold/warm cost and retained memory in
+hosted Release; preserve any remaining D2/Graphviz and installed-Finder
+failures. This change alone is not the complete E23 memory/timeout calibration.
+
 ## D2 static Quick Look resource feasibility — bounded architecture revision
 
 At `main` `2f349bd6`, the existing D2 Preview/Export renderer embeds a
