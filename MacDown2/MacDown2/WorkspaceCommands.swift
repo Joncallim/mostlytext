@@ -12,6 +12,7 @@ struct WorkspaceCommands: Commands {
     // used once a type's own body grows past its line-count limit.
     @Environment(\.windowCoordinator) var coordinator
     @Environment(\.appSettings) private var appSettings
+    @Environment(\.locale) var locale
     @FocusedValue(\.previewLayout) private var previewLayout
     @FocusedValue(\.licenseFindAction) private var licenseFindAction
     private let themeController: ThemeController
@@ -241,23 +242,25 @@ struct WorkspaceCommands: Commands {
 
                 Section("Light") {
                     ForEach(lightThemes) { theme in
-                        Button(
-                            action: { themeController.select(theme) },
-                            label: {
-                                Text(verbatim: ThemePickerDisplayName.menuName(for: theme, selectedID: active.id))
-                            }
-                        )
+                        Button {
+                            themeController.select(theme)
+                        } label: {
+                            Text(verbatim: ThemePickerDisplayName.menuName(
+                                for: theme, selectedID: active.id, locale: locale
+                            ))
+                        }
                     }
                 }
 
                 Section("Dark") {
                     ForEach(darkThemes) { theme in
-                        Button(
-                            action: { themeController.select(theme) },
-                            label: {
-                                Text(verbatim: ThemePickerDisplayName.menuName(for: theme, selectedID: active.id))
-                            }
-                        )
+                        Button {
+                            themeController.select(theme)
+                        } label: {
+                            Text(verbatim: ThemePickerDisplayName.menuName(
+                                for: theme, selectedID: active.id, locale: locale
+                            ))
+                        }
                     }
                 }
             }

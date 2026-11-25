@@ -8,7 +8,7 @@ extension WorkspaceCommands {
     var convertLineEndingsMenu: some View {
         Menu("Convert Line Endings") {
             ForEach(LineEndingChoice.allCases) { choice in
-                Button(choice.menuTitle) {
+                Button(choice.menuTitle(locale: locale)) {
                     coordinator?.convertKeyDocumentLineEndings(to: choice.ending)
                 }
                 .disabled(coordinator?.canConvertLineEndings != true)
@@ -36,10 +36,15 @@ enum LineEndingChoice: CaseIterable, Identifiable {
     }
 
     var menuTitle: String {
-        switch self {
-        case .lineFeed: String(localized: "LF (Unix, macOS)")
-        case .crlf: String(localized: "CRLF (Windows)")
-        case .carriageReturn: String(localized: "CR (Classic Mac OS)")
+        menuTitle(locale: .current)
+    }
+
+    func menuTitle(locale: Locale, bundle: Bundle = .main) -> String {
+        let bundle = ViewLocalizationBundle.resolve(locale: locale, in: bundle)
+        return switch self {
+        case .lineFeed: String(localized: "LF (Unix, macOS)", bundle: bundle, locale: locale)
+        case .crlf: String(localized: "CRLF (Windows)", bundle: bundle, locale: locale)
+        case .carriageReturn: String(localized: "CR (Classic Mac OS)", bundle: bundle, locale: locale)
         }
     }
 

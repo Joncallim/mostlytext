@@ -1,7 +1,7 @@
 {
   "schema": 1,
   "scope": "selected_plain_string_sinks",
-  "base_source_commit": "d8d9bdc63d16fae2d4ded1ae1760c01aeb9e1477 (PR #344 merged; multilingual view-locale correction branch)",
+  "base_source_commit": "415018ef2843cda435f1f2fc14cd7709172afc1c (PR #345 merged; status, outline and theme view-locale branch)",
   "limitations": [
     "Selected AppKit property/button/accessibility, name fallback, folder and workspace-replace error sites only; this is not the complete E16 literal census.",
     "Computed string flows, SwiftUI implicit keys, Info.plist/project.yml OS labels, built-in snippet and format names require separate policy and native audit.",
@@ -14,7 +14,7 @@
     "MacDown2/MacDown2/LegacyImportWindowController.swift": "d39f33bf027f93975ee61088ae362951ff651f32b35f7f99612a10c31763fc9f",
     "MacDown2/MacDown2/NSFilePanelProvider.swift": "4c271f2082313934cb2f9cf51a82407a04e203211dcf2698fa99bdce09184eb8",
     "MacDown2/MacDown2/SidebarFileTreeSupport.swift": "9545033163b356ed7def9fd59f9178997a00e6d2447886a9ab2b0c662e4e6d7c",
-    "MacDown2/MacDown2/SidebarView+Folder.swift": "d92d80177cf269736f10c0c0ee613c57325b4949ce7cd3a17beeff676b1770ba",
+    "MacDown2/MacDown2/SidebarView+Folder.swift": "66e9979c553701a92f2d0bb00fa37e46fd6781e44793bd6bfcfb2a407883534a",
     "MacDown2/MacDown2/TextFilterCommands.swift": "cb5766a60b190f486d73581c454871a7c365cf9524d772e9d09da71bc15d0bca",
     "MacDown2/MacDown2/TextFilterCoordinator.swift": "c5de2d59e224e101231a3d02ff0b42790fcabb4b12514c372b2a15a693d6edff",
     "MacDown2/MacDown2/ThemeExportDocument.swift": "6384ff057496e0c505f04c70bbb5ef77d4bdada0ede2ebd4e7ab9afecec553c4",
@@ -104,7 +104,7 @@
     },
     {
       "path": "MacDown2/MacDown2/SidebarView+Folder.swift",
-      "line": 149,
+      "line": 153,
       "kind": "folder_error",
       "literal": "\"Untrusted folder move.\"",
       "route": "localized"

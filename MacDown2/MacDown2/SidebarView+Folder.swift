@@ -103,8 +103,12 @@ extension SidebarView {
 
     private var folderRootHeader: some View {
         HStack {
-            Label(fileTreeModel.root?.lastPathComponent ?? String(localized: "Folder"), systemImage: "folder")
-                .lineLimit(1)
+            Label {
+                Text(verbatim: fileTreeModel.root?.lastPathComponent ?? SidebarSection.folder.title(locale: locale))
+            } icon: {
+                Image(systemName: "folder")
+            }
+            .lineLimit(1)
             Spacer()
             if let root = fileTreeModel.root {
                 Menu {
