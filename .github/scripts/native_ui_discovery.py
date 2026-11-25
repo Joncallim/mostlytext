@@ -66,7 +66,10 @@ def selected_batch(root, batch):
     if hashlib.sha256(raw).hexdigest() != DISCOVERY_SHA256:
         raise ValueError('Actual calibration bytes changed')
     manifest = json.loads((root / 'planning/downstream/native-ui-required-cases.json').read_text())
-    ids = observed_ui_ids(raw, [row['id'] for row in manifest['cases']])
+    # The dated SDK receipt and batch plan describe the original methods. Keep
+    # that calibration intact when a reviewed product-policy change replaces a
+    # method in current source; execute the traceable current method instead.
+    ids = observed_ui_ids(raw, manifest['originalRequiredIDs'])
     groups = plan['batches']
     if not isinstance(groups, list) or len(groups) != 10:
         raise ValueError('Expected ten fixed bounded batches')
@@ -76,6 +79,13 @@ def selected_batch(root, batch):
     matching = [row for row in groups if row['id'] == batch]
     if len(matching) != 1:
         raise ValueError('Unknown fixed batch selection')
-    return {'batch': batch, 'cases': matching[0]['cases'], 'all_discovered_ui_ids': ids,
+    replacements = {row['original']: row['replacement'] for row in manifest['replacements']}
+    current = {row['id'] for row in manifest['cases']}
+    all_execution_cases = [replacements.get(case, case) for case in ids]
+    if len(replacements) != len(manifest['replacements']) or len(set(all_execution_cases)) != len(ids) or set(all_execution_cases) != current:
+        raise ValueError('Current source cases do not uniquely cover the historical batch plan')
+    execution_cases = [replacements.get(case, case) for case in matching[0]['cases']]
+    return {'batch': batch, 'cases': matching[0]['cases'], 'execution_cases': execution_cases,
+            'all_discovered_ui_ids': ids,
             'actual_discovery_sha256': DISCOVERY_SHA256, 'qualified_main': QUALIFIED_MAIN,
             'scope': 'Original ordinary Debug engineering cases; not six extra/repeated/final/protected/signed acceptance'}

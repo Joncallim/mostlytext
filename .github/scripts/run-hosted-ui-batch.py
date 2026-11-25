@@ -111,7 +111,7 @@ def main():
                   "generated_sha256": {str(p.relative_to(root / "fixture")): sha(p) for p in (root / "fixture").rglob("*") if p.is_file()},
                   "fixture_mapping": mapping, "selected_original": selected, "batch_contract": contract,
                   "batch_cases": [{"selected": case, "status": "NOT_RUN", "reason": "Not yet executed"}
-                                  for case in contract["cases"]], "passed": False, "execution_started": False, "commands": [], "errors": [],
+                                  for case in contract["execution_cases"]], "passed": False, "execution_started": False, "commands": [], "errors": [],
                   "host": {"os": output(["sw_vers"]), "xcode": output(["xcodebuild", "-version"]), "uid": os.getuid()},
                   "initial_domain": {"returncode": domain.returncode, "stderr": domain.stderr},
                   "scope": "Intentional ordinary Debug original-case engineering, not protected CORTANA, ordinary Release, performance or signed-artifact acceptance"}
@@ -122,7 +122,7 @@ def main():
     if record.get("batch_contract") != contract or "results" in record or record.get("execution_started") is not False:
         raise RuntimeError("Refuse a changed contract or previously attempted batch root")
     if record.get("batch_cases") != [{"selected": case, "status": "NOT_RUN", "reason": "Not yet executed"}
-                                     for case in contract["cases"]]:
+                                     for case in contract["execution_cases"]]:
         raise RuntimeError("Refuse retargeted or previously attempted original cases")
 
     def save(): record_path.write_text(json.dumps(record, indent=2) + "\n")

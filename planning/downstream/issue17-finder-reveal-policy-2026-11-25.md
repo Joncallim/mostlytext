@@ -27,6 +27,11 @@ a claim that Finder receives descriptor-bound authority.
   inventories. Historical receipts and earlier failed probes remain intact.
 - The pre-existing `documentFileWasDeleted` recovery helper remains in source
   but has no UI caller after this policy change. It cannot initiate deletion.
+- The original 38-case SDK discovery and fixed UI batch plan remain historical
+  evidence. The source inventory retains the old test ID and records the
+  owner's policy change as a traceable replacement. Future batch execution
+  selects the current Reveal test for that slot; it does not relabel the dated
+  SDK discovery as evidence that the replacement was run.
 
 ## Verification and limits
 

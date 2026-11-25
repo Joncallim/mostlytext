@@ -21,7 +21,8 @@ def read_order(source, anchor='0' * 40, receipt=None):
     scope = {'__file__': str(SCRIPT), '__name__': 'read_order_control'}
     exec(compile(ast.fix_missing_locations(tree), str(SCRIPT), 'exec'), scope)
     reads, commands = [], []
-    contract = {'batch': 'B01', 'cases': ['MacDown2UITests/Control/testNeverExecuted']}
+    contract = {'batch': 'B01', 'cases': ['MacDown2UITests/Control/testNeverExecuted'],
+                'execution_cases': ['MacDown2UITests/Control/testNeverExecuted']}
 
     def intercept(path, *_args, **_kwargs):
         reads.append(str(path))
@@ -66,7 +67,8 @@ class BatchAdmissionControls(unittest.TestCase):
 
     def test_actual_attempt_and_retarget_guards_stop_before_product_or_native_commands(self):
         source = SCRIPT.read_text().replace('    guard.check_host(root)\n', '')
-        contract = {'batch': 'B01', 'cases': ['MacDown2UITests/Control/testNeverExecuted']}
+        contract = {'batch': 'B01', 'cases': ['MacDown2UITests/Control/testNeverExecuted'],
+                    'execution_cases': ['MacDown2UITests/Control/testNeverExecuted']}
         for receipt in [{'batch_contract': contract, 'execution_started': True},
                         {'batch_contract': contract, 'execution_started': False, 'batch_cases': []}]:
             reads, commands, error = read_order(source, receipt=receipt)
