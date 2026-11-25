@@ -278,6 +278,22 @@
           }
         }
       }
+    },
+    "copy": {
+      "comment": "Lowercase suffix used when duplicating a file or folder name. Review grammar with the filename before release.",
+      "localizations": {
+        "fr": {"stringUnit": {"state": "needs_review", "value": "copie"}},
+        "ja": {"stringUnit": {"state": "needs_review", "value": "コピー"}},
+        "pl": {"stringUnit": {"state": "needs_review", "value": "kopia"}}
+      }
+    },
+    "untitled": {
+      "comment": "Default filename and folder name for a new sidebar item. Review grammar with the file extension before release.",
+      "localizations": {
+        "fr": {"stringUnit": {"state": "needs_review", "value": "sans titre"}},
+        "ja": {"stringUnit": {"state": "needs_review", "value": "名称未設定"}},
+        "pl": {"stringUnit": {"state": "needs_review", "value": "bez tytułu"}}
+      }
     }
   },
   "version": "1.0"

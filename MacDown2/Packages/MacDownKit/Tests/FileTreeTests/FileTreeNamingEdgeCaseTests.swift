@@ -18,6 +18,13 @@ struct FileTreeNamingEdgeCaseTests {
         #expect(FileTreeNaming.duplicateName(of: "README", existing: []) == "README copy")
     }
 
+    @Test func duplicateNameUsesTheSelectedLanguageAndPreservesTheExtension() {
+        #expect(FileTreeNaming.duplicateName(of: "notes.md", existing: [], copyWord: "copie") == "notes copie.md")
+        #expect(FileTreeNaming.duplicateName(
+            of: "archive.tar.gz", existing: ["archive copie.tar.gz"], copyWord: "copie"
+        ) == "archive copie 2.tar.gz")
+    }
+
     @Test func dotAndDotDotAreNotValidNames() {
         #expect(FileTreeNaming.validate(".", existing: [], currentName: nil) == .nameReserved("."))
         #expect(FileTreeNaming.validate("..", existing: [], currentName: nil) == .nameReserved(".."))
