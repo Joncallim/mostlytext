@@ -119,15 +119,17 @@
                 try await (renderer.render(MermaidFence(source: text, sourceRange: 0 ..< text.utf16.count),
                                            context: .neutralLight)).svg
             }
-            let wide = await measure(source: "graph LR\n" + (0 ..< 64).map {
+            let wideSource = "graph LR\n" + (0 ..< 64).map {
                 "n\($0) --> n\($0 + 1)"
-            }.joined(separator: "\n")) { text in
+            }.joined(separator: "\n")
+            let tallSource = "graph TD\n" + (0 ..< 64).map {
+                "n\($0) --> n\($0 + 1)"
+            }.joined(separator: "\n")
+            let wide = await measure(source: wideSource) { text in
                 try await (renderer.render(MermaidFence(source: text, sourceRange: 0 ..< text.utf16.count),
                                            context: .neutralLight)).svg
             }
-            let tall = await measure(source: "graph TD\n" + (0 ..< 64).map {
-                "n\($0) --> n\($0 + 1)"
-            }.joined(separator: "\n")) { text in
+            let tall = await measure(source: tallSource) { text in
                 try await (renderer.render(MermaidFence(source: text, sourceRange: 0 ..< text.utf16.count),
                                            context: .neutralLight)).svg
             }
@@ -136,12 +138,27 @@
                                            context: .neutralLight)).svg
             }
             await renderer.shutdown()
-            var additional = ["wide": wide, "tall": tall, "sourceOverLimit": oversized]
+            let vectorRenderer = MermaidWebRenderer(poolSize: 1, includeRaster: false)
+            let vectorWide = await measure(source: wideSource) { text in
+                try await (vectorRenderer.render(MermaidFence(source: text, sourceRange: 0 ..< text.utf16.count),
+                                                 context: .neutralLight)).svg
+            }
+            let vectorTall = await measure(source: tallSource) { text in
+                try await (vectorRenderer.render(MermaidFence(source: text, sourceRange: 0 ..< text.utf16.count),
+                                                 context: .neutralLight)).svg
+            }
+            await vectorRenderer.shutdown()
+            var additional = ["wide": wide, "tall": tall, "vectorOnlyWide": vectorWide,
+                              "vectorOnlyTall": vectorTall, "sourceOverLimit": oversized]
             let limits = await mermaidLimits()
             additional.merge(limits) { _, latest in latest }
             try write("mermaid", ordinary: ordinary, stress: stress, dense: dense,
                       additional: additional, to: directory)
             #expect(ordinary["outcome"] as? String == "rendered")
+            #expect(wide["outcome"] as? String == "rendered")
+            #expect(tall["outcome"] as? String == "rendered")
+            #expect(vectorWide["outcome"] as? String == "rendered")
+            #expect(vectorTall["outcome"] as? String == "rendered")
             #expect((oversized["error"] as? String)?.contains("sourceTooLarge") == true)
         }
 

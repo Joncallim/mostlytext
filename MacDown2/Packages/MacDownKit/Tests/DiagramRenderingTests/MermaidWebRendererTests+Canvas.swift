@@ -8,6 +8,24 @@ import Testing
 /// Canvas rasterization and pie-palette cases of the `MermaidWebRenderer`
 /// suite, kept in an extension so the suite stays one Swift Testing suite.
 extension MermaidWebRendererTests {
+    @Test func wideAndTallDiagramsKeepVectorWhenPreviewRasterExceedsItsBudget() async throws {
+        let renderer = MermaidWebRenderer(poolSize: 1)
+        for direction in ["LR", "TD"] {
+            let source = "graph \(direction)\n" + (0 ..< 64).map {
+                "n\($0) --> n\($0 + 1)"
+            }.joined(separator: "\n")
+            do {
+                let diagram = try await renderer.render(Self.fence(source), context: .neutralLight)
+                #expect(diagram.svg.contains("<svg"))
+                #expect(diagram.pngData == nil)
+            } catch {
+                await renderer.shutdown()
+                throw error
+            }
+        }
+        await renderer.shutdown()
+    }
+
     @Test func explicitNodeColorsRemainAuthored() async throws {
         let renderer = MermaidWebRenderer()
         let source = "graph TD; A-->B; style A fill:#123456,stroke:#ABCDEF;"
