@@ -1,7 +1,7 @@
 import Foundation
 
-/// Restricts harness navigation to actual descendants of its bundled resource directory.
-/// A textual path prefix also matches a sibling such as `Resources-extra`.
+/// Restricts top-level navigation to the selected harness and checks local
+/// resource reads against the bundled directory's resolved path components.
 public enum DiagramNavigationPolicy {
     /// A WebKit page may load scripts and WASM from its bundled directory, but
     /// only the one selected harness may replace the top-level document.
