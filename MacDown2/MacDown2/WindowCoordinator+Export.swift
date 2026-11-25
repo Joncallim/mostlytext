@@ -1,3 +1,4 @@
+import FileCore
 import Foundation
 import Workspace
 
@@ -16,7 +17,8 @@ enum ExportPhase: Equatable {
     }
 
     func label(locale: Locale, bundle: Bundle = .main) -> String {
-        switch self {
+        let bundle = ViewLocalizationBundle.resolve(locale: locale, in: bundle)
+        return switch self {
         case .choosingDestination: String(localized: "Choosing export destination…", bundle: bundle, locale: locale)
         case .preparing: String(localized: "Preparing export…", bundle: bundle, locale: locale)
         case .exportingHTML: String(localized: "Exporting HTML…", bundle: bundle, locale: locale)

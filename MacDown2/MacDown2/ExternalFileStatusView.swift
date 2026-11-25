@@ -142,7 +142,8 @@ struct ExternalFileStatusView: View {
     static func unavailableCopy(
         for issue: FileBackingIssue, locale: Locale, bundle: Bundle = .main
     ) -> String {
-        switch issue {
+        let bundle = ViewLocalizationBundle.resolve(locale: locale, in: bundle)
+        return switch issue {
         case .missingOrMoved, .parentUnavailable:
             String(localized: "The backing file is unavailable. Save As to keep this copy.",
                    bundle: bundle, locale: locale)

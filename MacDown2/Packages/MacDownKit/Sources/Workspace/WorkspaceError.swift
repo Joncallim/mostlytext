@@ -26,7 +26,7 @@ public enum WorkspaceError: Error {
     public static func textNotRepresentableCopy(
         encodingName: String, locale: Locale, bundle: Bundle? = nil
     ) -> String {
-        let bundle = bundle ?? .module
+        let bundle = ViewLocalizationBundle.resolve(locale: locale, in: bundle ?? .module)
         return String(
             localized: """
             This text cannot be saved as \(encodingName) without losing characters. \

@@ -72,7 +72,8 @@ struct HTMLPreviewPane: View {
     }
 
     static func modeLabel(_ mode: PreviewMode, locale: Locale, bundle: Bundle = .main) -> String {
-        switch mode {
+        let bundle = ViewLocalizationBundle.resolve(locale: locale, in: bundle)
+        return switch mode {
         case .source: String(localized: "Source", bundle: bundle, locale: locale)
         case .rendered: String(localized: "Rendered", bundle: bundle, locale: locale)
         case .outline: String(localized: "Outline", bundle: bundle, locale: locale)

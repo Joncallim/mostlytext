@@ -1,3 +1,4 @@
+import FileCore
 import Foundation
 
 /// Whole catalog messages keep accessibility counts and nouns in the same
@@ -7,7 +8,8 @@ enum PreviewDiagnosticLabel {
     case warning(count: Int)
 
     func message(bundle: Bundle = .main, locale: Locale = .current) -> String {
-        switch self {
+        let bundle = ViewLocalizationBundle.resolve(locale: locale, in: bundle)
+        return switch self {
         case let .error(count):
             String(localized: "\(count) preview errors", bundle: bundle, locale: locale)
         case let .warning(count):

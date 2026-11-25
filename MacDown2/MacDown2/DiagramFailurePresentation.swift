@@ -1,3 +1,4 @@
+import FileCore
 import Foundation
 
 /// App-owned context around renderer failures. Engine syntax messages remain
@@ -10,7 +11,8 @@ enum DiagramFailurePresentation: Sendable {
     case rendererUnavailable
 
     func message(bundle: Bundle = .main, locale: Locale = .current) -> String {
-        switch self {
+        let bundle = ViewLocalizationBundle.resolve(locale: locale, in: bundle)
+        return switch self {
         case .noPreviewImage:
             String(localized: "no preview image was produced", bundle: bundle, locale: locale)
         case .timedOut:

@@ -107,13 +107,15 @@ struct EditorStatusBarView: View {
         characterCount: Int, wordCount: Int,
         bundle: Bundle = .main, locale: Locale = .current
     ) -> String {
-        String(localized: "\(characterCount) characters, \(wordCount) words", bundle: bundle, locale: locale)
+        let bundle = ViewLocalizationBundle.resolve(locale: locale, in: bundle)
+        return String(localized: "\(characterCount) characters, \(wordCount) words", bundle: bundle, locale: locale)
     }
 
     static func selectedCountText(
         _ count: Int, bundle: Bundle = .main, locale: Locale = .current
     ) -> String {
-        String(localized: "\(count) selected", bundle: bundle, locale: locale)
+        let bundle = ViewLocalizationBundle.resolve(locale: locale, in: bundle)
+        return String(localized: "\(count) selected", bundle: bundle, locale: locale)
     }
 
     var indentationText: String {

@@ -1,3 +1,4 @@
+import FileCore
 import SwiftUI
 import Themes
 
@@ -61,8 +62,9 @@ private struct AppearanceSettingsForm: View {
     }
 
     private func themePicker(_ appearance: ThemeAppearance) -> some View {
-        let title = appearance == .light ? String(localized: "Light Theme", locale: locale)
-            : String(localized: "Dark Theme", locale: locale)
+        let bundle = ViewLocalizationBundle.resolve(locale: locale, in: .main)
+        let title = appearance == .light ? String(localized: "Light Theme", bundle: bundle, locale: locale)
+            : String(localized: "Dark Theme", bundle: bundle, locale: locale)
         return Picker(title, selection: Binding(
             get: { appearance == .light ? controller.light.id : controller.dark.id },
             set: { id in

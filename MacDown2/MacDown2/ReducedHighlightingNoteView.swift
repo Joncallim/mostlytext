@@ -1,3 +1,4 @@
+import FileCore
 import Highlighting
 import SwiftUI
 
@@ -18,6 +19,7 @@ struct ReducedHighlightingNote: Equatable {
     }
 
     func explanation(locale: Locale, bundle: Bundle = .main) -> String {
+        let bundle = ViewLocalizationBundle.resolve(locale: locale, in: bundle)
         let restore = restoreAtOrBelowUTF16Units.formatted(.number.locale(locale))
         if visibleOnly {
             return String(
@@ -48,8 +50,9 @@ struct ReducedHighlightingNoteView: View {
     let note: ReducedHighlightingNote
 
     var body: some View {
-        let title = note.visibleOnly ? String(localized: "Visible highlighting only", locale: locale)
-            : String(localized: "Highlighting reduced", locale: locale)
+        let bundle = ViewLocalizationBundle.resolve(locale: locale, in: .main)
+        let title = note.visibleOnly ? String(localized: "Visible highlighting only", bundle: bundle, locale: locale)
+            : String(localized: "Highlighting reduced", bundle: bundle, locale: locale)
         let explanation = note.explanation(locale: locale)
         return Label(title, systemImage: "speedometer")
             .labelStyle(.titleAndIcon)

@@ -1,5 +1,6 @@
 import AppKit
 import CoreTransferable
+import FileCore
 import FileTree
 import JSONSupport
 import OutlineUI
@@ -63,7 +64,8 @@ struct SidebarView: View {
             Button("OK", role: .cancel) { fileTreeModel.clearOperationError() }
         } message: {
             Text(verbatim: fileTreeModel.lastOperationError?.message(locale: locale)
-                ?? String(localized: "Unknown error", locale: locale))
+                ?? String(localized: "Unknown error",
+                          bundle: ViewLocalizationBundle.resolve(locale: locale, in: .main), locale: locale))
         }
     }
 

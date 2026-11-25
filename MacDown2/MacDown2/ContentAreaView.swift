@@ -214,7 +214,11 @@ struct ContentAreaView: View {
     }
 
     private func title(for document: FileCore.FileDocument) -> String {
-        document.fileURL?.lastPathComponent ?? String(localized: "Untitled", locale: locale)
+        document.fileURL?.lastPathComponent ?? String(
+            localized: "Untitled",
+            bundle: ViewLocalizationBundle.resolve(locale: locale, in: .main),
+            locale: locale
+        )
     }
 
     private func documentIcon(for formatID: String) -> String {

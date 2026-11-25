@@ -1,13 +1,13 @@
 {
   "schema": 1,
   "scope": "selected_plain_string_sinks",
-  "base_source_commit": "c7fe25fb764b1a4bdd225bbec2e15a8c13fdeba2 (PR #334 merged; Finder reveal policy branch)",
+  "base_source_commit": "d8d9bdc63d16fae2d4ded1ae1760c01aeb9e1477 (PR #344 merged; multilingual view-locale correction branch)",
   "limitations": [
     "Selected AppKit property/button/accessibility, name fallback, folder and workspace-replace error sites only; this is not the complete E16 literal census.",
     "Computed string flows, SwiftUI implicit keys, Info.plist/project.yml OS labels, built-in snippet and format names require separate policy and native audit.",
     "Catalog and translation quality, language overrides, accessibility layout, and final string freeze require independent evidence."
   ],
-  "production_swift_inputs_scanned": 797,
+  "production_swift_inputs_scanned": 799,
   "source_sha256": {
     "MacDown2/MacDown2/ExportCoordinator.swift": "1e9ae02533ef1cdc7b01dd640381bffb9b951be05dd33efbb1b907295ab8eb72",
     "MacDown2/MacDown2/FirstRunWindowController.swift": "b8737772a8974cab6944c2b6c63bd711d35b24d47d99f4179b14085b1ebf4dbf",
@@ -15,7 +15,7 @@
     "MacDown2/MacDown2/NSFilePanelProvider.swift": "4c271f2082313934cb2f9cf51a82407a04e203211dcf2698fa99bdce09184eb8",
     "MacDown2/MacDown2/SidebarFileTreeSupport.swift": "9545033163b356ed7def9fd59f9178997a00e6d2447886a9ab2b0c662e4e6d7c",
     "MacDown2/MacDown2/SidebarView+Folder.swift": "d92d80177cf269736f10c0c0ee613c57325b4949ce7cd3a17beeff676b1770ba",
-    "MacDown2/MacDown2/TextFilterCommands.swift": "96f125183edbb097e7c97008088590c4c2f20f883a2755e58cb60cba0eb57991",
+    "MacDown2/MacDown2/TextFilterCommands.swift": "cb5766a60b190f486d73581c454871a7c365cf9524d772e9d09da71bc15d0bca",
     "MacDown2/MacDown2/TextFilterCoordinator.swift": "c5de2d59e224e101231a3d02ff0b42790fcabb4b12514c372b2a15a693d6edff",
     "MacDown2/MacDown2/ThemeExportDocument.swift": "6384ff057496e0c505f04c70bbb5ef77d4bdada0ede2ebd4e7ab9afecec553c4",
     "MacDown2/MacDown2/ValidatedExportPanel.swift": "80a277a6cd22ba769f20ca731686dff72fc198150c49c522f0c115344853526a",
@@ -23,7 +23,7 @@
     "MacDown2/MacDown2/WindowController+Encoding.swift": "2ba41bc64d32efed071cfb053f578d94a9d0620cafb34277b985eaf13f609111",
     "MacDown2/MacDown2/WindowController.swift": "737bb902d52ba926d66004b934bf53678637316efa9830d871b7b6313e70d9b0",
     "MacDown2/MacDown2/WindowCoordinator+FileTree.swift": "731b765e0784ffd3a435c9d157b6ffe803f15ccb60581c2c57cae544c9c2ee2b",
-    "MacDown2/MacDown2/WindowCoordinator+OpenFailure.swift": "b7fb53b67bd0adb861b2b434d7a1aae4bbab74798df179efef7773fa18ebc129",
+    "MacDown2/MacDown2/WindowCoordinator+OpenFailure.swift": "f2879d6414dedd434589982055c423afd57a6ec3ffbc06bb4eafae2015a8e999",
     "MacDown2/MacDown2/WindowCoordinator+OpenWithEncoding.swift": "032de76f1322ca9c960d8376e063ed54ed20e3064d3015f4865af445ee3e1331",
     "MacDown2/MacDown2/WindowCoordinator+RevealActiveFile.swift": "c6212d87fbd3a285d198b7951bb0016da4245b9e9bff626c4e66017bf3dded01",
     "MacDown2/MacDown2/WindowCoordinator+ValidatedExport.swift": "e486575e272df847e56eddf87dd0f5213eef608dba8552517505c1a791fc1539",
@@ -111,28 +111,28 @@
     },
     {
       "path": "MacDown2/MacDown2/TextFilterCommands.swift",
-      "line": 77,
+      "line": 78,
       "kind": "appkit_property",
       "literal": "\"Check that MostlyText can write to the Commands folder, then try again.\"",
       "route": "localized"
     },
     {
       "path": "MacDown2/MacDown2/TextFilterCommands.swift",
-      "line": 83,
+      "line": 84,
       "kind": "appkit_property",
       "literal": "\"They're now listed in the Commands menu.\"",
       "route": "localized"
     },
     {
       "path": "MacDown2/MacDown2/TextFilterCommands.swift",
-      "line": 86,
+      "line": 87,
       "kind": "appkit_property",
       "literal": "\"Example Scripts Already Installed\"",
       "route": "localized"
     },
     {
       "path": "MacDown2/MacDown2/TextFilterCommands.swift",
-      "line": 87,
+      "line": 88,
       "kind": "appkit_property",
       "literal": "\"Nothing new to add — see \\\"Show Commands Folder\\\" for what's there.\"",
       "route": "localized"
@@ -335,21 +335,21 @@
     },
     {
       "path": "MacDown2/MacDown2/WindowCoordinator+OpenFailure.swift",
-      "line": 42,
+      "line": 43,
       "kind": "appkit_property",
       "literal": "\"Couldn't Open \\\"\\(url.lastPathComponent)\\\"\"",
       "route": "localized"
     },
     {
       "path": "MacDown2/MacDown2/WindowCoordinator+OpenFailure.swift",
-      "line": 48,
+      "line": 49,
       "kind": "appkit_button",
       "literal": "\"OK\"",
       "route": "localized"
     },
     {
       "path": "MacDown2/MacDown2/WindowCoordinator+OpenFailure.swift",
-      "line": 50,
+      "line": 51,
       "kind": "appkit_button",
       "literal": "\"Open With Encoding…\"",
       "route": "localized"

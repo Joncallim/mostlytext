@@ -10,7 +10,7 @@ import Workspace
 @Suite("View locale copy")
 struct ViewLocaleCopyTests {
     @Test func panelAndStatusCopyUseThePresentedLocale() throws {
-        let (root, bundle) = try makeFrenchBundle()
+        let (root, bundle) = try makeMultilingualBundle()
         defer { try? FileManager.default.removeItem(at: root) }
         let locale = Locale(identifier: "fr")
 
@@ -23,6 +23,13 @@ struct ViewLocaleCopyTests {
         #expect(HTMLPreviewPane.modeLabel(.source, locale: locale, bundle: bundle) == "FR_SOURCE")
         #expect(HTMLPreviewPane.modeLabel(.rendered, locale: locale, bundle: bundle) == "FR_RENDERED")
         #expect(HTMLPreviewPane.modeLabel(.outline, locale: locale, bundle: bundle) == "FR_OUTLINE")
+        let findCopy = FindBarLocalizedCopy(locale: locale, bundle: bundle)
+        #expect(findCopy.caseSensitive == "FR_CASE")
+        #expect(findCopy.wholeWordShort == "FR_W")
+        #expect(findCopy.wholeWord == "FR_WORD")
+        #expect(findCopy.regularExpression == "FR_REGEX")
+        #expect(findCopy.inSelectionShort == "FR_SEL")
+        #expect(findCopy.inSelection == "FR_SELECTION")
 
         let cases: [(FileBackingIssue, String)] = [
             (.missingOrMoved, "FR_UNAVAILABLE"),
@@ -40,7 +47,7 @@ struct ViewLocaleCopyTests {
     }
 
     @Test func fileFailureCopyUsesThePresentedLocale() throws {
-        let (root, bundle) = try makeFrenchBundle()
+        let (root, bundle) = try makeMultilingualBundle()
         defer { try? FileManager.default.removeItem(at: root) }
         let locale = Locale(identifier: "fr")
         let openCases: [(FileStoreError, String)] = [
@@ -89,7 +96,7 @@ struct ViewLocaleCopyTests {
     }
 
     @Test func progressAndRecoveryCopyUseThePresentedLocale() throws {
-        let (root, bundle) = try makeFrenchBundle()
+        let (root, bundle) = try makeMultilingualBundle()
         defer { try? FileManager.default.removeItem(at: root) }
         let locale = Locale(identifier: "fr")
 
@@ -105,15 +112,25 @@ struct ViewLocaleCopyTests {
         ) == "FR_ENCODING_Windows-1252")
     }
 
-    private func makeFrenchBundle() throws -> (URL, Bundle) {
+    private func makeMultilingualBundle() throws -> (URL, Bundle) {
         let root = FileManager.default.temporaryDirectory
             .appendingPathComponent("mostlytext-view-locale-\(UUID().uuidString)")
         let french = root.appendingPathComponent("fr.lproj")
+        let english = root.appendingPathComponent("en.lproj")
         try FileManager.default.createDirectory(at: french, withIntermediateDirectories: true)
+        try FileManager.default.createDirectory(at: english, withIntermediateDirectories: true)
+        let translations = frenchTranslations
+        try writeTranslations(translations, in: french)
+        try writeTranslations(translations.mapValues { $0.replacingOccurrences(of: "FR_", with: "EN_") },
+                              in: english)
+        return try (root, #require(Bundle(url: root)))
+    }
+
+    private var frenchTranslations: [String: String] {
         let encodingKey = "This text cannot be saved as %@ without losing characters. " +
             "Nothing was changed; choose another encoding, or delete an invisible byte-order-mark character " +
             "(U+FEFF or U+FFFE) at the very start of the text."
-        let translations = [
+        return [
             "HTML": "FR_HTML",
             "Self-contained HTML": "FR_SELF_CONTAINED",
             "PDF": "FR_PDF",
@@ -122,6 +139,12 @@ struct ViewLocaleCopyTests {
             "Source": "FR_SOURCE",
             "Rendered": "FR_RENDERED",
             "Outline": "FR_OUTLINE",
+            "Case Sensitive": "FR_CASE",
+            "W": "FR_W",
+            "Whole Word": "FR_WORD",
+            "Regular Expression": "FR_REGEX",
+            "Sel": "FR_SEL",
+            "In Selection": "FR_SELECTION",
             "The backing file is unavailable. Save As to keep this copy.": "FR_UNAVAILABLE",
             "MostlyText cannot access the backing file. Save As to keep this copy.": "FR_PERMISSION",
             "The backing path is no longer a regular file. Save As to keep this copy.": "FR_NOT_FILE",
@@ -150,10 +173,12 @@ struct ViewLocaleCopyTests {
             "The item no longer exists.": "FR_ITEM_MISSING",
             encodingKey: "FR_ENCODING_%@",
         ]
+    }
+
+    private func writeTranslations(_ translations: [String: String], in folder: URL) throws {
         let strings = translations.sorted { $0.key < $1.key }
             .map { "\"\($0.key)\" = \"\($0.value)\";" }.joined(separator: "\n")
-        try strings.write(to: french.appendingPathComponent("Localizable.strings"),
+        try strings.write(to: folder.appendingPathComponent("Localizable.strings"),
                           atomically: true, encoding: .utf8)
-        return try (root, #require(Bundle(url: root)))
     }
 }

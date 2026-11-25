@@ -9,7 +9,8 @@ import Foundation
 /// write-flavoured mapping rather than a shared one (#57).
 enum FileSaveFailurePresentation {
     static func message(for error: FileStoreError, locale: Locale, bundle: Bundle = .main) -> String {
-        switch error {
+        let bundle = ViewLocalizationBundle.resolve(locale: locale, in: bundle)
+        return switch error {
         case .writeFailed: String(localized: "The file could not be written.", bundle: bundle, locale: locale)
         case .permissionDenied:
             String(localized: "MostlyText does not have permission to write this file.", bundle: bundle, locale: locale)
