@@ -94,6 +94,7 @@ public struct DiagramHarnessResult: Sendable {
 public final class DiagramHarnessPage: NSObject, WKNavigationDelegate, WKUIDelegate {
     private let webView: WKWebView
     private let allowedDirectory: URL
+    private let navigationURL: URL
     private let schemeHandler: BundledDiagramSchemeHandler?
     private let schemeHarnessURL: URL?
     private let loadCompletion = DiagramHarnessNavigationCompletion()
@@ -139,7 +140,8 @@ public final class DiagramHarnessPage: NSObject, WKNavigationDelegate, WKUIDeleg
             schemeHarnessURL = nil
         }
         let page = DiagramHarnessPage(allowedDirectory: allowedDirectory, schemeHandler: handler,
-                                      schemeHarnessURL: schemeHarnessURL)
+                                      schemeHarnessURL: schemeHarnessURL,
+                                      navigationURL: schemeHarnessURL ?? harnessURL)
         do {
             try await page.load(harnessURL: harnessURL)
             return page
@@ -149,10 +151,12 @@ public final class DiagramHarnessPage: NSObject, WKNavigationDelegate, WKUIDeleg
         }
     }
 
-    private init(allowedDirectory: URL, schemeHandler: BundledDiagramSchemeHandler?, schemeHarnessURL: URL?) {
+    private init(allowedDirectory: URL, schemeHandler: BundledDiagramSchemeHandler?, schemeHarnessURL: URL?,
+                 navigationURL: URL) {
         self.allowedDirectory = allowedDirectory
         self.schemeHandler = schemeHandler
         self.schemeHarnessURL = schemeHarnessURL
+        self.navigationURL = navigationURL
 
         let configuration = WKWebViewConfiguration()
         configuration.websiteDataStore = .nonPersistent()
@@ -276,11 +280,9 @@ public final class DiagramHarnessPage: NSObject, WKNavigationDelegate, WKUIDeleg
         decidePolicyFor navigationAction: WKNavigationAction,
         decisionHandler: @escaping @MainActor @Sendable (WKNavigationActionPolicy) -> Void
     ) {
-        let permitted: Bool = if let schemeHarnessURL {
-            navigationAction.request.url == schemeHarnessURL
-        } else {
-            DiagramNavigationPolicy.allows(navigationAction.request.url, within: allowedDirectory)
-        }
+        let permitted = DiagramNavigationPolicy.allowsHarnessNavigation(
+            navigationAction.request.url, harnessURL: navigationURL
+        )
         guard permitted else {
             decisionHandler(.cancel)
             return

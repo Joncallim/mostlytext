@@ -6,6 +6,39 @@ import Testing
 /// report a CSP violation; a dead or unreachable server would not satisfy it.
 @MainActor
 struct DiagramHarnessOfflinePolicyTests {
+    @Test func bundledGraphvizHarnessRejectsRemoteFetchAndImage() async throws {
+        let tests = URL(fileURLWithPath: #filePath).deletingLastPathComponent()
+        let package = tests.deletingLastPathComponent().deletingLastPathComponent()
+        let resources = package.appendingPathComponent("Sources/GraphvizRendering/Resources", isDirectory: true)
+        let bundle = try #require(Bundle(url: resources))
+        let page = try await DiagramHarnessPage.make(harnessResourceName: "harness", bundle: bundle)
+        defer { page.teardown() }
+
+        let result = try await page.evaluate(
+            """
+            return await new Promise(resolve => {
+              const blocked = new Set();
+              const timer = setTimeout(() => resolve({ok: false, message: [...blocked].join(',')}), 1500);
+              document.addEventListener('securitypolicyviolation', event => {
+                if (event.blockedURI.startsWith('http://127.0.0.1:9')) {
+                  blocked.add(event.violatedDirective);
+                  if (blocked.has('connect-src') && blocked.has('img-src')) {
+                    clearTimeout(timer);
+                    resolve({ok: true, message: [...blocked].sort().join(',')});
+                  }
+                }
+              });
+              fetch('http://127.0.0.1:9/mostlytext-graphviz-fetch').catch(() => {});
+              const image = new Image();
+              image.src = 'http://127.0.0.1:9/mostlytext-graphviz-image';
+            });
+            """,
+            arguments: [:]
+        )
+        #expect(result.succeeded)
+        #expect(result.message == "connect-src,img-src")
+    }
+
     @Test func bundledMermaidHarnessRejectsRemoteFetchAndImage() async throws {
         let tests = URL(fileURLWithPath: #filePath).deletingLastPathComponent()
         let package = tests.deletingLastPathComponent().deletingLastPathComponent()

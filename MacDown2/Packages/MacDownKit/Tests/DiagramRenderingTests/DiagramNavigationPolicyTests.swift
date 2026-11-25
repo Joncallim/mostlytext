@@ -43,4 +43,31 @@ struct DiagramNavigationPolicyTests {
         ))
         #expect(!DiagramNavigationPolicy.allows(nil, within: resources))
     }
+
+    @Test func topLevelNavigationCannotOpenAnotherBundledResource() throws {
+        let temporary = FileManager.default.temporaryDirectory.appendingPathComponent(UUID().uuidString)
+        defer { try? FileManager.default.removeItem(at: temporary) }
+        try FileManager.default.createDirectory(at: temporary, withIntermediateDirectories: true)
+        let harness = temporary.appendingPathComponent("harness.html")
+        let script = temporary.appendingPathComponent("render.js")
+        let alias = temporary.appendingPathComponent("alias.html")
+        try Data().write(to: harness)
+        try Data().write(to: script)
+        try FileManager.default.createSymbolicLink(at: alias, withDestinationURL: harness)
+
+        #expect(DiagramNavigationPolicy.allowsHarnessNavigation(harness, harnessURL: harness))
+        #expect(!DiagramNavigationPolicy.allowsHarnessNavigation(script, harnessURL: harness))
+        #expect(!DiagramNavigationPolicy.allowsHarnessNavigation(alias, harnessURL: harness))
+        #expect(!DiagramNavigationPolicy.allowsHarnessNavigation(
+            URL(string: harness.absoluteString + "?other=1"), harnessURL: harness
+        ))
+        #expect(!DiagramNavigationPolicy.allowsHarnessNavigation(
+            URL(string: "https://example.invalid/render"), harnessURL: harness
+        ))
+        let schemeHarness = try #require(URL(string: "mostlytext-diagram://bundle/harness.html"))
+        #expect(DiagramNavigationPolicy.allowsHarnessNavigation(schemeHarness, harnessURL: schemeHarness))
+        #expect(!DiagramNavigationPolicy.allowsHarnessNavigation(
+            URL(string: "mostlytext-diagram://bundle/render.js"), harnessURL: schemeHarness
+        ))
+    }
 }

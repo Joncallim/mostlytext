@@ -590,6 +590,23 @@ fresh Release build are required before merge. This closes a concrete
 navigation predicate defect; it does not by itself establish the full E23
 sandbox/no-network, memory or Quick Look acceptance criteria.
 
+## Exact bundled diagram page navigation
+
+**Owner summary.** A diagram renderer needs its own bundled HTML page and
+nearby scripts, but it never needs to replace that page with another bundled
+resource. The former top-level navigation rule admitted every real descendant
+of the resource folder. Keep the existing local resource-read scope while
+allowing top-level navigation only to the harness URL selected at page creation.
+
+This applies to Mermaid's file-backed page and the shared D2/Graphviz page.
+The D2 custom scheme already used an exact page URL; the shared rule now makes
+that contract explicit for all three. The fixed D2 scheme resource allowlist,
+content security policies, ephemeral WebKit data store and output/source
+budgets are unchanged. A controlled sibling-resource navigation fails against
+the previous policy and passes with the narrower one. Qualification must also
+exercise the real WebKit renderer paths and remote-request denial; a pure
+predicate test alone does not prove the page still loads.
+
 ## D2 static Quick Look resource feasibility — bounded architecture revision
 
 At `main` `2f349bd6`, the existing D2 Preview/Export renderer embeds a

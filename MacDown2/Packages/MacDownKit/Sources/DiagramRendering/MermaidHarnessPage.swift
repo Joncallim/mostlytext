@@ -70,6 +70,7 @@ final class MermaidHarnessNavigationCompletion {
 final class MermaidHarnessPage: NSObject, WKNavigationDelegate, WKUIDelegate {
     private let webView: WKWebView
     private let allowedDirectory: URL
+    private let harnessURL: URL
     private let loadCompletion = MermaidHarnessNavigationCompletion()
 
     /// The WebContent process died; the renderer replaces a terminated page instead of reusing it.
@@ -79,13 +80,13 @@ final class MermaidHarnessPage: NSObject, WKNavigationDelegate, WKUIDelegate {
     /// initializer (it would override `NSObject.init()`'s plain,
     /// synchronous signature), so construction is split: this factory
     /// resolves the bundled harness and performs the async page load,
-    /// while `init(allowedDirectory:)` stays a normal, synchronous
+    /// while `init(harnessURL:)` stays a normal, synchronous
     /// designated initializer.
     static func make() async throws -> MermaidHarnessPage {
         guard let harnessURL = Bundle.module.url(forResource: "harness", withExtension: "html") else {
             throw MermaidRenderError.rendererUnavailable
         }
-        let page = MermaidHarnessPage(allowedDirectory: harnessURL.deletingLastPathComponent())
+        let page = MermaidHarnessPage(harnessURL: harnessURL)
         do {
             try await page.load(harnessURL: harnessURL)
             return page
@@ -95,8 +96,9 @@ final class MermaidHarnessPage: NSObject, WKNavigationDelegate, WKUIDelegate {
         }
     }
 
-    private init(allowedDirectory: URL) {
-        self.allowedDirectory = allowedDirectory
+    private init(harnessURL: URL) {
+        self.harnessURL = harnessURL
+        allowedDirectory = harnessURL.deletingLastPathComponent()
 
         let configuration = WKWebViewConfiguration()
         configuration.websiteDataStore = .nonPersistent()
@@ -232,7 +234,9 @@ final class MermaidHarnessPage: NSObject, WKNavigationDelegate, WKUIDelegate {
         decidePolicyFor navigationAction: WKNavigationAction,
         decisionHandler: @escaping @MainActor @Sendable (WKNavigationActionPolicy) -> Void
     ) {
-        guard DiagramNavigationPolicy.allows(navigationAction.request.url, within: allowedDirectory) else {
+        guard DiagramNavigationPolicy.allowsHarnessNavigation(
+            navigationAction.request.url, harnessURL: harnessURL
+        ) else {
             decisionHandler(.cancel)
             return
         }
