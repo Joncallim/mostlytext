@@ -54,7 +54,8 @@ See `planning/downstream/mostlytext-brand-backlog-cutover-2026-11-03.md`.
 | Build CLI | `xcodebuild -project MacDown2/MacDown2.xcodeproj -scheme MostlyTextCLI -destination 'platform=macOS' build` (the executable is `mostlytext`) |
 | Build app for dogfooding | `MacDown2/scripts/pin-xcode-package-versions.sh`, then the command above + `-configuration Release -onlyUsePackageVersionsFromResolvedFile` — Debug Swift has no optimizations and materially changes how the app feels to type in; judge responsiveness on a Release build, not Debug |
 | Pin Xcode to locked dependency versions | `MacDown2/scripts/pin-xcode-package-versions.sh` after `xcodegen generate`, then add `-onlyUsePackageVersionsFromResolvedFile` to `xcodebuild`. CI does this for every Xcode build; the plain "Build app" command above does not, so Xcode resolves on its own |
-| Build + test package | `cd MacDown2/Packages/MacDownKit && swift build && swift test` (CI adds `--force-resolved-versions`) |
+| Test affected package suite | `cd MacDown2/Packages/MacDownKit && swift test --force-resolved-versions --filter '<SuiteOrTest>'` |
+| Test full package | `cd MacDown2/Packages/MacDownKit && swift test --force-resolved-versions` |
 | Lint | `swiftlint lint --strict MacDown2` |
 | Format check | `swiftformat --lint MacDown2` |
 
@@ -99,6 +100,74 @@ See `planning/downstream/mostlytext-brand-backlog-cutover-2026-11-03.md`.
   feature-complete and released. New engine-level code should avoid gratuitous
   AppKit coupling when a platform-neutral design is equally simple, but do not
   add abstraction solely for a future iPad port.
+
+## Lean testing and review
+
+These rules govern iteration, not acceptance. [Release Hardening §12](planning/RELEASE_HARDENING.md#12-test-evidence-and-flakiness-policy), required CI, and the [release sequence](planning/RELEASE_SEQUENCE.md) remain binding.
+
+- **Start at the smallest owning boundary.** Inspect the diff and its direct
+  consumers. Run the failing case or affected suite first, then show
+  fail-before/pass-after on a deterministic reproducer for fixes. Prefer a tiny,
+  intentional fixture, fixed inputs, and explicit async completion to sleeps
+  or large incidental fixtures. Extend a nearby test before adding another;
+  add a second layer only if it proves a different failure mode. Keep the
+  workload necessary to establish a real performance or renderer failure.
+- **Pick the right lane.** Pure Swift package changes start with the narrow
+  owning Swift Testing suite and the committed lock. App-only changes start
+  with the relevant `MacDown2Tests` case or suite; preserve the pinned Xcode
+  build and serial test options. Test cross-boundary changes where the app,
+  CLI, WebKit, renderer or export actually consumes the result. Use actual
+  macOS 26 UI execution when window, input, file, or accessibility behavior is
+  under test; compilation is not execution. Use an optimized Release build for
+  responsiveness conclusions; do not repeat Debug and Release by habit, or
+  omit either when behavior differs or the gate requires both.
+- **Broaden before merge where impact spreads.** Use the existing
+  [CI selector](.github/scripts/select-ci-tests.py) as a conservative guide to
+  affected package targets and reviewed app suites; do not build a second
+  matrix or treat its output as acceptance. Cover downstream consumers for
+  shared interfaces or uncertain impact. Changes to manifests, pins, bundled
+  resources, generated project inputs, or CI selection call for broader checks
+  as applicable. Run the existing required workflow checks on the actual final
+  head; retain explicit full integration/release runs where required.
+- **Avoid duplicated setup and repairs.** Prefer incremental builds and reuse
+  a compatible build/fixture on the same revision, configuration, toolchain
+  and dependency lock; `swift test` already builds the tests. Generate and pin
+  the Xcode project once per unchanged input set. Isolate writable worktrees,
+  scratch/DerivedData, GUI profiles and evidence directories by agent; keep
+  load-sensitive app/UI lanes serial on the same Mac. Do not replace evidence
+  for the current candidate with a cached result from different inputs.
+- **Select local tests from all working changes.** The existing CI selector
+  compares committed revisions only. For local iteration, account for the
+  branch diff plus staged, unstaged and untracked inputs; use the union of
+  affected lanes, and broaden when discovery or ownership is uncertain. If
+  automating this, extend the existing selector rather than creating a second
+  matrix. Narrow app checks only where ownership and consumers are reviewed.
+- **Cut duplicate builds before cutting checks.** For CI optimisation, first
+  prove that SwiftPM's build-tests step subsumes the preceding plain build
+  while retaining both XCTest and the owned Swift Testing helper. Use the
+  Debug build-for-testing as compile evidence only if equivalent, and reuse
+  Release output only when build inputs and required checks match. Retain
+  standalone CLI and embedded CLI verification. Benchmark the same revision
+  on the same runner class and record per-step times and checks retained.
+- **Separate headless app testing from GUI evidence.** Build the non-UI test
+  bundle only when selected. Give the GUI bundle a separate compile check
+  wherever required, and keep actual interactive release validation distinct.
+  Do not change required check names or drop a build/test gate as an incidental
+  optimisation; prove equivalent evidence before changing any lane.
+- **Review in bounded tranches.** Within the existing epic branch convention,
+  group related fixes serving one acceptance outcome, not unrelated edits or
+  one PR per test. Carry exact, still-applicable evidence forward with its
+  revision, scope and configuration. Request targeted independent re-review for
+  changed boundaries and the integrated/cold review at the required gate; do
+  not repeat a full panel against unchanged work. Record first failures before
+  diagnostic retries and keep intermittency visible as required by §12.
+- **Keep routine reports short.** Give the tested revision, command/scope,
+  result, tests not run and why, plus the next real gate; link logs and evidence
+  instead of copying them. Docs-only changes need link, accuracy and diff
+  checks, not runtime tests unless the modified docs are bundled or otherwise
+  consumed. Never weaken required final-head CI, repeated full release-suite
+  runs, actual native/signed artifact checks, rights/compliance, or release and
+  publication approvals. A scoped pass is not a release pass.
 
 ## Human-readable repository history
 
