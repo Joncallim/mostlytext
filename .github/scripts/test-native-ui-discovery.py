@@ -8,7 +8,7 @@ from native_ui_discovery import observed_ui_ids, selected_batch
 
 ROOT = Path(__file__).resolve().parents[2]
 RAW = (ROOT / 'planning/downstream/evidence/critical-sdk-discovery-2026-11-07/actual-discovered-tests.json').read_bytes()
-EXPECTED = [r['id'] for r in json.loads((ROOT / 'planning/downstream/native-ui-required-cases.json').read_text())['cases']]
+EXPECTED = json.loads((ROOT / 'planning/downstream/native-ui-required-cases.json').read_text())['originalRequiredIDs']
 
 
 class ActualDiscoveryControls(unittest.TestCase):
@@ -17,6 +17,11 @@ class ActualDiscoveryControls(unittest.TestCase):
         groups = [selected_batch(ROOT, f'B{i:02d}')['cases'] for i in range(1, 11)]
         self.assertEqual([x for group in groups for x in group], sorted(EXPECTED))
         self.assertEqual([len(x) for x in groups], [4] * 9 + [2])
+        current = [case for i in range(1, 11) for case in selected_batch(ROOT, f'B{i:02d}')['execution_cases']]
+        manifest = json.loads((ROOT / 'planning/downstream/native-ui-required-cases.json').read_text())
+        self.assertEqual(set(current), {row['id'] for row in manifest['cases']})
+        self.assertEqual(selected_batch(ROOT, 'B07')['execution_cases'][1],
+                         'MacDown2UITests/FolderBrowserUITests/testSidebarOffersFinderRevealWithoutInAppTrash')
 
     def refuse(self, mutate):
         value = json.loads(RAW)

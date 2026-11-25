@@ -15,7 +15,6 @@ public enum FileTreeMutation: Sendable {
     case createDirectory(URL)
     case move(URL, URL)
     case copy(URL, URL)
-    case trash(URL)
 }
 
 public protocol FileSystemMutating: Sendable {
@@ -25,7 +24,6 @@ public protocol FileSystemMutating: Sendable {
     func createDirectory(at url: URL) async throws
     func move(from source: URL, to destination: URL) async throws
     func copy(from source: URL, to destination: URL) async throws
-    func trash(at url: URL) async throws
 }
 
 public enum FileSystemItemKind: Sendable, Equatable {
@@ -86,12 +84,6 @@ public struct FileSystemMutator: FileSystemMutating {
     public func copy(from source: URL, to destination: URL) async throws {
         try await Task.detached {
             try FileManager.default.copyItem(at: source, to: destination)
-        }.value
-    }
-
-    public func trash(at url: URL) async throws {
-        try await Task.detached {
-            try FileManager.default.trashItem(at: url, resultingItemURL: nil)
         }.value
     }
 }

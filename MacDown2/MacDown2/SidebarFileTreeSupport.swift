@@ -7,7 +7,6 @@ import UniformTypeIdentifiers
 import Workspace
 
 struct FileTreeRowView: View {
-    @Environment(\.windowCoordinator) private var coordinator
     let row: FileTreeRow
     let model: FileTreeModel
     let isRenaming: Bool
@@ -15,7 +14,6 @@ struct FileTreeRowView: View {
     let activate: (URL) -> Void
     let didRename: (URL, URL) -> Void
     let didMove: (URL, URL) -> Void
-    let didDelete: (URL) -> Void
     let didCreate: (URL, Bool, FileTreeOperationContext) -> Void
     @State private var newName = ""
     @State private var renameSubmitted = false
@@ -153,10 +151,14 @@ struct FileTreeRowView: View {
                     }
                 }
             }
-            Button("Reveal in Finder") { NSWorkspace.shared.activateFileViewerSelecting([row.entry.url]) }
-            Divider()
-            Button("Move to Trash", role: .destructive, action: requestMoveToTrash)
-                .accessibilityIdentifier("fileTreeTrashAction")
+            Button("Reveal in Finder") {
+                guard model.selectedRootIsCurrent,
+                      let root = model.root?.standardizedFileURL,
+                      row.entry.url.standardizedFileURL.pathComponents.starts(with: root.pathComponents)
+                else { return }
+                NSWorkspace.shared.activateFileViewerSelecting([row.entry.url])
+            }
+            .accessibilityIdentifier("fileTreeRevealInFinderAction")
         }
     }
 
@@ -203,32 +205,6 @@ struct FileTreeRowView: View {
             } catch {
                 if model.isCurrent(context) {
                     model.recordOperationError(error)
-                }
-            }
-        }
-    }
-
-    private func requestMoveToTrash() {
-        guard let coordinator, let window = coordinator.fileTreeOriginWindow(for: model) else { return }
-        let confirmation = FileTreeTrashConfirmation(model: model, source: row.entry.url) {
-            coordinator.fileTreeOriginWindow(for: model) === window && window.isVisible
-        }
-        let alert = NSAlert()
-        alert.messageText = String(localized: "Move \"\(row.entry.name)\" to Trash?")
-        alert.informativeText = String(localized: "You can recover it from the Trash in Finder.")
-        alert.alertStyle = .warning
-        alert.addButton(withTitle: String(localized: "Move to Trash"))
-        alert.addButton(withTitle: String(localized: "Cancel"))
-        alert.beginSheetModal(for: window) { response in
-            guard response == .alertFirstButtonReturn else { return }
-            Task { @MainActor in
-                do {
-                    guard let result = try await confirmation.run() else { return }
-                    didDelete(result.url)
-                } catch {
-                    if confirmation.isCurrent {
-                        model.recordOperationError(error)
-                    }
                 }
             }
         }

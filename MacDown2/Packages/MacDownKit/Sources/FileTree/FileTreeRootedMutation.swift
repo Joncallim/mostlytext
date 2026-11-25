@@ -159,8 +159,6 @@ public extension FileSystemMutator {
             case let .copy(source, destination):
                 try FileTreeRootedCopy.copy(source, to: destination, root: root,
                                             beforePublication: beforeRootedMutation)
-            case let .trash(url):
-                try await trash(at: url)
             }
         }.value
     }

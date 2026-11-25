@@ -26,15 +26,9 @@ extension WindowCoordinator {
     /// clicking into the editor left every Folder command (bound off this
     /// property) still enabled, because only `fileTreeModel.selectedURL`
     /// was checked, never focus. Fixed at this property's own definition,
-    /// not just at the "Duplicate" button's call site, since ALL THREE
-    /// Folder commands read this one property, and Cmd-D was not the only
-    /// live conflict with a key the editor itself depends on: "Rename" is a
-    /// plain, unmodified Return, which the editor's own E10 list/blockquote-
-    /// continuation assists use, and "Move to Trash" is Cmd-Delete, a
-    /// standard `NSTextView` binding (delete to beginning of line) — both
-    /// were silently hijack-able the identical way Cmd-D was, just never
-    /// separately reported. Fixing at the source closes all three at once
-    /// rather than only the one this slice's own issue named. Reads
+    /// not just at the "Duplicate" button's call site, since all Folder
+    /// commands read this one property. "Rename" uses Return, which the
+    /// editor's list/blockquote continuation assists also use. Reads
     /// `commandStateRevision` to establish an Observation dependency on
     /// AppKit focus changes, exactly like `canPerformOccurrenceSelection`'s
     /// own inverted check (`WindowCoordinator+OccurrenceSelection.swift`) —
@@ -49,13 +43,13 @@ extension WindowCoordinator {
     }
 
     /// Any text control being edited — the Find or folder-search field, the rename field, a palette
-    /// field — owns Return, ⌘D and ⌘⌫ while it has focus; the Folder commands must not claim them.
+    /// field — owns Return and ⌘D while it has focus; the Folder commands must not claim them.
     static func isTextEditing(_ responder: NSResponder?) -> Bool {
         responder is NSText
     }
 
     /// The key window's controller for a Folder command, unless a text control is being edited: the menu's enabled
-    /// state can be stale (it refreshes on mouse/focus events), and Return/⌘D/⌘⌫ belong to the field.
+    /// state can be stale (it refreshes on mouse/focus events), and Return/⌘D belong to the field.
     private func keyFolderCommandController() -> WindowController? {
         guard !Self.isTextEditing(NSApp.keyWindow?.firstResponder) else { return nil }
         return controllers.first(where: { $0.window == NSApp.keyWindow })
@@ -80,33 +74,14 @@ extension WindowCoordinator {
         }
     }
 
-    func trashKeyFolderSelection() {
+    func revealKeyFolderSelectionInFinder() {
         guard let controller = keyFolderCommandController(),
               let selected = controller.fileTreeModel.selectedURL,
-              let window = controller.window else { return }
-        let confirmation = FileTreeTrashConfirmation(
-            model: controller.fileTreeModel, source: selected
-        ) { [weak controller, weak window] in
-            guard let controller, let window else { return false }
-            return !controller.isClosed && controller.window === window
-        }
-        let alert = NSAlert()
-        alert.messageText = String(localized: "Move \"\(selected.lastPathComponent)\" to Trash?")
-        alert.informativeText = String(localized: "You can recover it from the Trash in Finder.")
-        alert.alertStyle = .warning
-        alert.addButton(withTitle: String(localized: "Move to Trash"))
-        alert.addButton(withTitle: String(localized: "Cancel"))
-        alert.beginSheetModal(for: window) { [weak self, weak controller] response in
-            guard response == .alertFirstButtonReturn, let self, let controller else { return }
-            Task { @MainActor in
-                do {
-                    guard let result = try await confirmation.run() else { return }
-                    self.documentFileWasDeleted(at: result.url)
-                } catch where confirmation.isCurrent {
-                    controller.fileTreeModel.recordOperationError(error)
-                } catch {}
-            }
-        }
+              controller.fileTreeModel.selectedRootIsCurrent,
+              let root = controller.fileTreeModel.root?.standardizedFileURL,
+              selected.standardizedFileURL.pathComponents.starts(with: root.pathComponents)
+        else { return }
+        NSWorkspace.shared.activateFileViewerSelecting([selected])
     }
 
     /// What ⌘N does. The standard New shortcut must never be dead: with a folder

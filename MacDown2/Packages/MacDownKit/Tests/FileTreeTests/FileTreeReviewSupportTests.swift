@@ -187,7 +187,6 @@ final class RaceCreatingMutator: @unchecked Sendable, FileSystemMutating {
     func createDirectory(at _: URL) async throws {}
     func move(from _: URL, to _: URL) async throws {}
     func copy(from _: URL, to _: URL) async throws {}
-    func trash(at _: URL) async throws {}
 }
 
 final class FolderRaceMutator: @unchecked Sendable, FileSystemMutating {
@@ -214,7 +213,6 @@ final class FolderRaceMutator: @unchecked Sendable, FileSystemMutating {
 
     func move(from _: URL, to _: URL) async throws {}
     func copy(from _: URL, to _: URL) async throws {}
-    func trash(at _: URL) async throws {}
 }
 
 final class SuspendedMutator: @unchecked Sendable, FileSystemMutating {
@@ -248,7 +246,6 @@ final class SuspendedMutator: @unchecked Sendable, FileSystemMutating {
     }
 
     func copy(from _: URL, to _: URL) async throws {}
-    func trash(at _: URL) async throws {}
 }
 
 /// Test doubles inject interleavings into the old operation-specific calls.
@@ -261,7 +258,6 @@ private func performInjectedMutation(
     case let .createDirectory(url): try await mutator.createDirectory(at: url)
     case let .move(source, destination): try await mutator.move(from: source, to: destination)
     case let .copy(source, destination): try await mutator.copy(from: source, to: destination)
-    case let .trash(url): try await mutator.trash(at: url)
     }
 }
 

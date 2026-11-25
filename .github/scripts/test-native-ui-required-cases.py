@@ -71,8 +71,8 @@ class RequiredSourceCasesTests(unittest.TestCase):
             case["id"] = new
             manifest["sources"][case["source"]] = hashlib.sha256(path.read_bytes()).hexdigest()
             with self.assertRaisesRegex(ValueError, "without its traceable replacement"): CHECKER.validate(root, manifest)
-            manifest["replacements"] = [{"original": old, "replacement": new, "reason": "Synthetic fixture-only rename control; not an adopted test change.", "evidenceReference": "test-native-ui-required-cases.py synthetic control"}]
-            self.assertEqual(CHECKER.validate(root, manifest)["traceable_replacements"], 1)
+            manifest["replacements"].append({"original": old, "replacement": new, "reason": "Synthetic fixture-only rename control; not an adopted test change.", "evidenceReference": "test-native-ui-required-cases.py synthetic control"})
+            self.assertEqual(CHECKER.validate(root, manifest)["traceable_replacements"], len(MANIFEST["replacements"]) + 1)
 
     def test_duplicate_json_key_refused(self):
         with self.assertRaisesRegex(ValueError, "Duplicate manifest key"):

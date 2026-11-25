@@ -6162,35 +6162,6 @@
         }
       }
     },
-    "Move \"%@\" to Trash?": {
-      "comment": "Exact key from the current first-party Apple compiler extraction. Non-English values are explicit English review drafts; native language/plural review remains required.",
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Move \"%@\" to Trash?"
-          }
-        },
-        "fr": {
-          "stringUnit": {
-            "state": "needs_review",
-            "value": "Move \"%@\" to Trash?"
-          }
-        },
-        "ja": {
-          "stringUnit": {
-            "state": "needs_review",
-            "value": "Move \"%@\" to Trash?"
-          }
-        },
-        "pl": {
-          "stringUnit": {
-            "state": "needs_review",
-            "value": "Move \"%@\" to Trash?"
-          }
-        }
-      }
-    },
     "Matches in %@: %@": {
       "comment": "Folder-search accessibility row with authored file path and separately pluralized match count. Non-English values remain review drafts.",
       "localizations": {
@@ -6332,35 +6303,6 @@
           "stringUnit": {
             "state": "needs_review",
             "value": "Move Line Up"
-          }
-        }
-      }
-    },
-    "Move to Trash": {
-      "comment": "Exact key from the current first-party Apple compiler extraction. Non-English values are explicit English review drafts; native language/plural review remains required.",
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Move to Trash"
-          }
-        },
-        "fr": {
-          "stringUnit": {
-            "state": "needs_review",
-            "value": "Move to Trash"
-          }
-        },
-        "ja": {
-          "stringUnit": {
-            "state": "needs_review",
-            "value": "Move to Trash"
-          }
-        },
-        "pl": {
-          "stringUnit": {
-            "state": "needs_review",
-            "value": "Move to Trash"
           }
         }
       }
@@ -12586,35 +12528,6 @@
           "stringUnit": {
             "state": "needs_review",
             "value": "Wrap lines"
-          }
-        }
-      }
-    },
-    "You can recover it from the Trash in Finder.": {
-      "comment": "Exact key from the current first-party Apple compiler extraction. Non-English values are explicit English review drafts; native language/plural review remains required.",
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "You can recover it from the Trash in Finder."
-          }
-        },
-        "fr": {
-          "stringUnit": {
-            "state": "needs_review",
-            "value": "You can recover it from the Trash in Finder."
-          }
-        },
-        "ja": {
-          "stringUnit": {
-            "state": "needs_review",
-            "value": "You can recover it from the Trash in Finder."
-          }
-        },
-        "pl": {
-          "stringUnit": {
-            "state": "needs_review",
-            "value": "You can recover it from the Trash in Finder."
           }
         }
       }

@@ -49,7 +49,7 @@
     "MacDown2/MacDown2UITests/EditorTypingUITests.swift": "dac6c3ca4993e7e855ffd718810097cd55ba6f5de38e4a1d796fc84cf19feb6d",
     "MacDown2/MacDown2UITests/ExternalFileChangesUITests.swift": "821ac29c83a8186ad7af5673443f7873c8db908e2adb7e594d1c2581acb94fd2",
     "MacDown2/MacDown2UITests/FirstRunUITests.swift": "8f56a9852a0c06d473e95694dd7562716d7f12013c689abb38efbb2c3f1526d1",
-    "MacDown2/MacDown2UITests/FolderBrowserUITests.swift": "8414881cbbf32c34a5934b285480b4c35456a681db8f55c3d5f4acde8381d0c2",
+    "MacDown2/MacDown2UITests/FolderBrowserUITests.swift": "64f01429a2b98b18eb70b457c39c96347d27d0ed98d6250f7324f219eccbde74",
     "MacDown2/MacDown2UITests/MathExponentVisualUITests.swift": "4ae274b82f3303001adcfb17afd6be84b8e8aef2f34321ce53f24b77034d774f",
     "MacDown2/MacDown2UITests/MermaidPreviewUITests.swift": "ab98fe44881aad27767f95845aa4c702a7a3832823cafc1c76734d2aec71ad2d",
     "MacDown2/MacDown2UITests/MultiFormatUITests.swift": "45e9880b721eb64d67837a777073ff83693e9bec97410b004ce6fad9163d3634",
@@ -184,7 +184,7 @@
       "area": "folder navigation and mutations"
     },
     {
-      "id": "MacDown2UITests/FolderBrowserUITests/testMoveToTrashOffersDestructiveConfirmationAction",
+      "id": "MacDown2UITests/FolderBrowserUITests/testSidebarOffersFinderRevealWithoutInAppTrash",
       "source": "MacDown2/MacDown2UITests/FolderBrowserUITests.swift",
       "area": "folder navigation and mutations"
     },
@@ -256,7 +256,14 @@
       "area": "math visual diagnostic"
     }
   ],
-  "replacements": [],
+  "replacements": [
+    {
+      "original": "MacDown2UITests/FolderBrowserUITests/testMoveToTrashOffersDestructiveConfirmationAction",
+      "replacement": "MacDown2UITests/FolderBrowserUITests/testSidebarOffersFinderRevealWithoutInAppTrash",
+      "reason": "The owner changed the folder deletion policy to Reveal in Finder. The replacement checks that the sidebar exposes Finder reveal and no in-app Trash action, while the original required ID remains frozen for history.",
+      "evidenceReference": "planning/downstream/issue17-finder-reveal-policy-2026-11-25.md; Joncallim/mostlytext PR #335"
+    }
+  ],
   "additionalRequiredBehaviors": [
     {
       "id": "actual-pdf-menu-save-panel",

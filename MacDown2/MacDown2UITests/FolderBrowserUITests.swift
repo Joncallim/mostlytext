@@ -77,7 +77,7 @@ final class FolderBrowserUITests: XCTestCase {
         XCTAssertTrue(app.menuItems["New Folder"].exists)
     }
 
-    func testMoveToTrashOffersDestructiveConfirmationAction() throws {
+    func testSidebarOffersFinderRevealWithoutInAppTrash() throws {
         let folder = try temporaryDirectory()
         let seed = try temporaryFile(named: "seed.md")
         let file = folder.appendingPathComponent("delete-me.md")
@@ -92,8 +92,10 @@ final class FolderBrowserUITests: XCTestCase {
         let row = app.descendants(matching: .any).matching(identifier: "fileRow-delete-me.md").firstMatch
         XCTAssertTrue(row.waitForExistence(timeout: 8))
         row.rightClick()
-        let trash = app.menuItems["fileTreeTrashAction"]
-        XCTAssertTrue(trash.waitForExistence(timeout: 5))
+        let reveal = app.menuItems["fileTreeRevealInFinderAction"]
+        XCTAssertTrue(reveal.waitForExistence(timeout: 5))
+        XCTAssertFalse(app.menuItems["fileTreeTrashAction"].exists)
+        XCTAssertFalse(app.menuItems["Move to Trash"].exists)
         XCTAssertTrue(FileManager.default.fileExists(atPath: file.path))
     }
 
