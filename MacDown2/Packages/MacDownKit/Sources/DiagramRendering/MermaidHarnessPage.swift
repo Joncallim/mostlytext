@@ -80,7 +80,7 @@ final class MermaidHarnessPage: NSObject, WKNavigationDelegate, WKUIDelegate {
     /// initializer (it would override `NSObject.init()`'s plain,
     /// synchronous signature), so construction is split: this factory
     /// resolves the bundled harness and performs the async page load,
-    /// while `init(allowedDirectory:)` stays a normal, synchronous
+    /// while `init(harnessURL:)` stays a normal, synchronous
     /// designated initializer.
     static func make() async throws -> MermaidHarnessPage {
         guard let harnessURL = Bundle.module.url(forResource: "harness", withExtension: "html") else {
