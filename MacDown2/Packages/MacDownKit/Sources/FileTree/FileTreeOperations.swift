@@ -71,6 +71,23 @@ public enum FileTreeNaming {
     private static let compressedTarSuffixes: Set<String> = ["gz", "bz2", "xz", "zst", "lz", "lzma", "z"]
 
     public static func duplicateName(of name: String, existing: Set<String>) -> String {
+        let copy = safeLocalizedNameFragment(
+            String(localized: "copy", bundle: .module,
+                   comment: "Lowercase suffix used when duplicating a file or folder name"),
+            fallback: "copy"
+        )
+        return duplicateName(of: name, existing: existing, copyWord: copy)
+    }
+
+    static func safeLocalizedNameFragment(_ value: String, fallback: String) -> String {
+        guard !value.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty,
+              !value.utf8.contains(0), !value.utf8.contains(0x2F), !value.utf8.contains(0x3A),
+              value != ".", value != ".."
+        else { return fallback }
+        return value
+    }
+
+    static func duplicateName(of name: String, existing: Set<String>, copyWord: String) -> String {
         let url = URL(fileURLWithPath: name)
         var stem = url.deletingPathExtension().lastPathComponent
         var ext = url.pathExtension
@@ -84,7 +101,7 @@ public enum FileTreeNaming {
         let folded = Set(existing.map(foldedName))
         var index = 1
         while true {
-            let candidate = index == 1 ? "\(stem) copy\(suffix)" : "\(stem) copy \(index)\(suffix)"
+            let candidate = index == 1 ? "\(stem) \(copyWord)\(suffix)" : "\(stem) \(copyWord) \(index)\(suffix)"
             if !folded.contains(foldedName(candidate)) {
                 return candidate
             }
