@@ -25,6 +25,13 @@ struct FileTreeNamingEdgeCaseTests {
         ) == "archive copie 2.tar.gz")
     }
 
+    @Test func unsafeTranslatedFilenameWordsFallBackBeforePathAssembly() {
+        for word in ["", "  ", ".", "..", "a/b", "a:b", "a\u{0}b"] {
+            #expect(FileTreeNaming.safeLocalizedNameFragment(word, fallback: "copy") == "copy")
+        }
+        #expect(FileTreeNaming.safeLocalizedNameFragment("コピー", fallback: "copy") == "コピー")
+    }
+
     @Test func dotAndDotDotAreNotValidNames() {
         #expect(FileTreeNaming.validate(".", existing: [], currentName: nil) == .nameReserved("."))
         #expect(FileTreeNaming.validate("..", existing: [], currentName: nil) == .nameReserved(".."))

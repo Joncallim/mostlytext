@@ -228,8 +228,11 @@ public extension FileTreeModel {
         var url: URL
         while true {
             let name = FileTreeNaming.uniqueName(
-                base: String(localized: "untitled", bundle: .module,
-                             comment: "Default filename and folder name for a new sidebar item"),
+                base: FileTreeNaming.safeLocalizedNameFragment(
+                    String(localized: "untitled", bundle: .module,
+                           comment: "Default filename and folder name for a new sidebar item"),
+                    fallback: "untitled"
+                ),
                 extension: isDirectory ? "" : "md",
                 existing: existing
             )
