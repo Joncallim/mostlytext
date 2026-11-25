@@ -17,15 +17,17 @@ struct ReducedHighlightingNote: Equatable {
         visibleOnly = state.isVisibleOnly
     }
 
-    var explanation: String {
-        let restore = restoreAtOrBelowUTF16Units.formatted()
+    func explanation(locale: Locale, bundle: Bundle = .main) -> String {
+        let restore = restoreAtOrBelowUTF16Units.formatted(.number.locale(locale))
         if visibleOnly {
             return String(
                 localized: """
                 Highlighting is limited to visible text in this large document. Colour may update after \
                 editing or scrolling. The text, editing and search are unaffected. Full highlighting \
                 returns automatically once the document is at or below \(restore) UTF-16 units.
-                """
+                """,
+                bundle: bundle,
+                locale: locale
             )
         }
         return String(
@@ -33,23 +35,27 @@ struct ReducedHighlightingNote: Equatable {
             Syntax highlighting is off for this large document to keep typing responsive. \
             The text, editing and search are unaffected. Highlighting returns automatically \
             once the document is at or below \(restore) UTF-16 units (roughly that many characters of ordinary text).
-            """
+            """,
+            bundle: bundle,
+            locale: locale
         )
     }
 }
 
 /// A concise, non-modal indicator; the full explanation is its help text.
 struct ReducedHighlightingNoteView: View {
+    @Environment(\.locale) private var locale
     let note: ReducedHighlightingNote
 
     var body: some View {
-        let title = note.visibleOnly ? String(localized: "Visible highlighting only")
-            : String(localized: "Highlighting reduced")
+        let title = note.visibleOnly ? String(localized: "Visible highlighting only", locale: locale)
+            : String(localized: "Highlighting reduced", locale: locale)
+        let explanation = note.explanation(locale: locale)
         return Label(title, systemImage: "speedometer")
             .labelStyle(.titleAndIcon)
             .fixedSize()
-            .help(note.explanation)
+            .help(explanation)
             .accessibilityIdentifier("highlightingReducedNote")
-            .accessibilityHint(note.explanation)
+            .accessibilityHint(explanation)
     }
 }

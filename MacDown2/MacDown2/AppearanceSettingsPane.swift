@@ -15,6 +15,7 @@ struct AppearanceSettingsPane: View {
 
 private struct AppearanceSettingsForm: View {
     let controller: ThemeController
+    @Environment(\.locale) private var locale
     @Environment(\.themeCatalog) private var themeCatalog
     @State private var selectedID = ""
 
@@ -60,18 +61,19 @@ private struct AppearanceSettingsForm: View {
     }
 
     private func themePicker(_ appearance: ThemeAppearance) -> some View {
-        Picker(appearance == .light ? String(localized: "Light Theme") : String(localized: "Dark Theme"),
-               selection: Binding(
-                   get: { appearance == .light ? controller.light.id : controller.dark.id },
-                   set: { id in
-                       selectedID = id
-                       if appearance == .light {
-                           controller.selectLight(id: id)
-                       } else {
-                           controller.selectDark(id: id)
-                       }
-                   }
-               )) {
+        let title = appearance == .light ? String(localized: "Light Theme", locale: locale)
+            : String(localized: "Dark Theme", locale: locale)
+        return Picker(title, selection: Binding(
+            get: { appearance == .light ? controller.light.id : controller.dark.id },
+            set: { id in
+                selectedID = id
+                if appearance == .light {
+                    controller.selectLight(id: id)
+                } else {
+                    controller.selectDark(id: id)
+                }
+            }
+        )) {
             ForEach(controller.available.filter { $0.appearance == appearance }) { theme in
                 Text(verbatim: ThemePickerDisplayName.name(for: theme)).tag(theme.id)
             }

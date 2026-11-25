@@ -8,17 +8,21 @@ import Foundation
 /// already carry FileCore's package-localised messages. Shared by the failed-open
 /// alert and `ContentAreaView`'s empty state so their explanations stay consistent.
 enum FileOpenFailurePresentation {
-    static func message(for error: FileStoreError) -> String {
+    static func message(for error: FileStoreError, locale: Locale = .current, bundle: Bundle = .main) -> String {
         switch error {
-        case .fileMissing: String(localized: "The file could not be found.")
-        case .permissionDenied: String(localized: "MostlyText does not have permission to read this file.")
-        case .notRegularFile: String(localized: "This is not a regular file.")
-        case .invalidURL: String(localized: "This is not a valid file location.")
-        case .fileChangedDuringRead: String(localized: "The file changed while it was being read. Try again.")
-        case .encodingDetectionFailed: String(localized: "The file's text encoding could not be determined.")
+        case .fileMissing: String(localized: "The file could not be found.", bundle: bundle, locale: locale)
+        case .permissionDenied:
+            String(localized: "MostlyText does not have permission to read this file.", bundle: bundle, locale: locale)
+        case .notRegularFile: String(localized: "This is not a regular file.", bundle: bundle, locale: locale)
+        case .invalidURL: String(localized: "This is not a valid file location.", bundle: bundle, locale: locale)
+        case .fileChangedDuringRead:
+            String(localized: "The file changed while it was being read. Try again.", bundle: bundle, locale: locale)
+        case .encodingDetectionFailed:
+            String(localized: "The file's text encoding could not be determined.", bundle: bundle, locale: locale)
         case let .decodingFailed(diagnostics):
-            diagnostics.first?.message ?? String(localized: "The file's contents could not be decoded.")
-        default: String(localized: "The file could not be read.")
+            diagnostics.first?.message ?? String(localized: "The file's contents could not be decoded.",
+                                                 bundle: bundle, locale: locale)
+        default: String(localized: "The file could not be read.", bundle: bundle, locale: locale)
         }
     }
 }

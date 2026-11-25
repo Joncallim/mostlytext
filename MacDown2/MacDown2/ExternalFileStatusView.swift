@@ -5,6 +5,7 @@ import SwiftUI
 /// Inline status for external-file observations. It intentionally sits above
 /// the editor without replacing it, so focus stays with the text view.
 struct ExternalFileStatusView: View {
+    @Environment(\.locale) private var locale
     let controller: ExternalFileController
 
     var body: some View {
@@ -105,7 +106,7 @@ struct ExternalFileStatusView: View {
         HStack(spacing: 10) {
             Image(systemName: "externaldrive.badge.exclamationmark")
                 .foregroundStyle(.red)
-            Text(verbatim: unavailableCopy(for: issue))
+            Text(verbatim: Self.unavailableCopy(for: issue, locale: locale))
                 .font(.callout)
             Spacer()
             Button("Save As…") {
@@ -138,18 +139,25 @@ struct ExternalFileStatusView: View {
         .accessibilityElement(children: .combine)
     }
 
-    private func unavailableCopy(for issue: FileBackingIssue) -> String {
+    static func unavailableCopy(
+        for issue: FileBackingIssue, locale: Locale, bundle: Bundle = .main
+    ) -> String {
         switch issue {
         case .missingOrMoved, .parentUnavailable:
-            String(localized: "The backing file is unavailable. Save As to keep this copy.")
+            String(localized: "The backing file is unavailable. Save As to keep this copy.",
+                   bundle: bundle, locale: locale)
         case .permissionDenied:
-            String(localized: "MostlyText cannot access the backing file. Save As to keep this copy.")
+            String(localized: "MostlyText cannot access the backing file. Save As to keep this copy.",
+                   bundle: bundle, locale: locale)
         case .notRegularFile:
-            String(localized: "The backing path is no longer a regular file. Save As to keep this copy.")
+            String(localized: "The backing path is no longer a regular file. Save As to keep this copy.",
+                   bundle: bundle, locale: locale)
         case .ambiguousMove, .moveCollidesWithOpenDocument:
-            String(localized: "MostlyText cannot safely identify the moved file. Save As to keep this copy.")
+            String(localized: "MostlyText cannot safely identify the moved file. Save As to keep this copy.",
+                   bundle: bundle, locale: locale)
         case .readFailed:
-            String(localized: "The backing file could not be read safely. Save As to keep this copy.")
+            String(localized: "The backing file could not be read safely. Save As to keep this copy.",
+                   bundle: bundle, locale: locale)
         }
     }
 }
