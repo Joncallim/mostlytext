@@ -100,6 +100,19 @@ extension MermaidWebRendererTests {
         }
     }
 
+    @Test @MainActor func vectorViewportHasItsOwnBoundIndependentOfRasterPixels() async throws {
+        let page = try await MermaidHarnessPage.make()
+        defer { page.teardown() }
+        let admitted = try await page.inspectVectorSizeForTesting(width: 65536, height: 1024)
+        #expect((admitted["width"] as? NSNumber)?.intValue == 65536)
+        #expect((admitted["height"] as? NSNumber)?.intValue == 1024)
+        for (width, height) in [(65536.1, 1000.0), (65536.0, 1024.1), (1e308, 1.0)] {
+            await #expect(throws: Error.self) {
+                _ = try await page.inspectVectorSizeForTesting(width: width, height: height)
+            }
+        }
+    }
+
     @Test @MainActor func canvasUsesNegativeOriginAndCommaSeparatedExponentViewBoxForPNG() async throws {
         let probe = try await MermaidSVGProbe.canvasProbe(
             #"<svg xmlns="http://www.w3.org/2000/svg" viewBox="-10,-20,3.2e2,1.8e2">"#

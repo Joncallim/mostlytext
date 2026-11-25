@@ -627,7 +627,9 @@ must not raise the existing 4,096-pixel side/8-Mpixel raster ceiling, source
 admission, SVG/PNG output byte cap or execution deadline.
 
 The bundled harness validates finite positive vector dimensions with a
-separate bounded viewport before returning SVG. It catches only the known
+separate provisional 65,536-unit side and 64-million-square-unit viewport
+bound before returning SVG. This bounds display coordinates; it is not a
+per-request memory cap. It catches only the known
 raster-pixel-cap refusal after successful SVG generation and returns the SVG
 without PNG. Other parser, layout, WebKit and raster errors keep their existing
 failure/fallback behavior. The shared result/cache remain one render for

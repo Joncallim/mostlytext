@@ -32,6 +32,24 @@ var PREVIEW_RASTER_LIMITS = Object.freeze({
     maxPixels: 8 * 1024 * 1024
 });
 
+// SVG-only destinations do not allocate a preview bitmap. Still refuse an
+// absurd viewBox before handing it to a browser for display; this is a
+// viewport policy, not a claim about renderer memory usage.
+var VECTOR_VIEWPORT_LIMITS = Object.freeze({
+    maxSide: 65536,
+    maxArea: 64 * 1024 * 1024
+});
+
+function checkedVectorSize(width, height) {
+    if (!Number.isFinite(width) || !Number.isFinite(height) || width <= 0 || height <= 0) {
+        throw new Error("invalid SVG dimensions");
+    }
+    if (width > VECTOR_VIEWPORT_LIMITS.maxSide || height > VECTOR_VIEWPORT_LIMITS.maxSide ||
+        width > VECTOR_VIEWPORT_LIMITS.maxArea / height) {
+        throw new Error("diagram exceeds vector viewport limit");
+    }
+}
+
 function checkedRasterSize(width, height) {
     if (!Number.isFinite(width) || !Number.isFinite(height) || width <= 0 || height <= 0) {
         throw new Error("invalid SVG dimensions");
@@ -178,7 +196,7 @@ function addOpaqueCanvas(svg, fill) {
 // (epic-20-implementation.md §7.1) and it must keep Mermaid's richer
 // default HTML-based labels, not a degraded native-<text> substitute.
 //
-// `png` is a real WebKit-rendered raster snapshot of that SAME svg, added
+// `png`, when present, is a real WebKit-rendered raster snapshot of that SAME svg, added
 // after a real spike (see this repository's PR history for
 // epic-20-implementation.md Slice 4) proved AppKit's own built-in SVG
 // decoder (`NSImage`/`_NSSVGImageRep`) does not reliably display real
@@ -293,6 +311,7 @@ window.__macdownRenderMermaid = async function (
         // content too; it must not be covered by our default backing rect.
         var resolved = mermaid.mermaidAPI.getConfig().themeVariables || {};
         var canvas = addOpaqueCanvas(result.svg, resolved.background || background);
+        checkedVectorSize(canvas.width, canvas.height);
         var byteCount = renderedUTF8ByteCount(canvas.svg);
         if (byteCount > maxOutputBytes) {
             return { ok: false, outputTooLargeByteCount: byteCount,
@@ -300,10 +319,19 @@ window.__macdownRenderMermaid = async function (
         }
         // Quick Look embeds the vetted SVG. Native Preview still needs PNG.
         if (!includeRaster) {
-            checkedRasterSize(canvas.width, canvas.height);
             return { ok: true, svg: canvas.svg, width: canvas.width, height: canvas.height };
         }
-        var png = await rasterize(canvas.svg, canvas.width, canvas.height);
+        var png;
+        try {
+            png = await rasterize(canvas.svg, canvas.width, canvas.height);
+        } catch (error) {
+            // The vector is already bounded and valid. Export can still use
+            // it; native Preview explicitly reports that no image was made.
+            if (error && error.message === "diagram exceeds raster pixel limit") {
+                return { ok: true, svg: canvas.svg, width: canvas.width, height: canvas.height };
+            }
+            throw error;
+        }
         var pngByteCount = rasterPNGByteCount(png);
         if (pngByteCount > maxOutputBytes) {
             return { ok: false, outputTooLargeByteCount: pngByteCount,

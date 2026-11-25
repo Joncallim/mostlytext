@@ -6,6 +6,7 @@ import Testing
 struct MermaidFailureClassificationTests {
     @Test func observedRasterLimitDoesNotBlameAuthoredSyntax() {
         #expect(MermaidWebRenderer.failure(for: "diagram exceeds raster pixel limit") == .rendererUnavailable)
+        #expect(MermaidWebRenderer.failure(for: "diagram exceeds vector viewport limit") == .rendererUnavailable)
         #expect(MermaidWebRenderer.failure(for: "Parse error on line 1") ==
             .invalidSyntax("Parse error on line 1"))
         #expect(MermaidWebRenderer.failure(for: "") == .rendererUnavailable)

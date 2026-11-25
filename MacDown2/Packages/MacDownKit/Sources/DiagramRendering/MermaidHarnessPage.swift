@@ -202,6 +202,20 @@ final class MermaidHarnessPage: NSObject, WKNavigationDelegate, WKUIDelegate {
         return dict
     }
 
+    /// Checks the SVG-only viewport admission without allocating a raster.
+    func inspectVectorSizeForTesting(width: Double, height: Double) async throws -> [String: Any] {
+        let result = try await webView.callAsyncJavaScript(
+            "checkedVectorSize(width, height); return {width: width, height: height};",
+            arguments: ["width": width, "height": height],
+            in: nil,
+            contentWorld: .page
+        )
+        guard let dict = result as? [String: Any] else {
+            throw MermaidRenderError.rendererUnavailable
+        }
+        return dict
+    }
+
     func teardown() {
         isTerminated = true
         loadCompletion.terminate(with: MermaidRenderError.rendererUnavailable)
