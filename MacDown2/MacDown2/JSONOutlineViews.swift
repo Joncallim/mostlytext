@@ -6,6 +6,7 @@ import SwiftUI
 /// (EPIC-11 §3.4). Path-based IDs keep collapse/selection state stable
 /// across edits and formatting.
 struct JSONOutlineRowView: View {
+    @Environment(\.locale) private var locale
     let item: ContentOutlineItem
     let depth: Int
     @Bindable var outlineController: OutlineController
@@ -23,7 +24,7 @@ struct JSONOutlineRowView: View {
                 .buttonStyle(.plain)
                 .accessibilityLabel(isCollapsed ? Text("Expand") : Text("Collapse"))
             }
-            Text(verbatim: item.title.isEmpty ? String(localized: "Untitled section") : item.title)
+            Text(verbatim: OutlineRowView.displayTitle(item.title, locale: locale))
                 .fontWeight(isCurrent ? .semibold : .regular)
                 .foregroundStyle(
                     item.title.isEmpty ? AnyShapeStyle(.tertiary) :

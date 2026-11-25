@@ -1,14 +1,40 @@
+import EditorCore
 import FileCore
 import FileTree
 import Foundation
 import Highlighting
 @testable import MacDown2
 import Testing
+import Themes
 import Workspace
 
 @MainActor
 @Suite("View locale copy")
 struct ViewLocaleCopyTests {
+    @Test func statusOutlineAndLineEndingCopyUseThePresentedLocale() throws {
+        let (root, bundle) = try makeMultilingualBundle()
+        defer { try? FileManager.default.removeItem(at: root) }
+        let locale = Locale(identifier: "fr")
+        let status = EditorStatusBarView(
+            text: "word", selectedRange: NSRange(location: 0, length: 0),
+            lineIndex: EditorLineIndex(text: "word" as NSString), indentationWidth: 4,
+            convertsTabsToSpaces: true, onGoToLine: {}
+        )
+        #expect(status.lineColumnText(locale: locale, bundle: bundle) == "FR_LINE_1_COLUMN_1")
+        #expect(status.countText(locale: locale, bundle: bundle) == "FR_4_CHARS_1_WORDS")
+        #expect(status.indentationText(locale: locale, bundle: bundle) == "FR_SPACES_4")
+        #expect(OutlineRowView.displayTitle("", locale: locale, bundle: bundle) == "FR_SECTION")
+        #expect(OutlineRowView.displayTitle("Authored", locale: locale, bundle: bundle) == "Authored")
+        #expect(SidebarSection.folder.title(locale: locale, bundle: bundle) == "FR_FOLDER")
+        #expect(SidebarSection.outline.title(locale: locale, bundle: bundle) == "FR_OUTLINE")
+        #expect(SidebarSection.search.title(locale: locale, bundle: bundle) == "FR_SEARCH")
+        let empty = LineEndingStatusItemView(profile: LineEndingProfile(detecting: "text"), onConvert: { _ in })
+        #expect(empty.label(locale: locale, bundle: bundle) == "FR_NO_ENDINGS")
+        #expect(LineEndingChoice.crlf.menuTitle(locale: locale, bundle: bundle) == "FR_CRLF")
+        #expect(SyntaxModeStatusItemView.automaticTitle("Markdown", locale: locale, bundle: bundle)
+            == "FR_AUTO_Markdown")
+    }
+
     @Test func panelAndStatusCopyUseThePresentedLocale() throws {
         let (root, bundle) = try makeMultilingualBundle()
         defer { try? FileManager.default.removeItem(at: root) }
@@ -145,6 +171,15 @@ struct ViewLocaleCopyTests {
             "Regular Expression": "FR_REGEX",
             "Sel": "FR_SEL",
             "In Selection": "FR_SELECTION",
+            "Ln %lld, Col %lld": "FR_LINE_%lld_COLUMN_%lld",
+            "%lld characters, %lld words": "FR_%lld_CHARS_%lld_WORDS",
+            "Spaces: %lld": "FR_SPACES_%lld",
+            "Untitled section": "FR_SECTION",
+            "Folder": "FR_FOLDER",
+            "Search": "FR_SEARCH",
+            "No Line Endings": "FR_NO_ENDINGS",
+            "CRLF (Windows)": "FR_CRLF",
+            "Auto-detect (%@)": "FR_AUTO_%@",
             "The backing file is unavailable. Save As to keep this copy.": "FR_UNAVAILABLE",
             "MostlyText cannot access the backing file. Save As to keep this copy.": "FR_PERMISSION",
             "The backing path is no longer a regular file. Save As to keep this copy.": "FR_NOT_FILE",

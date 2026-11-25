@@ -1,8 +1,10 @@
+import FileCore
 import OutlineUI
 import SwiftUI
 import Workspace
 
 struct OutlineRowView: View {
+    @Environment(\.locale) private var locale
     let item: OutlineItem
     let depth: Int
     @Bindable var outlineController: OutlineController
@@ -20,7 +22,7 @@ struct OutlineRowView: View {
                 .buttonStyle(.plain)
                 .accessibilityLabel(isCollapsed ? Text("Expand") : Text("Collapse"))
             }
-            Text(verbatim: item.title.isEmpty ? String(localized: "Untitled section") : item.title)
+            Text(verbatim: Self.displayTitle(item.title, locale: locale))
                 .fontWeight(isCurrent ? .semibold : .regular)
                 .foregroundStyle(
                     item.title.isEmpty ? AnyShapeStyle(.tertiary) :
@@ -49,14 +51,21 @@ struct OutlineRowView: View {
             outlineController.collapsedItemIDs.insert(item.id)
         }
     }
+
+    static func displayTitle(_ title: String, locale: Locale, bundle: Bundle = .main) -> String {
+        guard title.isEmpty else { return title }
+        let bundle = ViewLocalizationBundle.resolve(locale: locale, in: bundle)
+        return String(localized: "Untitled section", bundle: bundle, locale: locale)
+    }
 }
 
 extension SidebarSection {
-    var title: String {
-        switch self {
-        case .folder: String(localized: "Folder")
-        case .outline: String(localized: "Outline")
-        case .search: String(localized: "Search")
+    func title(locale: Locale, bundle: Bundle = .main) -> String {
+        let bundle = ViewLocalizationBundle.resolve(locale: locale, in: bundle)
+        return switch self {
+        case .folder: String(localized: "Folder", bundle: bundle, locale: locale)
+        case .outline: String(localized: "Outline", bundle: bundle, locale: locale)
+        case .search: String(localized: "Search", bundle: bundle, locale: locale)
         }
     }
 

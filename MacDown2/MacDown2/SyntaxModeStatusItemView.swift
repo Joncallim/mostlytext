@@ -32,12 +32,13 @@ struct SyntaxModeStatusItem {
 /// this document. Purely an editing aid: the file's format, preview and bytes
 /// are never touched by the choice.
 struct SyntaxModeStatusItemView: View {
+    @Environment(\.locale) private var locale
     let item: SyntaxModeStatusItem
 
     var body: some View {
         Menu(item.effective.name) {
             Toggle(
-                String(localized: "Auto-detect (\(item.automatic.name))"),
+                Self.automaticTitle(item.automatic.name, locale: locale),
                 isOn: Binding(get: { !item.isOverridden }, set: { _ in item.onSelect(nil) })
             )
             Divider()
@@ -56,5 +57,10 @@ struct SyntaxModeStatusItemView: View {
         .fixedSize()
         .accessibilityIdentifier("statusBarSyntaxMode")
         .help("Syntax Mode")
+    }
+
+    static func automaticTitle(_ name: String, locale: Locale, bundle: Bundle = .main) -> String {
+        let bundle = ViewLocalizationBundle.resolve(locale: locale, in: bundle)
+        return String(localized: "Auto-detect (\(name))", bundle: bundle, locale: locale)
     }
 }

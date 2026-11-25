@@ -14,7 +14,7 @@ struct SidebarView: View {
     @Bindable var fileTreeModel: FileTreeModel
     @Bindable var folderSearchModel: FolderSearchModel
     @Environment(\.windowCoordinator) var coordinator
-    @Environment(\.locale) private var locale
+    @Environment(\.locale) var locale
 
     @FocusState private var outlineFocused: Bool
 
@@ -115,8 +115,9 @@ struct SidebarView: View {
     /// always-visible control — arguably more discoverable than an
     /// undiscoverable drag besides.
     private func sectionLabel(for section: SidebarSection) -> some View {
-        HStack {
-            Label(section.title, systemImage: section.systemImage)
+        let title = section.title(locale: locale)
+        return HStack {
+            Label { Text(verbatim: title) } icon: { Image(systemName: section.systemImage) }
             Spacer()
             if let index = model.sectionOrder.firstIndex(of: section) {
                 HStack(spacing: 8) {
@@ -126,8 +127,8 @@ struct SidebarView: View {
                         Image(systemName: "chevron.up")
                     }
                     .disabled(index == 0)
-                    .help("Move \(section.title) Up")
-                    .accessibilityLabel("Move \(section.title) Up")
+                    .help("Move \(title) Up")
+                    .accessibilityLabel("Move \(title) Up")
 
                     Button {
                         moveSection(at: index, up: false)
@@ -135,8 +136,8 @@ struct SidebarView: View {
                         Image(systemName: "chevron.down")
                     }
                     .disabled(index == model.sectionOrder.count - 1)
-                    .help("Move \(section.title) Down")
-                    .accessibilityLabel("Move \(section.title) Down")
+                    .help("Move \(title) Down")
+                    .accessibilityLabel("Move \(title) Down")
                 }
                 .buttonStyle(.plain)
                 .font(.system(size: 10, weight: .semibold))

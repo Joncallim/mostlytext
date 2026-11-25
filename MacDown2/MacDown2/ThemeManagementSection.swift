@@ -2,6 +2,7 @@ import SwiftUI
 import Themes
 
 struct ThemeManagementSection: View {
+    @Environment(\.locale) private var locale
     let model: ThemeCatalogModel
     let controller: ThemeController
     @Binding var selectedID: String
@@ -24,7 +25,7 @@ struct ThemeManagementSection: View {
         Section("Manage Themes") {
             Picker("Theme", selection: $selectedID) {
                 ForEach(controller.available) { theme in
-                    Text(verbatim: ThemePickerDisplayName.name(for: theme)).tag(theme.id)
+                    Text(verbatim: ThemePickerDisplayName.name(for: theme, locale: locale)).tag(theme.id)
                 }
             }
             .accessibilityIdentifier("managedThemePicker")

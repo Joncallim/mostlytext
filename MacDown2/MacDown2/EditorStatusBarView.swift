@@ -13,6 +13,7 @@ import Themes
 /// line-ending state, encoding, syntax mode) are deliberately deferred to
 /// Slices 3/8/9 rather than stubbed here.
 struct EditorStatusBarView: View {
+    @Environment(\.locale) private var locale
     /// The live text, uncopied, and its precomputed metrics: a selection-only
     /// re-render does no whole-document work (#183 F16).
     let source: NSString
@@ -89,18 +90,30 @@ struct EditorStatusBarView: View {
     /// pass (epic-22-implementation.md §6.7's promised status-bar test
     /// coverage).
     var lineColumnText: String {
+        lineColumnText(locale: .current)
+    }
+
+    func lineColumnText(locale: Locale, bundle: Bundle = .main) -> String {
         let line = lineIndex.line(atUTF16Offset: selectedRange.location)
         let column = lineIndex.column(atUTF16Offset: selectedRange.location, onLine: line, in: source)
-        return String(localized: "Ln \(line), Col \(column)", bundle: .main)
+        let bundle = ViewLocalizationBundle.resolve(locale: locale, in: bundle)
+        return String(localized: "Ln \(line), Col \(column)", bundle: bundle, locale: locale)
     }
 
     var countText: String {
+        countText(locale: .current)
+    }
+
+    func countText(locale: Locale, bundle: Bundle = .main) -> String {
         if selectedRange.length > 0, NSMaxRange(selectedRange) <= source.length {
             let selectedCharacterCount = source.substring(with: selectedRange).count
-            return Self.selectedCountText(selectedCharacterCount)
+            return Self.selectedCountText(selectedCharacterCount, bundle: bundle, locale: locale)
         }
         guard let metrics else { return "—" }
-        return Self.documentCountText(characterCount: metrics.characterCount, wordCount: metrics.wordCount)
+        return Self.documentCountText(
+            characterCount: metrics.characterCount, wordCount: metrics.wordCount,
+            bundle: bundle, locale: locale
+        )
     }
 
     static func documentCountText(
@@ -119,9 +132,14 @@ struct EditorStatusBarView: View {
     }
 
     var indentationText: String {
-        convertsTabsToSpaces
-            ? String(localized: "Spaces: \(indentationWidth)", bundle: .main)
-            : String(localized: "Tabs: \(indentationWidth)", bundle: .main)
+        indentationText(locale: .current)
+    }
+
+    func indentationText(locale: Locale, bundle: Bundle = .main) -> String {
+        let bundle = ViewLocalizationBundle.resolve(locale: locale, in: bundle)
+        return convertsTabsToSpaces
+            ? String(localized: "Spaces: \(indentationWidth)", bundle: bundle, locale: locale)
+            : String(localized: "Tabs: \(indentationWidth)", bundle: bundle, locale: locale)
     }
 
     private struct Labels {
@@ -133,7 +151,11 @@ struct EditorStatusBarView: View {
     var body: some View {
         // Read the existing metrics/selection once even when several layouts
         // are measured. Whole status items keep their intrinsic readable width.
-        let labels = Labels(lineColumn: lineColumnText, count: countText, indentation: indentationText)
+        let labels = Labels(
+            lineColumn: lineColumnText(locale: locale),
+            count: countText(locale: locale),
+            indentation: indentationText(locale: locale)
+        )
         ViewThatFits(in: .horizontal) {
             singleRow(labels)
             stackedRows(labels)
@@ -187,20 +209,20 @@ struct EditorStatusBarView: View {
     @ViewBuilder
     private func primaryItems(_ labels: Labels) -> some View {
         Button(action: onGoToLine) {
-            Text(labels.lineColumn)
+            Text(verbatim: labels.lineColumn)
         }
         .buttonStyle(.plain)
         .accessibilityIdentifier("statusBarLineColumn")
         .help("Go to Line/Column")
         .fixedSize(horizontal: true, vertical: false)
 
-        Text(labels.count)
+        Text(verbatim: labels.count)
             .accessibilityIdentifier("statusBarCount")
             .fixedSize(horizontal: true, vertical: false)
     }
 
     private func indentationItem(_ labels: Labels) -> some View {
-        Text(labels.indentation)
+        Text(verbatim: labels.indentation)
             .accessibilityIdentifier("statusBarIndentation")
             .fixedSize(horizontal: true, vertical: false)
     }
