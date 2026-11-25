@@ -108,17 +108,19 @@ struct FindBarView: View {
                 .background(.quaternary, in: RoundedRectangle(cornerRadius: 6))
                 .frame(minWidth: 200, maxWidth: 320)
 
-                optionToggle("Aa", isOn: $model.options.isCaseSensitive, help: String(localized: "Case Sensitive"))
+                optionToggle("Aa", isOn: $model.options.isCaseSensitive,
+                             help: String(localized: "Case Sensitive", locale: locale))
                 optionToggle(
-                    String(localized: "W"),
+                    String(localized: "W", locale: locale),
                     isOn: $model.options.isWholeWord,
-                    help: String(localized: "Whole Word")
+                    help: String(localized: "Whole Word", locale: locale)
                 )
-                optionToggle(".*", isOn: $model.options.isRegex, help: String(localized: "Regular Expression"))
+                optionToggle(".*", isOn: $model.options.isRegex,
+                             help: String(localized: "Regular Expression", locale: locale))
                 optionToggle(
-                    String(localized: "Sel"),
+                    String(localized: "Sel", locale: locale),
                     isOn: $model.options.searchesSelectionOnly,
-                    help: String(localized: "In Selection")
+                    help: String(localized: "In Selection", locale: locale)
                 )
 
                 if model.isSearching {
@@ -277,7 +279,7 @@ struct FindBarView: View {
     @ViewBuilder
     private var statusLabel: some View {
         if let error = model.error {
-            Text(errorMessage(for: error))
+            Text(errorMessage(for: error, locale: locale))
                 .font(.caption)
                 .foregroundStyle(.red)
                 .lineLimit(1)
@@ -381,12 +383,12 @@ struct FindBarView: View {
     }
 }
 
-private func errorMessage(for error: SearchQueryError) -> String {
+func errorMessage(for error: SearchQueryError, locale: Locale, bundle: Bundle = .main) -> String {
     switch error {
     case let .invalidRegex(message): message
     // `EditorFindModel` never stores a cancelled search as its error; this
     // only keeps the switch exhaustive.
-    case .cancelled: String(localized: "Search cancelled")
-    case .timedOut: String(localized: "Search took too long — refine your query")
+    case .cancelled: String(localized: "Search cancelled", bundle: bundle, locale: locale)
+    case .timedOut: String(localized: "Search took too long — refine your query", bundle: bundle, locale: locale)
     }
 }
