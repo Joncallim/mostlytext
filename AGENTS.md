@@ -136,6 +136,24 @@ These rules govern iteration, not acceptance. [Release Hardening §12](planning/
   scratch/DerivedData, GUI profiles and evidence directories by agent; keep
   load-sensitive app/UI lanes serial on the same Mac. Do not replace evidence
   for the current candidate with a cached result from different inputs.
+- **Select local tests from all working changes.** The existing CI selector
+  compares committed revisions only. For local iteration, account for the
+  branch diff plus staged, unstaged and untracked inputs; use the union of
+  affected lanes, and broaden when discovery or ownership is uncertain. If
+  automating this, extend the existing selector rather than creating a second
+  matrix. Narrow app checks only where ownership and consumers are reviewed.
+- **Cut duplicate builds before cutting checks.** For CI optimisation, first
+  prove that SwiftPM's build-tests step subsumes the preceding plain build
+  while retaining both XCTest and the owned Swift Testing helper. Use the
+  Debug build-for-testing as compile evidence only if equivalent, and reuse
+  Release output only when build inputs and required checks match. Retain
+  standalone CLI and embedded CLI verification. Benchmark the same revision
+  on the same runner class and record per-step times and checks retained.
+- **Separate headless app testing from GUI evidence.** Build the non-UI test
+  bundle only when selected. Give the GUI bundle a separate compile check
+  wherever required, and keep actual interactive release validation distinct.
+  Do not change required check names or drop a build/test gate as an incidental
+  optimisation; prove equivalent evidence before changing any lane.
 - **Review in bounded tranches.** Within the existing epic branch convention,
   group related fixes serving one acceptance outcome, not unrelated edits or
   one PR per test. Carry exact, still-applicable evidence forward with its
