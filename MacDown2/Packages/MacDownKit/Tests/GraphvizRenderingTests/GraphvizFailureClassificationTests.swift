@@ -13,4 +13,9 @@ struct GraphvizFailureClassificationTests {
         #expect(GraphvizWebRenderer.failure(for: nil) == .rendererUnavailable)
         #expect(GraphvizWebRenderer.failure(for: " \n") == .rendererUnavailable)
     }
+
+    @Test func oversizedGeneratedCanvasDoesNotBlameAuthoredDOTSyntax() {
+        #expect(GraphvizWebRenderer.failure(for: "diagram exceeds vector viewport limit") ==
+            .rendererUnavailable)
+    }
 }

@@ -28,10 +28,13 @@ dimensions.
   and five-second render limits. An excessive viewport is a renderer resource
   refusal, not an authored syntax error. Preview keeps its error state; the
   Export and Quick Look contribution paths preserve source and continue
-  rendering independent fences.
+  rendering independent fences. Graphviz's failure classifier recognizes the
+  exact new internal refusal instead of blaming the authored DOT.
 - Test the actual bundled WebKit scripts with tiny SVG fixtures at the side
   and area boundaries and immediately beyond them. Existing real renderer and
-  composition suites qualify ordinary output and fallback downstream.
+  composition suites qualify ordinary output and fallback downstream. The
+  Graphviz classifier regression failed on the baseline implementation as
+  `invalidSyntax` and passed after the resource-failure mapping.
 
 This is a bounded output-consumption policy. It does **not** cap D2/Graphviz
 WASM memory during compilation, establish an end-to-end Quick Look latency
