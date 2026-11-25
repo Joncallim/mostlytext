@@ -12,14 +12,23 @@ import QuickLookSource
 
 private let derivedLogger = Logger(subsystem: "app.mostlytext.quicklook.worker", category: "derived")
 
-/// Selected-source static math, Graphviz and Mermaid. The parent already owns a complete
-/// source fallback; each accepted snapshot is complete before a later renderer runs.
+/// Selected-source formatted Markdown, math, Graphviz and Mermaid. The parent
+/// already owns an escaped source fallback; each accepted snapshot is complete
+/// before a later renderer runs.
 @MainActor
 enum DerivedMathReply {
     static func render(
         _ source: String, publishDeadline: Double, onSnapshot: @MainActor (Data) -> Bool
     ) async {
-        guard source.contains("$") || source.contains("```") || source.contains("~~~") else { return }
+        // The source-only snapshot is already marked. Preserve ordinary GFM
+        // when it completes, even for files with no technical content.
+        if let gfm = QuickLookSourceFallback.renderedReplyHTML(
+            forSource: source, contributions: [], sourceGeneration: 1
+        ) {
+            _ = onSnapshot(gfm)
+        }
+        guard source.contains("$") || source.contains("```") || source.contains("~~~"),
+              ProcessInfo.processInfo.systemUptime < publishDeadline else { return }
         do {
             let document = try await ParseEngine().parse(source, revision: 1)
             var mathResults: [ContributionResult] = []

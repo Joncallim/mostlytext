@@ -6,6 +6,28 @@ import Foundation
 import Testing
 
 struct QuickLookSourceFallbackTests {
+    @Test func sourceOnlyFallbackIsEscapedAndBoundedBeforeMarkdownRendering() throws {
+        let source = "# Heading & <script>bad()</script>\n[link](https://example.invalid/go)\n"
+        let fallback = try #require(String(
+            bytes: QuickLookSourceFallback.sourceOnlyReplyHTML(forSource: source), encoding: .utf8
+        ))
+        #expect(fallback.contains("# Heading &amp; &lt;script&gt;bad()&lt;/script&gt;"))
+        #expect(fallback.contains("[link](https://example.invalid/go)"))
+        #expect(!fallback.contains("<h1>"))
+        #expect(!fallback.contains("<script>"))
+        #expect(!fallback.contains("href="))
+        #expect(fallback.contains("default-src 'none'; img-src data:"))
+
+        let worst = String(repeating: "\"", count: QuickLookSourceFallback.maximumSourceBytes)
+        let maximumFallback = QuickLookSourceFallback.sourceOnlyReplyHTML(forSource: worst)
+        #expect(maximumFallback.count <= QuickLookSourceFallback.maximumHTMLBytes)
+        #expect(maximumFallback.count > QuickLookSourceFallback.maximumSourceBytes)
+        let gfm = try #require(QuickLookSourceFallback.renderedReplyHTML(
+            forSource: source, contributions: [], sourceGeneration: 1
+        ))
+        #expect(String(data: gfm, encoding: .utf8)?.contains("<h1>Heading &amp;") == true)
+    }
+
     @Test func rendererRefusalAndOversizeExpansionPreserveEscapedSource() throws {
         let source = "<script>authored</script> &"
         let refused = try #require(String(bytes: QuickLookSourceFallback.html(for: source, render: { _ in "" }),
