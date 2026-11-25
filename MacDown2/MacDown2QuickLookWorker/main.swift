@@ -67,34 +67,31 @@ private func sourceWorkerMain() -> Never {
           lseek(3, 0, SEEK_SET) == 0,
           let source = try? QuickLookSourceFallback.selectedSource(forOpenDescriptor: 3)
     else { Darwin._exit(1) }
-    let fallback = QuickLookSourceFallback.replyHTML(
-        forSource: source, contributions: [], sourceGeneration: 0
-    )
+    let fallback = QuickLookSourceFallback.sourceOnlyReplyHTML(forSource: source)
     guard fallback.count <= maximumOutputBytes,
           writeAll(4, bytes: fallback),
           writeAll(6, bytes: Data([0x46]))
     else { Darwin._exit(1) }
-    // The source fallback and its marker are immutable before slower work.
-    if source.contains("$") || source.contains("```") || source.contains("~~~") {
-        guard Thread.isMainThread else { Darwin._exit(1) }
-        let state = MainActor.assumeIsolated { DerivedReplyState() }
-        let publishDeadline = expires - 0.75
-        Task { @MainActor in
-            await DerivedMathReply.render(
-                source, publishDeadline: publishDeadline, onSnapshot: { snapshot in
-                    guard snapshot.count <= maximumOutputBytes else { return false }
-                    let descriptor = state.nextDescriptor
-                    publishDerived(snapshot, descriptor: descriptor, marker: descriptor == 5 ? 0x44 : 0x47)
-                    state.nextDescriptor = descriptor == 5 ? 7 : 5
-                    return true
-                }
-            )
-            state.completed = true
-        }
-        while ProcessInfo.processInfo.systemUptime < publishDeadline,
-              !MainActor.assumeIsolated({ state.completed }) {
-            RunLoop.main.run(until: Date().addingTimeInterval(0.01))
-        }
+    // The escaped source and marker are immutable before GFM parsing or any
+    // technical renderer starts. Ordinary GFM is the first derived snapshot.
+    guard Thread.isMainThread else { Darwin._exit(1) }
+    let state = MainActor.assumeIsolated { DerivedReplyState() }
+    let publishDeadline = expires - 0.75
+    Task { @MainActor in
+        await DerivedMathReply.render(
+            source, publishDeadline: publishDeadline, onSnapshot: { snapshot in
+                guard snapshot.count <= maximumOutputBytes else { return false }
+                let descriptor = state.nextDescriptor
+                publishDerived(snapshot, descriptor: descriptor, marker: descriptor == 5 ? 0x44 : 0x47)
+                state.nextDescriptor = descriptor == 5 ? 7 : 5
+                return true
+            }
+        )
+        state.completed = true
+    }
+    while ProcessInfo.processInfo.systemUptime < publishDeadline,
+          !MainActor.assumeIsolated({ state.completed }) {
+        RunLoop.main.run(until: Date().addingTimeInterval(0.01))
     }
     Darwin._exit(0)
 }

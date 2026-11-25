@@ -77,6 +77,13 @@ public enum QuickLookSourceFallback {
         }
     }
 
+    /// Publishable before Markdown parsing or any derived renderer runs. If
+    /// either later stage stalls, the worker can still return this escaped,
+    /// passive view of the selected source.
+    public static func sourceOnlyReplyHTML(forSource source: String) -> Data {
+        document(body: sourceView(source))
+    }
+
     /// A derived snapshot may advance the published reply only when passive
     /// rendering itself succeeded within budget. The source-only fallback is
     /// already published separately by the worker.
