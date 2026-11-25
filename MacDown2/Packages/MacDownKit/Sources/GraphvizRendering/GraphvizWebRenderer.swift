@@ -117,7 +117,12 @@ public actor GraphvizWebRenderer: GraphvizDiagramRendering {
         guard let message, !message.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty else {
             return .rendererUnavailable
         }
-        return message.hasPrefix("Aborted()") ? .rendererUnavailable : .invalidSyntax(message)
+        // The viewport refusal comes from our generated SVG guard after Viz
+        // accepted the authored DOT. It is a resource failure, not syntax.
+        if message == "diagram exceeds vector viewport limit" || message.hasPrefix("Aborted()") {
+            return .rendererUnavailable
+        }
+        return .invalidSyntax(message)
     }
 
     private func withPoolErrorMapping<T: Sendable>(_ body: () async throws -> T) async throws -> T {

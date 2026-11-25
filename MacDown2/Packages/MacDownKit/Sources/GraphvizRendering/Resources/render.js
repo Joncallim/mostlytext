@@ -42,6 +42,19 @@ const GENERATED_NODE_COMPARISON_SENTINEL = "#fdfcfb";
 // without applying a CSS-only substitution after layout.
 const GENERATED_FONT_NAME = "Helvetica";
 
+// Match Mermaid's SVG-only viewport ceiling before Graphviz's generated
+// elements are rewritten or the SVG is copied into AppKit Preview/Export.
+// Output-byte limits alone cannot bound the decoded canvas dimensions.
+const GRAPHVIZ_VECTOR_VIEWPORT_LIMITS = Object.freeze({ maxSide: 65536, maxArea: 64 * 1024 * 1024 });
+
+function checkedGraphvizVectorViewport(width, height) {
+    if (width > GRAPHVIZ_VECTOR_VIEWPORT_LIMITS.maxSide ||
+        height > GRAPHVIZ_VECTOR_VIEWPORT_LIMITS.maxSide ||
+        width > GRAPHVIZ_VECTOR_VIEWPORT_LIMITS.maxArea / height) {
+        throw new Error("diagram exceeds vector viewport limit");
+    }
+}
+
 function normalizedGraphvizSVG(svg, comparisonSVG, fill, nodeFill, stroke) {
     const document = new DOMParser().parseFromString(svg, "image/svg+xml");
     const comparisonDocument = new DOMParser().parseFromString(comparisonSVG, "image/svg+xml");
@@ -54,6 +67,7 @@ function normalizedGraphvizSVG(svg, comparisonSVG, fill, nodeFill, stroke) {
     if (values.length !== 4 || !values.every(Number.isFinite) || values[2] <= 0 || values[3] <= 0) {
         throw new Error("invalid Graphviz SVG dimensions");
     }
+    checkedGraphvizVectorViewport(values[2], values[3]);
 
     const nodes = [...root.querySelectorAll("g.node")];
     const comparisonNodes = [...comparisonRoot.querySelectorAll("g.node")];
