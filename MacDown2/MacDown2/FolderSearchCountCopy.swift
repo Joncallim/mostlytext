@@ -1,3 +1,4 @@
+import FileCore
 import Foundation
 
 /// Keeps each folder-search count beside its noun so catalog plural rules
@@ -12,6 +13,7 @@ enum FolderSearchCountCopy {
     case previewRemaining(matches: Int)
 
     func message(bundle: Bundle = .main, locale: Locale = .current) -> String {
+        let bundle = ViewLocalizationBundle.resolve(locale: locale, in: bundle)
         switch self {
         case let .confirmation(matches, files):
             return String(localized: "Replace \(matches) matches in \(files) files?", bundle: bundle, locale: locale)

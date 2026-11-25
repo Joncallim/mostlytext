@@ -9,7 +9,8 @@ import Foundation
 /// alert and `ContentAreaView`'s empty state so their explanations stay consistent.
 enum FileOpenFailurePresentation {
     static func message(for error: FileStoreError, locale: Locale = .current, bundle: Bundle = .main) -> String {
-        switch error {
+        let bundle = ViewLocalizationBundle.resolve(locale: locale, in: bundle)
+        return switch error {
         case .fileMissing: String(localized: "The file could not be found.", bundle: bundle, locale: locale)
         case .permissionDenied:
             String(localized: "MostlyText does not have permission to read this file.", bundle: bundle, locale: locale)

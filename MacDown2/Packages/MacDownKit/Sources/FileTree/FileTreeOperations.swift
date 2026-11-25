@@ -23,7 +23,7 @@ public enum FileTreeOperationError: Error, Sendable, Equatable, LocalizedError {
     /// The sidebar presents this through `Text(verbatim:)`; resolve catalog
     /// copy for that view's locale while retaining authored underlying detail.
     public func message(locale: Locale, bundle: Bundle? = nil) -> String {
-        let bundle = bundle ?? .module
+        let bundle = ViewLocalizationBundle.resolve(locale: locale, in: bundle ?? .module)
         return switch self {
         case .nameEmpty: String(localized: "A name is required.", bundle: bundle, locale: locale)
         case .nameContainsPathSeparator: String(

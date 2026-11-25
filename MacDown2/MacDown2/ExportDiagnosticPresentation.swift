@@ -1,3 +1,4 @@
+import FileCore
 import Foundation
 
 /// Localised text for the existing export alert. Diagnostics remain literal
@@ -7,6 +8,7 @@ struct ExportDiagnosticPresentation {
     let body: String
 
     init(messages: [String], bundle: Bundle = .main, locale: Locale = .current) {
+        let bundle = ViewLocalizationBundle.resolve(locale: locale, in: bundle)
         title = String(localized: "Exported with \(messages.count) issues", bundle: bundle, locale: locale)
         let shown = messages.prefix(6)
         var text = shown.joined(separator: "\n")

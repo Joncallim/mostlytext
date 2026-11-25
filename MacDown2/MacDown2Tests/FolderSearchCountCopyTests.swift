@@ -44,7 +44,7 @@ struct FolderSearchCountCopyTests {
             .message(bundle: bundle, locale: locale) == "and 3 more")
     }
 
-    @Test func compiledPluralFamiliesKeepPathAndGrammar() throws {
+    @Test func compiledPluralFamiliesKeepPathAndGrammar() {
         let cases: [PluralCase] = [
             .init(language: "fr", count: 0, confirmation: "Remplacer 0 correspondance dans 0 fichier ?",
                   row: "Correspondances dans note.md : 0 correspondance"),
@@ -62,7 +62,7 @@ struct FolderSearchCountCopyTests {
                   row: "Dopasowania w note.md: 22 dopasowania"),
         ]
         for item in cases {
-            let bundle = try resources(item.language)
+            let bundle = Bundle.main
             let locale = Locale(identifier: item.language)
             #expect(FolderSearchCountCopy.confirmation(matches: item.count, files: item.count)
                 .message(bundle: bundle, locale: locale) == item.confirmation)
@@ -78,14 +78,14 @@ struct FolderSearchCountCopyTests {
             .message(bundle: bundle, locale: locale) == "2ファイルの1件の一致を置換しますか？")
     }
 
-    @Test func compiledProgressAndPreviewCountsUseOwningCatalog() throws {
+    @Test func compiledProgressAndPreviewCountsUseOwningCatalog() {
         let cases: [ProgressCase] = [
             .init(language: "fr", progress: "Remplacement de 1 sur 12…", remaining: "et 3 autres"),
             .init(language: "ja", progress: "1 / 12 件を置換中…", remaining: "ほか 3 件"),
             .init(language: "pl", progress: "Zastępowanie 1 z 12…", remaining: "i jeszcze 3"),
         ]
         for item in cases {
-            let bundle = try resources(item.language)
+            let bundle = Bundle.main
             let locale = Locale(identifier: item.language)
             #expect(FolderSearchCountCopy.replaceProgress(completed: 1, total: 12)
                 .message(bundle: bundle, locale: locale) == item.progress)
@@ -99,7 +99,9 @@ struct FolderSearchCountCopyTests {
         let root = FileManager.default.temporaryDirectory
             .appendingPathComponent("mostlytext-search-copy-\(UUID().uuidString)")
         let french = root.appendingPathComponent("fr.lproj")
+        let english = root.appendingPathComponent("en.lproj")
         try FileManager.default.createDirectory(at: french, withIntermediateDirectories: true)
+        try FileManager.default.createDirectory(at: english, withIntermediateDirectories: true)
         defer { try? FileManager.default.removeItem(at: root) }
         let translations = [
             "changed since the search; not modified": "FR_CHANGED",
@@ -115,6 +117,9 @@ struct FolderSearchCountCopyTests {
             .map { "\"\($0.key)\" = \"\($0.value)\";" }.joined(separator: "\n")
         try strings.write(to: french.appendingPathComponent("Localizable.strings"),
                           atomically: true, encoding: .utf8)
+        try strings.replacingOccurrences(of: "FR_", with: "EN_").write(
+            to: english.appendingPathComponent("Localizable.strings"), atomically: true, encoding: .utf8
+        )
         let bundle = try #require(Bundle(url: root))
         let locale = Locale(identifier: "fr")
         let reasons: [(ReplacementFileOutcome, String)] = [

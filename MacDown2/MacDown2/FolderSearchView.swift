@@ -1,3 +1,4 @@
+import FileCore
 import SwiftUI
 import TextSearch
 
@@ -198,7 +199,8 @@ struct FolderSearchView: View {
     static func reason(
         for outcome: ReplacementFileOutcome, locale: Locale, bundle: Bundle = .main
     ) -> String {
-        switch outcome {
+        let bundle = ViewLocalizationBundle.resolve(locale: locale, in: bundle)
+        return switch outcome {
         case .replaced: ""
         case .skippedChangedSinceSearch:
             String(localized: "changed since the search; not modified", bundle: bundle, locale: locale)

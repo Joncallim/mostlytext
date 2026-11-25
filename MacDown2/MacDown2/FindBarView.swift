@@ -1,4 +1,5 @@
 import EditorCore
+import FileCore
 import SwiftUI
 import TextSearch
 
@@ -76,6 +77,7 @@ struct FindBarView: View {
     @Environment(\.windowCoordinator) private var coordinator
 
     var body: some View {
+        let copy = FindBarLocalizedCopy(locale: locale)
         VStack(spacing: 6) {
             HStack(spacing: 10) {
                 HStack(spacing: 6) {
@@ -109,18 +111,18 @@ struct FindBarView: View {
                 .frame(minWidth: 200, maxWidth: 320)
 
                 optionToggle("Aa", isOn: $model.options.isCaseSensitive,
-                             help: String(localized: "Case Sensitive", locale: locale))
+                             help: copy.caseSensitive)
                 optionToggle(
-                    String(localized: "W", locale: locale),
+                    copy.wholeWordShort,
                     isOn: $model.options.isWholeWord,
-                    help: String(localized: "Whole Word", locale: locale)
+                    help: copy.wholeWord
                 )
                 optionToggle(".*", isOn: $model.options.isRegex,
-                             help: String(localized: "Regular Expression", locale: locale))
+                             help: copy.regularExpression)
                 optionToggle(
-                    String(localized: "Sel", locale: locale),
+                    copy.inSelectionShort,
                     isOn: $model.options.searchesSelectionOnly,
-                    help: String(localized: "In Selection", locale: locale)
+                    help: copy.inSelection
                 )
 
                 if model.isSearching {
@@ -294,6 +296,7 @@ struct FindBarView: View {
         } else {
             Text(verbatim: String(
                 localized: "\((model.currentIndex ?? 0) + 1) of \(model.matchCount)",
+                bundle: ViewLocalizationBundle.resolve(locale: locale, in: .main),
                 locale: locale
             ))
             .font(.caption)
@@ -340,7 +343,9 @@ struct FindBarView: View {
             onMatchesChanged(reveal, intentToken)
         }
     }
+}
 
+extension FindBarView {
     /// A no-op (not an error) when there's no current match to replace, or
     /// while a search is still in flight — mirrors the disabled state of
     /// the "Replace" button, but this guard is what actually matters: the
@@ -384,7 +389,8 @@ struct FindBarView: View {
 }
 
 func errorMessage(for error: SearchQueryError, locale: Locale, bundle: Bundle = .main) -> String {
-    switch error {
+    let bundle = ViewLocalizationBundle.resolve(locale: locale, in: bundle)
+    return switch error {
     case let .invalidRegex(message): message
     // `EditorFindModel` never stores a cancelled search as its error; this
     // only keeps the switch exhaustive.

@@ -1,4 +1,5 @@
 import AppKit
+import FileCore
 import SwiftUI
 import TextFilters
 
@@ -92,7 +93,8 @@ struct TextFilterCommands: Commands {
     }
 
     static func installedExamplesTitle(count: Int, bundle: Bundle = .main, locale: Locale = .current) -> String {
-        String(AttributedString(
+        let bundle = ViewLocalizationBundle.resolve(locale: locale, in: bundle)
+        return String(AttributedString(
             localized: "^[Added \(count) Example Script](inflect: true)", bundle: bundle, locale: locale
         ).characters)
     }

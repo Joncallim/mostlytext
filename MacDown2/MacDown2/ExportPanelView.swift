@@ -1,5 +1,6 @@
 import AppKit
 import ExportService
+import FileCore
 import SwiftUI
 import UniformTypeIdentifiers
 
@@ -14,7 +15,8 @@ enum ExportFormatOption: String, CaseIterable, Identifiable {
     }
 
     func title(locale: Locale, bundle: Bundle = .main) -> String {
-        switch self {
+        let bundle = ViewLocalizationBundle.resolve(locale: locale, in: bundle)
+        return switch self {
         case .standaloneHTML: String(localized: "HTML", bundle: bundle, locale: locale)
         case .selfContainedHTML: String(localized: "Self-contained HTML", bundle: bundle, locale: locale)
         case .pdf: String(localized: "PDF", bundle: bundle, locale: locale)
@@ -39,7 +41,8 @@ enum ExportFormatOption: String, CaseIterable, Identifiable {
     static let knownExtensions = ["html", "htm", "pdf"]
 
     func explanation(locale: Locale, bundle: Bundle = .main) -> String? {
-        switch self {
+        let bundle = ViewLocalizationBundle.resolve(locale: locale, in: bundle)
+        return switch self {
         case .standaloneHTML: nil
         case .selfContainedHTML:
             String(localized: "Embeds the stylesheet and every image into one file that opens anywhere.",
