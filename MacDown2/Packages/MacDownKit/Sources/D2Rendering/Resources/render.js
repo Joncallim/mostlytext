@@ -51,6 +51,18 @@ function removeDormantD2SketchRules(root) {
     }
 }
 
+// Match Mermaid's SVG-only viewport ceiling before serializing a D2 SVG for
+// AppKit Preview or Export. SVG byte size alone does not bound decoded canvas
+// dimensions. This does not claim to cap D2's compile-time WASM memory.
+const D2_VECTOR_VIEWPORT_LIMITS = Object.freeze({ maxSide: 65536, maxArea: 64 * 1024 * 1024 });
+
+function checkedD2VectorViewport(width, height) {
+    if (width > D2_VECTOR_VIEWPORT_LIMITS.maxSide || height > D2_VECTOR_VIEWPORT_LIMITS.maxSide ||
+        width > D2_VECTOR_VIEWPORT_LIMITS.maxArea / height) {
+        throw new Error("diagram exceeds vector viewport limit");
+    }
+}
+
 function opaqueD2Canvas(svg, fill) {
     const document = new DOMParser().parseFromString(svg, "image/svg+xml");
     const root = document.documentElement;
@@ -59,6 +71,7 @@ function opaqueD2Canvas(svg, fill) {
     if (values.length !== 4 || !values.every(Number.isFinite) || values[2] <= 0 || values[3] <= 0) {
         throw new Error("invalid D2 SVG dimensions");
     }
+    checkedD2VectorViewport(values[2], values[3]);
     // D2's generated background is the first rect in its nested SVG. AppKit's
     // SVG decoder does not apply D2's scoped CSS class to that rect and paints
     // it black. Make the generated theme background literal while
