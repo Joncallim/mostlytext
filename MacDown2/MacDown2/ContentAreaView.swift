@@ -144,7 +144,7 @@ struct ContentAreaView: View {
         HStack(spacing: 8) {
             ProgressView()
                 .controlSize(.small)
-            Text(verbatim: phase.label)
+            Text(verbatim: phase.label(locale: locale))
                 .font(.system(size: 11))
                 .foregroundStyle(.secondary)
                 .lineLimit(2)
@@ -297,7 +297,7 @@ private struct WorkspaceRecoveryRequiredNotice: View {
             HStack(spacing: 10) {
                 Image(systemName: "exclamationmark.triangle")
                     .foregroundStyle(.orange)
-                Text(verbatim: WorkspaceError.textNotRepresentable(encodingName: encodingName).errorDescription ?? "")
+                Text(verbatim: WorkspaceError.textNotRepresentableCopy(encodingName: encodingName, locale: locale))
                     .font(.callout)
                 Spacer()
                 Button("Dismiss") {

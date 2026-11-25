@@ -13,6 +13,7 @@ struct SidebarView: View {
     @Bindable var fileTreeModel: FileTreeModel
     @Bindable var folderSearchModel: FolderSearchModel
     @Environment(\.windowCoordinator) var coordinator
+    @Environment(\.locale) private var locale
 
     @FocusState private var outlineFocused: Bool
 
@@ -61,7 +62,8 @@ struct SidebarView: View {
         ) {
             Button("OK", role: .cancel) { fileTreeModel.clearOperationError() }
         } message: {
-            Text(verbatim: fileTreeModel.lastOperationError?.localizedDescription ?? String(localized: "Unknown error"))
+            Text(verbatim: fileTreeModel.lastOperationError?.message(locale: locale)
+                ?? String(localized: "Unknown error", locale: locale))
         }
     }
 

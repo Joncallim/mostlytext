@@ -1,8 +1,10 @@
 import FileCore
+import FileTree
 import Foundation
 import Highlighting
 @testable import MacDown2
 import Testing
+import Workspace
 
 @MainActor
 @Suite("View locale copy")
@@ -86,11 +88,31 @@ struct ViewLocaleCopyTests {
         #expect(note.explanation(locale: english).contains(englishNumber))
     }
 
+    @Test func progressAndRecoveryCopyUseThePresentedLocale() throws {
+        let (root, bundle) = try makeFrenchBundle()
+        defer { try? FileManager.default.removeItem(at: root) }
+        let locale = Locale(identifier: "fr")
+
+        #expect(ExportPhase.preparing.label(locale: locale, bundle: bundle) == "FR_PREPARING")
+        #expect(ExportPhase.loadingPDF.label(locale: locale, bundle: bundle) == "FR_LOADING_PDF")
+        #expect(ExportPhase.cancelling.label(locale: locale, bundle: bundle) == "FR_CANCELLING")
+        #expect(FileTreeOperationError.nameEmpty.message(locale: locale, bundle: bundle) == "FR_NAME_REQUIRED")
+        #expect(FileTreeOperationError.sourceMissing.message(locale: locale, bundle: bundle) == "FR_ITEM_MISSING")
+        #expect(FileTreeOperationError.underlying("authored detail").message(locale: locale, bundle: bundle)
+            == "authored detail")
+        #expect(WorkspaceError.textNotRepresentableCopy(
+            encodingName: "Windows-1252", locale: locale, bundle: bundle
+        ) == "FR_ENCODING_Windows-1252")
+    }
+
     private func makeFrenchBundle() throws -> (URL, Bundle) {
         let root = FileManager.default.temporaryDirectory
             .appendingPathComponent("mostlytext-view-locale-\(UUID().uuidString)")
         let french = root.appendingPathComponent("fr.lproj")
         try FileManager.default.createDirectory(at: french, withIntermediateDirectories: true)
+        let encodingKey = "This text cannot be saved as %@ without losing characters. " +
+            "Nothing was changed; choose another encoding, or delete an invisible byte-order-mark character " +
+            "(U+FEFF or U+FFFE) at the very start of the text."
         let translations = [
             "HTML": "FR_HTML",
             "Self-contained HTML": "FR_SELF_CONTAINED",
@@ -121,6 +143,12 @@ struct ViewLocaleCopyTests {
             "The file's contents could not be verified after saving.": "FR_SAVE_DECODING",
             "A competing version was preserved separately.": "FR_SAVE_COMPETING",
             "The file could not be verified after saving.": "FR_SAVE_READ",
+            "Preparing export…": "FR_PREPARING",
+            "Loading PDF content…": "FR_LOADING_PDF",
+            "Cancelling export…": "FR_CANCELLING",
+            "A name is required.": "FR_NAME_REQUIRED",
+            "The item no longer exists.": "FR_ITEM_MISSING",
+            encodingKey: "FR_ENCODING_%@",
         ]
         let strings = translations.sorted { $0.key < $1.key }
             .map { "\"\($0.key)\" = \"\($0.value)\";" }.joined(separator: "\n")
