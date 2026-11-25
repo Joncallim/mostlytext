@@ -15,20 +15,58 @@ public enum FileTreeOperationError: Error, Sendable, Equatable, LocalizedError {
     case underlying(String)
 
     public var errorDescription: String? {
-        switch self {
-        case .nameEmpty: String(localized: "A name is required.", bundle: .module)
-        case .nameContainsPathSeparator: String(localized: "Names cannot contain / or :.", bundle: .module)
-        case let .nameReserved(name): String(localized: "\"\(name)\" is not a valid name.", bundle: .module)
-        case let .nameExists(name): String(localized: "\"\(name)\" already exists.", bundle: .module)
-        case .sourceMissing: String(localized: "The item no longer exists.", bundle: .module)
-        case .destinationNotDirectory: String(localized: "The destination is not a folder.", bundle: .module)
-        case .outsideCurrentRoot: String(localized: "The destination is outside the open folder.", bundle: .module)
-        case .staleOperation: String(localized: "The folder changed before the operation could start.", bundle: .module)
-        case .moveIntoOwnSubtree: String(localized: "A folder cannot be moved into itself.", bundle: .module)
-        case let .posix(code): String(localized: "Folder operation failed (POSIX error \(code)).", bundle: .module)
+        message(locale: .current)
+    }
+
+    // One case per public error remains deliberate so no refusal loses its copy.
+    // swiftlint:disable cyclomatic_complexity
+    /// The sidebar presents this through `Text(verbatim:)`; resolve catalog
+    /// copy for that view's locale while retaining authored underlying detail.
+    public func message(locale: Locale, bundle: Bundle? = nil) -> String {
+        let bundle = bundle ?? .module
+        return switch self {
+        case .nameEmpty: String(localized: "A name is required.", bundle: bundle, locale: locale)
+        case .nameContainsPathSeparator: String(
+                localized: "Names cannot contain / or :.",
+                bundle: bundle,
+                locale: locale
+            )
+        case let .nameReserved(name): String(
+                localized: "\"\(name)\" is not a valid name.",
+                bundle: bundle,
+                locale: locale
+            )
+        case let .nameExists(name): String(localized: "\"\(name)\" already exists.", bundle: bundle, locale: locale)
+        case .sourceMissing: String(localized: "The item no longer exists.", bundle: bundle, locale: locale)
+        case .destinationNotDirectory: String(
+                localized: "The destination is not a folder.",
+                bundle: bundle,
+                locale: locale
+            )
+        case .outsideCurrentRoot: String(
+                localized: "The destination is outside the open folder.",
+                bundle: bundle,
+                locale: locale
+            )
+        case .staleOperation: String(
+                localized: "The folder changed before the operation could start.",
+                bundle: bundle,
+                locale: locale
+            )
+        case .moveIntoOwnSubtree: String(
+                localized: "A folder cannot be moved into itself.",
+                bundle: bundle,
+                locale: locale
+            )
+        case let .posix(code): String(
+                localized: "Folder operation failed (POSIX error \(code)).",
+                bundle: bundle,
+                locale: locale
+            )
         case let .underlying(message): message
         }
     }
+    // swiftlint:enable cyclomatic_complexity
 }
 
 /// A caller captures this synchronously, before scheduling a CRUD task. Its

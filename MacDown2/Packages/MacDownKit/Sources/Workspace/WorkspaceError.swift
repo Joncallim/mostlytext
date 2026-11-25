@@ -20,6 +20,23 @@ public enum WorkspaceError: Error {
     case textNotRepresentable(encodingName: String)
     /// Save As chose a file that is open in another window. Nothing was written.
     case destinationOpenInAnotherWindow(name: String)
+
+    /// The warning is a plain String in SwiftUI, so the presenting view must
+    /// supply its locale before interpolation reaches the rendered label.
+    public static func textNotRepresentableCopy(
+        encodingName: String, locale: Locale, bundle: Bundle? = nil
+    ) -> String {
+        let bundle = bundle ?? .module
+        return String(
+            localized: """
+            This text cannot be saved as \(encodingName) without losing characters. \
+            Nothing was changed; choose another encoding, or delete an invisible byte-order-mark character \
+            (U+FEFF or U+FFFE) at the very start of the text.
+            """,
+            bundle: bundle,
+            locale: locale
+        )
+    }
 }
 
 extension WorkspaceError: LocalizedError {
@@ -53,14 +70,7 @@ extension WorkspaceError: LocalizedError {
                 bundle: .module
             )
         case let .textNotRepresentable(encodingName):
-            String(
-                localized: """
-                This text cannot be saved as \(encodingName) without losing characters. \
-                Nothing was changed; choose another encoding, or delete an invisible byte-order-mark character \
-                (U+FEFF or U+FFFE) at the very start of the text.
-                """,
-                bundle: .module
-            )
+            Self.textNotRepresentableCopy(encodingName: encodingName, locale: .current)
         case let .destinationOpenInAnotherWindow(name):
             String(
                 localized: "\(name) is open in another window. Close it there, or choose a different name.",

@@ -12,15 +12,23 @@ enum ExportPhase: Equatable {
     case cancelling
 
     var label: String {
+        label(locale: .current)
+    }
+
+    func label(locale: Locale, bundle: Bundle = .main) -> String {
         switch self {
-        case .choosingDestination: String(localized: "Choosing export destination…")
-        case .preparing: String(localized: "Preparing export…")
-        case .exportingHTML: String(localized: "Exporting HTML…")
-        case .loadingPDF: String(localized: "Loading PDF content…")
-        case .printingPDF: String(localized: "Printing PDF (this step cannot be cancelled)…")
-        case .validatingPDF: String(localized: "Checking PDF…")
-        case .publishing: String(localized: "Saving export…")
-        case .cancelling: String(localized: "Cancelling export…")
+        case .choosingDestination: String(localized: "Choosing export destination…", bundle: bundle, locale: locale)
+        case .preparing: String(localized: "Preparing export…", bundle: bundle, locale: locale)
+        case .exportingHTML: String(localized: "Exporting HTML…", bundle: bundle, locale: locale)
+        case .loadingPDF: String(localized: "Loading PDF content…", bundle: bundle, locale: locale)
+        case .printingPDF: String(
+                localized: "Printing PDF (this step cannot be cancelled)…",
+                bundle: bundle,
+                locale: locale
+            )
+        case .validatingPDF: String(localized: "Checking PDF…", bundle: bundle, locale: locale)
+        case .publishing: String(localized: "Saving export…", bundle: bundle, locale: locale)
+        case .cancelling: String(localized: "Cancelling export…", bundle: bundle, locale: locale)
         }
     }
 
