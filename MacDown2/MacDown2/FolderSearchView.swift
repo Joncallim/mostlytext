@@ -175,7 +175,7 @@ struct FolderSearchView: View {
                     .font(.caption)
                     .accessibilityIdentifier("folderReplaceSummary")
                 ForEach(summary.skipped.prefix(Self.skippedRowLimit), id: \.relativePath) { skipped in
-                    Text(verbatim: "\(skipped.relativePath) — \(Self.reason(for: skipped.outcome))")
+                    Text(verbatim: "\(skipped.relativePath) — \(Self.reason(for: skipped.outcome, locale: locale))")
                         .font(.caption)
                         .foregroundStyle(.secondary)
                         .lineLimit(2)
@@ -195,16 +195,24 @@ struct FolderSearchView: View {
 
     private static let skippedRowLimit = 50
 
-    private static func reason(for outcome: ReplacementFileOutcome) -> String {
+    static func reason(
+        for outcome: ReplacementFileOutcome, locale: Locale, bundle: Bundle = .main
+    ) -> String {
         switch outcome {
         case .replaced: ""
-        case .skippedChangedSinceSearch: String(localized: "changed since the search; not modified")
-        case .skippedUnreadable: String(localized: "could not be read; not modified")
-        case .skippedSymbolicLink: String(localized: "is a symbolic link; not modified")
-        case .skippedOpenDocumentWithUnsavedChanges: String(localized: "open with unsaved changes; not modified")
-        case .skippedCannotRepresent: String(localized: "cannot be rewritten safely; not modified")
+        case .skippedChangedSinceSearch:
+            String(localized: "changed since the search; not modified", bundle: bundle, locale: locale)
+        case .skippedUnreadable: String(localized: "could not be read; not modified", bundle: bundle, locale: locale)
+        case .skippedSymbolicLink: String(localized: "is a symbolic link; not modified", bundle: bundle, locale: locale)
+        case .skippedOpenDocumentWithUnsavedChanges: String(
+                localized: "open with unsaved changes; not modified",
+                bundle: bundle,
+                locale: locale
+            )
+        case .skippedCannotRepresent:
+            String(localized: "cannot be rewritten safely; not modified", bundle: bundle, locale: locale)
         case let .failed(message): message
-        case .notAttempted: String(localized: "stopped before this file")
+        case .notAttempted: String(localized: "stopped before this file", bundle: bundle, locale: locale)
         }
     }
 

@@ -1,6 +1,7 @@
 import Foundation
 @testable import MacDown2
 import Testing
+import TextSearch
 
 @Suite("Folder search count copy")
 struct FolderSearchCountCopyTests {
@@ -91,5 +92,45 @@ struct FolderSearchCountCopyTests {
             #expect(FolderSearchCountCopy.previewRemaining(matches: 3)
                 .message(bundle: bundle, locale: locale) == item.remaining)
         }
+    }
+
+    @Test func dynamicSearchCopyUsesThePresentedLocaleAndPreservesAuthoredFailures() throws {
+        let root = FileManager.default.temporaryDirectory
+            .appendingPathComponent("mostlytext-search-copy-\(UUID().uuidString)")
+        let french = root.appendingPathComponent("fr.lproj")
+        try FileManager.default.createDirectory(at: french, withIntermediateDirectories: true)
+        defer { try? FileManager.default.removeItem(at: root) }
+        let translations = [
+            "changed since the search; not modified": "FR_CHANGED",
+            "could not be read; not modified": "FR_UNREADABLE",
+            "is a symbolic link; not modified": "FR_LINK",
+            "open with unsaved changes; not modified": "FR_DIRTY",
+            "cannot be rewritten safely; not modified": "FR_UNSAFE",
+            "stopped before this file": "FR_STOPPED",
+            "Search cancelled": "FR_CANCELLED",
+            "Search took too long — refine your query": "FR_TIMEOUT",
+        ]
+        let strings = translations.sorted { $0.key < $1.key }
+            .map { "\"\($0.key)\" = \"\($0.value)\";" }.joined(separator: "\n")
+        try strings.write(to: french.appendingPathComponent("Localizable.strings"),
+                          atomically: true, encoding: .utf8)
+        let bundle = try #require(Bundle(url: root))
+        let locale = Locale(identifier: "fr")
+        let reasons: [(ReplacementFileOutcome, String)] = [
+            (.skippedChangedSinceSearch, "FR_CHANGED"),
+            (.skippedUnreadable, "FR_UNREADABLE"),
+            (.skippedSymbolicLink, "FR_LINK"),
+            (.skippedOpenDocumentWithUnsavedChanges, "FR_DIRTY"),
+            (.skippedCannotRepresent, "FR_UNSAFE"),
+            (.notAttempted, "FR_STOPPED"),
+            (.failed("authored failure"), "authored failure"),
+        ]
+        for (outcome, expected) in reasons {
+            #expect(FolderSearchView.reason(for: outcome, locale: locale, bundle: bundle) == expected)
+        }
+        #expect(errorMessage(for: .cancelled, locale: locale, bundle: bundle) == "FR_CANCELLED")
+        #expect(errorMessage(for: .timedOut, locale: locale, bundle: bundle) == "FR_TIMEOUT")
+        #expect(errorMessage(for: .invalidRegex("authored regex"), locale: locale, bundle: bundle)
+            == "authored regex")
     }
 }
