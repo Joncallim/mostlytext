@@ -1,5 +1,6 @@
 import Contributions
 import ExportService
+import FileCore
 import Foundation
 import MarkdownEngine
 import Preview
@@ -27,25 +28,29 @@ enum PreviewContributionAdapter {
         document: MarkdownDocument?,
         text: String?,
         generation: UInt,
-        headingState: HeadingState? = nil
+        headingState: HeadingState? = nil,
+        locale: Locale = .current
     ) async throws -> [ContributionResult] {
         guard let document, let text else { return [] }
         let registry: ContributionRegistry
         switch headingState {
-        case nil: registry = .standard
+        case nil: registry = .standard(locale: locale)
         case .preparing: return []
         case .unavailable:
             guard TOCContribution.containsMarker(in: text, document: document) else { return [] }
             let diagnostic = ContributionDiagnostic(
                 severity: .error,
-                message: TOCContribution.navigationUnavailableMessage
+                message: TOCContribution.navigationUnavailableMessage(locale: locale)
             )
             let result = ContributionResult(
                 contributionID: "toc", content: nil, sourceGeneration: generation, diagnostics: [diagnostic]
             )
             return [result]
         case let .prepared(preparation):
-            registry = ContributionRegistry(contributions: [TOCContribution(headingIndex: preparation.index)])
+            registry = ContributionRegistry(
+                contributions: [TOCContribution(headingIndex: preparation.index, locale: locale)],
+                locale: locale
+            )
         }
         return try await registry.run(
             document: document, sourceText: text, sourceGeneration: generation
@@ -61,7 +66,8 @@ enum PreviewContributionAdapter {
         sourceText: String,
         contributions: [ContributionResult],
         sourceGeneration: UInt,
-        budget: PreviewContributionBudget = .standard
+        budget: PreviewContributionBudget = .standard,
+        locale: Locale = .current
     ) -> PreviewContributionComposition {
         guard !contributions.isEmpty else {
             return PreviewContributionComposition(sourceGeneration: sourceGeneration, blocks: base, diagnostics: [])
@@ -72,12 +78,7 @@ enum PreviewContributionAdapter {
         var diagnostics = contributions.flatMap(producerDiagnostics(for:))
 
         guard isCoherent else {
-            diagnostics.append(PreviewContributionDiagnostic(
-                contributionID: "preview-composer", severity: .error,
-                message: String(
-                    localized: "preview blocks are not ordered/non-overlapping; contributions left as authored source"
-                )
-            ))
+            diagnostics.append(unorderedBlocksDiagnostic(locale: locale))
             return PreviewContributionComposition(
                 sourceGeneration: sourceGeneration,
                 blocks: base,
@@ -87,22 +88,26 @@ enum PreviewContributionAdapter {
 
         let context = PreviewCompositionContext(
             base: base, baseIntervals: intervals, document: document, sourceText: sourceText,
-            sourceUTF16Length: sourceUTF16Length, sourceGeneration: sourceGeneration
+            sourceUTF16Length: sourceUTF16Length, sourceGeneration: sourceGeneration, locale: locale
         )
         let (candidates, admissionDiagnostics) = admitAll(contributions, context: context)
         diagnostics.append(contentsOf: admissionDiagnostics)
 
-        let (accepted, resolutionDiagnostics) = resolveOverlapAndBudget(candidates: candidates, budget: budget)
+        let (accepted, resolutionDiagnostics) = resolveOverlapAndBudget(
+            candidates: candidates, budget: budget, locale: locale
+        )
         diagnostics.append(contentsOf: resolutionDiagnostics)
 
         guard let composedBlocks = composeBlocks(
             base: base, baseIntervals: intervals, accepted: accepted, sourceText: sourceText,
             sourceMap: document.sourceMap
         ) else {
+            let bundle = ViewLocalizationBundle.resolve(locale: locale, in: .main)
             diagnostics.append(PreviewContributionDiagnostic(
                 contributionID: "preview-composer", severity: .error,
                 message: String(
-                    localized: "internal composition invariant violated; contributions left as authored source"
+                    localized: "internal composition invariant violated; contributions left as authored source",
+                    bundle: bundle, locale: locale
                 )
             ))
             return PreviewContributionComposition(
@@ -116,6 +121,16 @@ enum PreviewContributionAdapter {
             sourceGeneration: sourceGeneration,
             blocks: composedBlocks,
             diagnostics: diagnostics
+        )
+    }
+
+    private static func unorderedBlocksDiagnostic(locale: Locale) -> PreviewContributionDiagnostic {
+        PreviewContributionDiagnostic(
+            contributionID: "preview-composer", severity: .error,
+            message: String(
+                localized: "preview blocks are not ordered/non-overlapping; contributions left as authored source",
+                bundle: ViewLocalizationBundle.resolve(locale: locale, in: .main), locale: locale
+            )
         )
     }
 

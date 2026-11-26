@@ -1,4 +1,5 @@
 import Contributions
+import Foundation
 @testable import MacDown2
 import MarkdownEngine
 import Preview
@@ -36,6 +37,33 @@ struct PreviewContributionAdapterTests {
         #expect(results.count == 1)
         #expect(results.first?.content != nil)
         #expect(results.first?.sourceGeneration == 3)
+    }
+
+    @Test func adapterDiagnosticsFollowTheSelectedLanguageWithoutChangingSource() async throws {
+        let text = "[TOC]"
+        let document = try await ParseEngine().parse(text, revision: 0)
+        let base = PreviewBlock.blocks(from: document, text: text)
+        let content = ContributionContent(sourceRange: 0 ..< text.utf16.count,
+                                          placement: .block, representation: .markdown("- derived"))
+        let stale = ContributionResult(contributionID: "toc", content: content, sourceGeneration: 2)
+        let french = PreviewContributionAdapter.compose(
+            base: base, document: document, sourceText: text, contributions: [stale],
+            sourceGeneration: 1, locale: Locale(identifier: "fr")
+        )
+        let english = PreviewContributionAdapter.compose(
+            base: base, document: document, sourceText: text, contributions: [stale],
+            sourceGeneration: 1, locale: Locale(identifier: "en")
+        )
+
+        #expect(french.blocks == base)
+        #expect(english.blocks == base)
+        #expect(french.diagnostics.first?.message.contains("n'est plus à jour") == true)
+        #expect(english.diagnostics.first?.message.contains("is stale") == true)
+        let identity = UUID()
+        #expect(PreviewContributionTaskID(documentIdentity: identity, parsedRevision: 0,
+                                          localeIdentifier: "fr") !=
+                PreviewContributionTaskID(documentIdentity: identity, parsedRevision: 0,
+                                          localeIdentifier: "en"))
     }
 
     // MARK: - compose: pass-through

@@ -8,13 +8,19 @@ import MarkdownEngine
 /// a lazy-build cache (epic-14-implementation.md §2.1).
 public struct ContributionRegistry: Sendable {
     public let contributions: [any Contributing]
+    private let locale: Locale
 
-    public init(contributions: [any Contributing]) {
+    public init(contributions: [any Contributing], locale: Locale = .current) {
         self.contributions = contributions
+        self.locale = locale
     }
 
     /// The first-party contributions MacDown 2 ships.
     public static let standard = ContributionRegistry(contributions: [TOCContribution()])
+
+    public static func standard(locale: Locale) -> ContributionRegistry {
+        ContributionRegistry(contributions: [TOCContribution(locale: locale)], locale: locale)
+    }
 
     /// Runs every registered contribution against one document snapshot
     /// and aggregates their results.
@@ -51,7 +57,7 @@ public struct ContributionRegistry: Sendable {
                     severity: .error,
                     message: String(
                         localized: "\(contribution.id) failed: \(error.localizedDescription)",
-                        bundle: .module
+                        bundle: ContributionLocalization.bundle(for: locale), locale: locale
                     )
                 )
                 results.append(ContributionResult(
@@ -64,5 +70,16 @@ public struct ContributionRegistry: Sendable {
         }
         try Task.checkCancellation()
         return results
+    }
+}
+
+enum ContributionLocalization {
+    static func bundle(for locale: Locale) -> Bundle {
+        let source = Bundle.module
+        let preferred = Bundle.preferredLocalizations(from: source.localizations, forPreferences: [locale.identifier])
+        guard let language = preferred.first,
+              let url = source.url(forResource: language, withExtension: "lproj"),
+              let selected = Bundle(url: url) else { return source }
+        return selected
     }
 }

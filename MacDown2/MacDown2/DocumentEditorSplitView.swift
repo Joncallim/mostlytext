@@ -179,6 +179,9 @@ struct DocumentEditorSplitView: View {
             .onChange(of: previewContributionSession.composition) { _, _ in
                 refreshRenderedPreviewBlocks()
             }
+            .onChange(of: locale.identifier) { _, _ in
+                refreshRenderedPreviewBlocks()
+            }
             .task(id: contributionTaskID) {
                 await refreshPreviewContributions()
                 refreshRenderedPreviewBlocks()
@@ -293,19 +296,19 @@ struct DocumentEditorSplitView: View {
         guard previewBlocksFrame == liveFrame else { return }
         let displayed = previewContributionSession.displayedBlocks(
             baseBlocks: previewBlocks, currentRevision: parseSession.document?.revision,
-            documentIdentity: parseSession.identity
+            documentIdentity: parseSession.identity, localeIdentifier: locale.identifier
         )
         previewDisplayCache.update(revision: parseSession.document?.revision, blocks: displayed, frame: liveFrame)
     }
 
-    /// Keyed to document/tab identity + parsed revision only — never save
-    /// state, dirty state, URL, or encoding — so a non-text `FileDocument`
-    /// mutation neither restarts this task nor invalidates a valid composed
+    /// Keyed to document/tab identity, parsed revision, heading preparation,
+    /// and selected language — never save state, dirty state, URL, or encoding.
+    /// A non-text `FileDocument` mutation cannot invalidate a valid composed
     /// TOC (architecture takeover, pass 1/10).
     private var contributionTaskID: PreviewContributionTaskID {
         PreviewContributionTaskID(
             documentIdentity: parseSession.identity, parsedRevision: parseSession.document?.revision,
-            headingBindingID: headingSession.publicationID
+            headingBindingID: headingSession.publicationID, localeIdentifier: locale.identifier
         )
     }
 
@@ -316,7 +319,7 @@ struct DocumentEditorSplitView: View {
         await previewContributionSession.refresh(
             taskID: contributionTaskID, document: document, text: text,
             baseBlocks: base ?? PreviewBlock.blocks(from: document, text: text),
-            headingState: headingContributionState
+            headingState: headingContributionState, locale: locale
         )
     }
 
