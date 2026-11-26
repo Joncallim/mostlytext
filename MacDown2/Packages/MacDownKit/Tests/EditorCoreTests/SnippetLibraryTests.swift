@@ -119,7 +119,9 @@ struct SnippetLibraryTests {
             .appendingPathComponent("snippet-localization-\(UUID().uuidString).bundle", isDirectory: true)
         defer { try? FileManager.default.removeItem(at: bundleURL) }
         let resources = bundleURL.appendingPathComponent("Contents/Resources/fr.lproj", isDirectory: true)
+        let english = bundleURL.appendingPathComponent("Contents/Resources/en.lproj", isDirectory: true)
         try FileManager.default.createDirectory(at: resources, withIntermediateDirectories: true)
+        try FileManager.default.createDirectory(at: english, withIntermediateDirectories: true)
         let info: [String: String] = [
             "CFBundleIdentifier": "app.mostlytext.snippet-localization-test.\(UUID().uuidString)",
             "CFBundleDevelopmentRegion": "fr",
@@ -140,12 +142,20 @@ struct SnippetLibraryTests {
             atomically: true,
             encoding: .utf8
         )
+        try strings.replacingOccurrences(of: "FR_", with: "EN_").write(
+            to: english.appendingPathComponent("Localizable.strings"),
+            atomically: true,
+            encoding: .utf8
+        )
         let fixture = try #require(Bundle(url: bundleURL))
 
         let originals = BuiltInSnippets.all
-        let localized = BuiltInSnippets.all(in: fixture)
+        let localized = BuiltInSnippets.all(locale: Locale(identifier: "fr"), in: fixture)
+        let englishNames = BuiltInSnippets.all(locale: Locale(identifier: "en"), in: fixture)
         #expect(localized.map(\.name) == translations.map(\.1))
+        #expect(englishNames.map(\.name) == translations.map { $0.1.replacingOccurrences(of: "FR_", with: "EN_") })
         #expect(localized.map(\.id) == originals.map(\.id))
+        #expect(englishNames.map(\.id) == originals.map(\.id))
         #expect(localized.map(\.body) == originals.map(\.body))
         #expect(localized.map(\.scopes) == originals.map(\.scopes))
 

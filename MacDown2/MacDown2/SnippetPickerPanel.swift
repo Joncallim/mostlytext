@@ -18,7 +18,8 @@ final class SnippetPickerPanel: NSPanel, NSWindowDelegate {
         coordinator: WindowCoordinator,
         originController: WindowController,
         snippets: [Snippet],
-        notice: String? = nil
+        notice: String? = nil,
+        locale: Locale
     ) {
         self.init(
             contentRect: NSRect(x: 0, y: 0, width: 480, height: 360),
@@ -54,7 +55,7 @@ final class SnippetPickerPanel: NSPanel, NSWindowDelegate {
             },
             onDismiss: { [weak self] in self?.close() }
         )
-        contentView = NSHostingView(rootView: view)
+        contentView = NSHostingView(rootView: view.environment(\.locale, locale))
         // Self-contained origin-close handling: an orphaned picker would
         // target an evicted editor store.
         // A nil `object` would observe every window, so no window → no observer.

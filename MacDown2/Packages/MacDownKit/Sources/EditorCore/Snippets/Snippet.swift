@@ -1,3 +1,4 @@
+import FileCore
 import Foundation
 
 /// One user- or app-defined snippet. Plain data: a name to show, a body in the
@@ -121,32 +122,59 @@ public enum BuiltInSnippets {
         all(in: .module)
     }
 
+    /// Select the package catalog's language for a presenting view. The
+    /// snippet IDs and inserted bodies never depend on this locale.
+    public static func localized(for locale: Locale) -> [Snippet] {
+        all(locale: locale, in: .module)
+    }
+
     static func all(in bundle: Bundle) -> [Snippet] {
-        [
+        make(in: bundle, locale: nil)
+    }
+
+    static func all(locale: Locale, in bundle: Bundle) -> [Snippet] {
+        make(in: ViewLocalizationBundle.resolve(locale: locale, in: bundle), locale: locale)
+    }
+
+    private static func make(in bundle: Bundle, locale: Locale?) -> [Snippet] {
+        let formattingLocale = locale ?? .current
+        return [
             Snippet(
                 id: "builtin.markdown.codeBlock",
-                name: String(localized: "Fenced Code Block", bundle: bundle),
+                name: String(localized: "Fenced Code Block", bundle: bundle, locale: formattingLocale),
                 body: "```\n${selection}$0\n```",
                 scopes: ["markdown"]
             ),
-            Snippet(id: "builtin.markdown.link", name: String(localized: "Link", bundle: bundle),
-                    body: "[${selection}]($0)", scopes: ["markdown"]),
+            Snippet(
+                id: "builtin.markdown.link",
+                name: String(localized: "Link", bundle: bundle, locale: formattingLocale),
+                body: "[${selection}]($0)",
+                scopes: ["markdown"]
+            ),
             Snippet(
                 id: "builtin.markdown.linkFromClipboard",
-                name: String(localized: "Link from Clipboard", bundle: bundle),
+                name: String(localized: "Link from Clipboard", bundle: bundle, locale: formattingLocale),
                 body: "[${selection}](${clipboard})$0",
                 scopes: ["markdown"]
             ),
-            Snippet(id: "builtin.markdown.image", name: String(localized: "Image", bundle: bundle),
-                    body: "![${selection}]($0)", scopes: ["markdown"]),
+            Snippet(
+                id: "builtin.markdown.image",
+                name: String(localized: "Image", bundle: bundle, locale: formattingLocale),
+                body: "![${selection}]($0)",
+                scopes: ["markdown"]
+            ),
             Snippet(
                 id: "builtin.markdown.table",
-                name: String(localized: "Table", bundle: bundle),
+                name: String(localized: "Table", bundle: bundle, locale: formattingLocale),
                 body: "| Column | Column |\n| ------ | ------ |\n| $0 |  |",
                 scopes: ["markdown"]
             ),
-            Snippet(id: "builtin.markdown.task", name: String(localized: "Task", bundle: bundle),
-                    body: "- [ ] ${selection}$0", scopes: ["markdown"]),
+            Snippet(
+                id: "builtin.markdown.task",
+                name: String(localized: "Task", bundle: bundle, locale: formattingLocale),
+                body: "- [ ] ${selection}$0",
+                scopes: ["markdown"]
+            ),
         ]
     }
 }

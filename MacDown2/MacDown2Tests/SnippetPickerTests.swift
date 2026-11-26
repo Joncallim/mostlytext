@@ -162,4 +162,35 @@ struct SnippetPickerTests {
         #expect(WindowCoordinator.snippetNotice(for: .unreadable) != nil)
         #expect(WindowCoordinator.snippetNotice(for: .unsupportedVersion(9)) != nil)
     }
+
+    @Test func snippetFileNoticesFollowTheSelectedPanelLocale() throws {
+        let root = FileManager.default.temporaryDirectory
+            .appendingPathComponent("snippet-notice-locales-\(UUID().uuidString).bundle")
+        defer { try? FileManager.default.removeItem(at: root) }
+        for (language, prefix) in [("en", "EN"), ("fr", "FR")] {
+            let directory = root.appendingPathComponent("Contents/Resources/\(language).lproj")
+            try FileManager.default.createDirectory(at: directory, withIntermediateDirectories: true)
+            let values = """
+            "snippets.json could not be read; showing built-in snippets only." = "\(prefix)_UNREADABLE";
+            "snippets.json is from a newer version; showing built-in snippets only." = "\(prefix)_NEWER";
+            "%lld entries in snippets.json were skipped." = "\(prefix)_%lld_SKIPPED";
+            """
+            try values.write(to: directory.appendingPathComponent("Localizable.strings"),
+                             atomically: true, encoding: .utf8)
+        }
+        let bundle = try #require(Bundle(url: root))
+        let partial = try JSONDecoder().decode(SnippetLibrary.self, from: Data("""
+        {"version":1,"snippets":[{"id":"bad"}]}
+        """.utf8))
+        #expect(partial.skippedCount == 1)
+        for (language, prefix) in [("en", "EN"), ("fr", "FR")] {
+            let locale = Locale(identifier: language)
+            #expect(WindowCoordinator.snippetNotice(for: .unreadable, locale: locale, bundle: bundle)
+                == "\(prefix)_UNREADABLE")
+            #expect(WindowCoordinator.snippetNotice(for: .unsupportedVersion(9), locale: locale, bundle: bundle)
+                == "\(prefix)_NEWER")
+            #expect(WindowCoordinator.snippetNotice(for: .loaded(partial), locale: locale, bundle: bundle)
+                == "\(prefix)_1_SKIPPED")
+        }
+    }
 }
