@@ -92,6 +92,45 @@ struct ExternalSourceFidelityTests {
         #expect(fixture.model.activeDocument?.encoding.encoding == .utf8)
     }
 
+    @Test func cleanReadFailureThenChangedDiskReloadsWithoutAFalseConflict() async throws {
+        let original = "# Original\r\n\r\nlast line\r\n"
+        let newText = "# Replaced\r\n"
+        let fixture = try fixture(original: original)
+        defer { fixture.close() }
+        fixture.editor.selectedRange = NSRange(location: (original as NSString).length - 2, length: 2)
+
+        fixture.controller.handle(.unavailable(fixture.url, .readFailed("temporary read failure")))
+        try await waitUntil("temporary read failure") {
+            fixture.model.activeDocument?.backingState == .unavailable(.readFailed("temporary read failure"))
+        }
+        #expect(fixture.model.activeDocument?.state == .dirty)
+        #expect(fixture.editor.textView.string.isExactlyEqual(to: original))
+        await fixture.controller.drainRecovery()
+        let unavailable = try #require(fixture.model.activeDocument)
+        #expect(try await unavailable.recoveryBuffer.load(
+            for: unavailable.id, epoch: unavailable.recoveryEpoch
+        ) == original)
+
+        try Data(newText.utf8).write(to: fixture.url, options: .atomic)
+        let snapshot = try unavailable.fileStore.readSnapshot(from: fixture.url)
+        fixture.controller.handle(.available(snapshot))
+        try await waitUntil("clean reload after read failure") {
+            fixture.model.activeDocument?.text.isExactlyEqual(to: newText) == true
+                && fixture.editor.textView.string.isExactlyEqual(to: newText)
+        }
+
+        #expect(fixture.model.activeDocument?.state == .clean)
+        #expect(fixture.model.activeDocument?.pendingExternalRevision == nil)
+        #expect(fixture.controller.notice == .reloaded)
+        #expect(fixture.controller.latestExternalSnapshot == nil)
+        #expect(NSMaxRange(fixture.editor.selectedRange) <= (newText as NSString).length)
+        #expect(try Data(contentsOf: fixture.url) == Data(newText.utf8))
+        await fixture.controller.drainRecovery()
+        #expect(try await unavailable.recoveryBuffer.load(
+            for: unavailable.id, epoch: unavailable.recoveryEpoch
+        ) == nil)
+    }
+
     @Test func keepMineThenSavePublishesLocalBytesWithoutAnOwnSaveConflict() async throws {
         let original = "# Base\r\n"
         let mine = "# Mine\r\nlocal café\r\n"

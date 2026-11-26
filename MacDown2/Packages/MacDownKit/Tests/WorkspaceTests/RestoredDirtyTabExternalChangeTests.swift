@@ -8,6 +8,34 @@ import Testing
 /// `git pull`, a sync) was silently overwritten by the first Save.
 @MainActor
 struct RestoredDirtyTabExternalChangeTests {
+    @Test func anOlderSessionCannotMistakeANewerABARecoveryEditForCleanText() async throws {
+        let directory = temporaryDirectory()
+        defer { try? FileManager.default.removeItem(at: directory) }
+        let recovery = RecoveryBuffer(recoveryDirectory: directory.appendingPathComponent("Recovery"))
+        let url = directory.appendingPathComponent("notes.md")
+        try "disk v1".write(to: url, atomically: true, encoding: .utf8)
+        let loaded = try await FileDocument.create(fileURL: url, recoveryBuffer: recovery).load()
+        let unavailable = loaded.markingBackingUnavailable(.readFailed("temporary read failure"))
+        #expect(await unavailable.persistRecovery())
+        let first = TabStore(sessionStore: FakeSessionStore(), recoveryBuffer: recovery)
+        first.newTab(document: unavailable)
+        let oldSession = first.currentSession()
+        let editedAway = unavailable.edited(text: "my temporary edit")
+        #expect(await editedAway.persistRecovery())
+        let editedBack = editedAway.edited(text: "disk v1")
+        #expect(await editedBack.persistRecovery())
+        try "disk v2".write(to: url, atomically: true, encoding: .utf8)
+
+        let restarted = TabStore(sessionStore: FakeSessionStore(), recoveryBuffer: recovery)
+        let record = try #require(oldSession.tabs.first)
+        let restored = try #require(await restarted.restoreTab(from: record))
+
+        #expect(restored.document.text == "disk v1")
+        #expect(restored.document.state == .conflict)
+        #expect(restored.document.pendingExternalRevision != nil)
+        #expect(try await recovery.load(for: loaded.id, epoch: loaded.recoveryEpoch) == "disk v1")
+    }
+
     private func restore(modifyFileAfterQuit modification: ((URL) throws -> Void)?) async throws -> FileDocument {
         let directory = temporaryDirectory()
         defer { try? FileManager.default.removeItem(at: directory) }

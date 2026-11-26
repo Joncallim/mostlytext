@@ -13,6 +13,7 @@ public extension FileDocument {
     func edited(text newText: String) -> FileDocument {
         var copy = self
         copy.text = newText
+        copy.unavailableCleanText = nil
         switch copy.state {
         case .clean:
             copy.state = .dirty
