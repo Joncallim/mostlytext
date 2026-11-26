@@ -151,10 +151,7 @@ extension SidebarView {
                 for item in items {
                     guard let source = FileTreeInternalDrag.trustedURL(from: item, for: fileTreeModel) else {
                         if fileTreeModel.isCurrent(context) {
-                            fileTreeModel
-                                .recordOperationError(FileTreeOperationError.underlying(
-                                    String(localized: "Untrusted folder move.")
-                                ))
+                            fileTreeModel.recordOperationError(FileTreeOperationError.untrustedMove)
                         }
                         continue
                     }

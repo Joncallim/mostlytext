@@ -279,6 +279,35 @@
         }
       }
     },
+    "Untrusted folder move.": {
+      "comment": "Folder drag refusal. FileTree resolves this at presentation time; non-English drafts require translation and native layout review.",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Untrusted folder move."
+          }
+        },
+        "fr": {
+          "stringUnit": {
+            "state": "needs_review",
+            "value": "Untrusted folder move."
+          }
+        },
+        "ja": {
+          "stringUnit": {
+            "state": "needs_review",
+            "value": "Untrusted folder move."
+          }
+        },
+        "pl": {
+          "stringUnit": {
+            "state": "needs_review",
+            "value": "Untrusted folder move."
+          }
+        }
+      }
+    },
     "copy": {
       "comment": "Lowercase suffix used when duplicating a file or folder name. Review grammar with the filename before release.",
       "localizations": {

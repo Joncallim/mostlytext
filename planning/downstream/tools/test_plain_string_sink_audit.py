@@ -61,6 +61,27 @@ class PlainStringSinkAuditTests(unittest.TestCase):
         with self.assertRaisesRegex(ValueError, "sink routes changed"):
             subject.check(repo, ledger)
 
+    def test_deferred_review_rejects_changed_source(self):
+        relative = "MacDown2/MacDown2/Panel.swift"
+        repo = self.make_repo(relative, "// reviewed\n")
+        ledger = repo / "ledger.json"
+        ledger.write_text(json.dumps({
+            "schema": 1,
+            "scope": "selected_plain_string_sinks",
+            "sites": [],
+            "source_sha256": {},
+            "deferred_review": [{
+                "path": relative,
+                "sha256": subject.digest((repo / relative).read_bytes()),
+                "status": "open",
+                "reason": "Needs native review",
+            }],
+        }), encoding="utf-8")
+        self.assertEqual(subject.check(repo, ledger)["status"], "passed")
+        (repo / relative).write_text("// changed\n", encoding="utf-8")
+        with self.assertRaisesRegex(ValueError, "deferred review source bytes changed"):
+            subject.check(repo, ledger)
+
 
 if __name__ == "__main__":
     unittest.main()

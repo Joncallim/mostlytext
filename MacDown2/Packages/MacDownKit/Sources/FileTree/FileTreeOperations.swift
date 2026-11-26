@@ -11,6 +11,7 @@ public enum FileTreeOperationError: Error, Sendable, Equatable, LocalizedError {
     case outsideCurrentRoot
     case staleOperation
     case moveIntoOwnSubtree
+    case untrustedMove
     case posix(Int32)
     case underlying(String)
 
@@ -55,6 +56,11 @@ public enum FileTreeOperationError: Error, Sendable, Equatable, LocalizedError {
             )
         case .moveIntoOwnSubtree: String(
                 localized: "A folder cannot be moved into itself.",
+                bundle: bundle,
+                locale: locale
+            )
+        case .untrustedMove: String(
+                localized: "Untrusted folder move.",
                 bundle: bundle,
                 locale: locale
             )
