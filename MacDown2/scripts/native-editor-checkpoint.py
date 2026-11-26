@@ -74,11 +74,13 @@ def command(args, *, cwd=None, log=None, timeout=1800):
 
 def tree_manifest(root):
     entries = {}
+    canonical_root = root.resolve(strict=True)
     for path in sorted(root.rglob('*')):
         name = path.relative_to(root).as_posix()
         mode = path.lstat().st_mode
         if stat.S_ISLNK(mode):
-            require(path.resolve(strict=True).is_relative_to(root), 'product link escapes: ' + name)
+            require(path.resolve(strict=True).is_relative_to(canonical_root),
+                    'product link escapes: ' + name)
             entries[name] = {'type': 'link', 'target': path.readlink().as_posix()}
         elif stat.S_ISREG(mode):
             entries[name] = {'type': 'file', 'sha256': digest(path), 'executable': bool(mode & 0o111)}
@@ -91,15 +93,34 @@ def tree_manifest(root):
 
 def verify_test_plan(path):
     plan = plistlib.loads(path.read_bytes())
-    for target in ('MacDown2Tests', 'MacDown2UITests'):
+    hosts = {
+        'MacDown2Tests': '__TESTROOT__/Release/MacDown2.app',
+        'MacDown2UITests': '__TESTROOT__/Release/MacDown2UITests-Runner.app',
+    }
+    for target, host in hosts.items():
         record = plan.get(target)
         require(isinstance(record, dict), 'missing test target: ' + target)
-        require(record.get('TestHostPath', '').startswith('__TESTROOT__/'), 'test host escapes staged products')
-        require(record.get('TestBundlePath', '').startswith('__TESTHOST__/'), 'test bundle escapes staged host')
+        require(record.get('TestHostPath') == host, 'unverified test product path: ' + target)
+        require(record.get('TestBundlePath') == '__TESTHOST__/Contents/PlugIns/' + target + '.xctest',
+                'unverified test bundle path: ' + target)
         if target == 'MacDown2UITests':
-            require(record.get('UITargetAppPath', '').startswith('__TESTROOT__/'),
-                    'UI target escapes staged products')
+            require(record.get('UITargetAppPath') == hosts['MacDown2Tests'],
+                    'unverified test product path: UI target app')
     require('/Users/jonathanlim' not in str(plan), 'test plan references owner home')
+
+
+def verify_local_test_signatures(products):
+    for name in ('MacDown2.app', 'MacDown2UITests-Runner.app'):
+        product = products / 'Release' / name
+        require(product.is_dir() and not product.is_symlink(), 'local test product missing: ' + name)
+        result = subprocess.run(['/usr/bin/codesign', '--verify', '--deep', '--strict', str(product)],
+                                capture_output=True, text=True)
+        require(result.returncode == 0, 'local test signature invalid: ' + name + ': '
+                + result.stderr.strip())
+        identity = subprocess.run(['/usr/bin/codesign', '-dv', '--verbose=4', str(product)],
+                                  capture_output=True, text=True)
+        require(identity.returncode == 0 and 'Signature=adhoc' in identity.stderr,
+                'local test product is not ad hoc signed: ' + name)
 
 
 def passed_suites(test_tree, requested):
@@ -157,6 +178,7 @@ def verify_stage(stage, expected):
     require(binding['sourceSHA'] == expected, 'stage source differs from pinned SHA')
     require(digest(stage / 'checkpoint.py') == binding['checkpointSHA256'], 'checkpoint entry point changed')
     require(tree_manifest(stage / 'Products') == binding['products'], 'staged test products changed')
+    verify_local_test_signatures(stage / 'Products')
     require(digest(stage / 'source-fixtures.json') == binding['fixturesSHA256'], 'fixture manifest changed')
     return binding
 
@@ -187,7 +209,7 @@ def prepare(repo, sha):
             'xcodebuild', '-project', 'MacDown2/MacDown2.xcodeproj', '-scheme', 'MacDown2',
             '-configuration', 'Release', '-destination', 'platform=macOS', '-derivedDataPath', str(derived),
             '-onlyUsePackageVersionsFromResolvedFile', '-enableCodeCoverage', 'NO',
-            'ENABLE_TESTABILITY=YES', 'CODE_SIGNING_ALLOWED=NO',
+            'ENABLE_TESTABILITY=YES', 'CODE_SIGNING_ALLOWED=YES', 'CODE_SIGN_IDENTITY=-',
             'SWIFT_ACTIVE_COMPILATION_CONDITIONS=$(inherited) RELEASE_PREVIEW_PROBE', 'build-for-testing',
         ], cwd=repo, log=work / 'build.log', timeout=5400)
         command([str(repo / 'MacDown2/scripts/pin-xcode-package-versions.sh'), '--check'], cwd=repo,
@@ -197,6 +219,7 @@ def prepare(repo, sha):
         plans = list(products.glob('*.xctestrun'))
         require(len(plans) == 1, 'expected one pinned Xcode test plan')
         verify_test_plan(plans[0])
+        verify_local_test_signatures(products)
         product_entries = tree_manifest(products)
         require(shutil.disk_usage('/Applications').free > sum(
             path.stat().st_size for path in products.rglob('*') if path.is_file() and not path.is_symlink()
@@ -211,8 +234,9 @@ def prepare(repo, sha):
                    'products': product_entries, 'fixtureHashes': fixtures,
                    'fixturesSHA256': digest(partial / 'source-fixtures.json'),
                    'checkpointSHA256': digest(partial / 'checkpoint.py'),
-                   'signature': 'local unsigned Release test build; not a formal V1 candidate'}
+                   'signature': 'local ad hoc signed Release test build; not a formal V1 candidate'}
         require(tree_manifest(partial / 'Products') == product_entries, 'copied products differ')
+        verify_local_test_signatures(partial / 'Products')
         (partial / 'binding.json').write_text(json.dumps(binding, indent=2, sort_keys=True) + '\n')
         for path in [partial, *partial.rglob('*')]:
             if not path.is_symlink():
