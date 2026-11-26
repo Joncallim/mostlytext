@@ -34,6 +34,7 @@ struct DocumentEditorSplitView: View {
     @Environment(\.windowCoordinator) var coordinator
     /// Not `private`: read by DocumentEditorSplitView+EditorPane.swift.
     @Environment(\.appSettings) var appSettings
+    @Environment(\.locale) var locale
 
     /// Not `private`: read by DocumentEditorSplitView+Divider.swift, split
     /// out to stay under the type-body-length lint budget (matches

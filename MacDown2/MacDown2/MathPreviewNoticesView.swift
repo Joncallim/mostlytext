@@ -2,6 +2,7 @@ import Math
 import SwiftUI
 
 struct MathPreviewNoticesView: View {
+    @Environment(\.locale) private var locale
     let display: MathPreviewDisplay?
     let action: @MainActor (UUID, UUID) -> Void
     @State private var isPresented = false
@@ -16,7 +17,7 @@ struct MathPreviewNoticesView: View {
                     .padding(6)
             }
             .buttonStyle(.plain)
-            .accessibilityLabel(Text(verbatim: MathDiagnosticText.noticesTitle))
+            .accessibilityLabel(Text(verbatim: MathDiagnosticText.noticesTitle(locale: locale)))
             .accessibilityIdentifier("mathPreviewNotices")
             .popover(isPresented: $isPresented) {
                 List(display.notices) { notice in
@@ -27,7 +28,7 @@ struct MathPreviewNoticesView: View {
                                 action(display.content.id, sourceID)
                                 isPresented = false
                             } label: {
-                                Text(verbatim: MathDiagnosticText.sourceAction)
+                                Text(verbatim: MathDiagnosticText.sourceAction(locale: locale))
                             }
                             .accessibilityIdentifier("mathPreviewSourceAction")
                         }

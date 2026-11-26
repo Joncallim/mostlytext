@@ -29,8 +29,8 @@ enum MathPreviewDisplayBuilder {
                     sourceID: entry.id
                 ).withAccessibility(.init(
                     label: MathDiagnosticText.equationLabel(
-                        body.source, isDisplay: entry.equation.syntax.style != .inline
-                    ), actionID: entry.id, actionName: MathDiagnosticText.sourceAction
+                        body.source, isDisplay: entry.equation.syntax.style != .inline, locale: request.locale
+                    ), actionID: entry.id, actionName: MathDiagnosticText.sourceAction(locale: request.locale)
                 ))
             } catch is CancellationError {
                 throw CancellationError()
@@ -42,7 +42,8 @@ enum MathPreviewDisplayBuilder {
                 }
                 plan.notices.append(MathPreviewSourcePlanner.notice(
                     .init(equationID: entry.id, kind: kind,
-                          sourceOffset: entry.equation.syntax.bodyRange.lowerBound), document: request.document
+                          sourceOffset: entry.equation.syntax.bodyRange.lowerBound),
+                    document: request.document, locale: request.locale
                 ))
             }
         }
@@ -57,9 +58,13 @@ enum MathPreviewDisplayBuilder {
                      notices: plan.notices, locations: plan.locations)
     }
 
-    static func fallback(blocks: [PreviewBlock], bindingID: UUID) -> MathPreviewDisplay {
-        let notice = MathPreviewNotice(id: UUID(), message: MathDiagnosticText.previewAnalysisUnavailable,
-                                       kind: .internalFailure, sourceID: nil)
+    static func fallback(blocks: [PreviewBlock], bindingID: UUID, locale: Locale = .current) -> MathPreviewDisplay {
+        let notice = MathPreviewNotice(
+            id: UUID(),
+            message: MathDiagnosticText.previewAnalysisUnavailable(locale: locale),
+            kind: .internalFailure,
+            sourceID: nil
+        )
         let literals = blocks.reduce(into: [UUID: PreviewMathContent.Block]()) { $0[$1.id] = .literal }
         return .init(bindingID: bindingID, content: .init(blocks: literals), notices: [notice], locations: [:])
     }
