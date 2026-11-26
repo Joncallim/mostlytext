@@ -49,6 +49,7 @@ struct PreviewCompositionContext {
     let sourceText: String
     let sourceUTF16Length: Int
     let sourceGeneration: UInt
+    let locale: Locale
 }
 
 /// One structurally valid placement, ready for overlap/budget resolution and

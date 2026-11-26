@@ -35,4 +35,22 @@ struct PreviewResourceCompositionOwnershipTests {
         #expect(session.displayedBlocks(baseBlocks: firstBlocks, currentRevision: 1,
                                         documentIdentity: firstID) == firstBlocks)
     }
+
+    @Test func selectedLanguageChangeHidesOldContributionUntilRecomposed() async throws {
+        let text = "[TOC]\n"
+        let document = try await ParseEngine().parse(text, revision: 1)
+        let base = PreviewBlock.blocks(from: document, text: text)
+        let identity = UUID()
+        let session = PreviewContributionSession()
+        await session.refresh(taskID: .init(documentIdentity: identity, parsedRevision: 1,
+                                            localeIdentifier: "en"),
+                              document: document, text: text, baseBlocks: base,
+                              locale: Locale(identifier: "en"))
+        #expect(session.displayedBlocks(baseBlocks: base, currentRevision: 1,
+                                        documentIdentity: identity, localeIdentifier: "en") != base)
+        #expect(session.displayedBlocks(baseBlocks: base, currentRevision: 1,
+                                        documentIdentity: identity, localeIdentifier: "fr") == base)
+        #expect(session.displayedDiagnostics(currentRevision: 1,
+                                             documentIdentity: identity, localeIdentifier: "fr").isEmpty)
+    }
 }

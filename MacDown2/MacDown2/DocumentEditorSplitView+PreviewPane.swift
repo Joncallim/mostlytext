@@ -73,7 +73,7 @@ extension DocumentEditorSplitView {
                 PreviewContributionDiagnosticsBadge(
                     diagnostics: previewContributionSession.displayedDiagnostics(
                         currentRevision: parseSession.document?.revision,
-                        documentIdentity: parseSession.identity
+                        documentIdentity: parseSession.identity, localeIdentifier: locale.identifier
                     )
                 )
                 MathPreviewNoticesView(display: currentMathDisplay) { frameID, sourceID in

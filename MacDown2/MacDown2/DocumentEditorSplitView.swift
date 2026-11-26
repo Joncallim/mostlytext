@@ -179,6 +179,9 @@ struct DocumentEditorSplitView: View {
             .onChange(of: previewContributionSession.composition) { _, _ in
                 refreshRenderedPreviewBlocks()
             }
+            .onChange(of: locale.identifier) { _, _ in
+                refreshRenderedPreviewBlocks()
+            }
             .task(id: contributionTaskID) {
                 await refreshPreviewContributions()
                 refreshRenderedPreviewBlocks()
@@ -293,7 +296,7 @@ struct DocumentEditorSplitView: View {
         guard previewBlocksFrame == liveFrame else { return }
         let displayed = previewContributionSession.displayedBlocks(
             baseBlocks: previewBlocks, currentRevision: parseSession.document?.revision,
-            documentIdentity: parseSession.identity
+            documentIdentity: parseSession.identity, localeIdentifier: locale.identifier
         )
         previewDisplayCache.update(revision: parseSession.document?.revision, blocks: displayed, frame: liveFrame)
     }
@@ -305,7 +308,7 @@ struct DocumentEditorSplitView: View {
     private var contributionTaskID: PreviewContributionTaskID {
         PreviewContributionTaskID(
             documentIdentity: parseSession.identity, parsedRevision: parseSession.document?.revision,
-            headingBindingID: headingSession.publicationID
+            headingBindingID: headingSession.publicationID, localeIdentifier: locale.identifier
         )
     }
 
@@ -316,7 +319,7 @@ struct DocumentEditorSplitView: View {
         await previewContributionSession.refresh(
             taskID: contributionTaskID, document: document, text: text,
             baseBlocks: base ?? PreviewBlock.blocks(from: document, text: text),
-            headingState: headingContributionState
+            headingState: headingContributionState, locale: locale
         )
     }
 

@@ -1,4 +1,5 @@
 import Contributions
+import FileCore
 import Foundation
 import MarkdownEngine
 import Preview
@@ -45,24 +46,28 @@ extension PreviewContributionAdapter {
         resultIndex: Int,
         context: PreviewCompositionContext
     ) -> PreviewAdmissionOutcome {
+        let bundle = ViewLocalizationBundle.resolve(locale: context.locale, in: .main)
         guard let content = result.content else { return .skipped }
         guard !result.diagnostics.contains(where: { $0.severity == .error }) else { return .skipped }
         guard result.sourceGeneration == context.sourceGeneration else {
-            return .rejected(String(localized: "\(result.contributionID) is stale; authored source preserved"))
+            return .rejected(String(localized: "\(result.contributionID) is stale; authored source preserved",
+                                    bundle: bundle, locale: context.locale))
         }
         guard case .accepted = content.representation.admission(to: .nativePreview) else {
-            return .rejected(rejectedHTMLMessage(contributionID: result.contributionID))
+            return .rejected(rejectedHTMLMessage(contributionID: result.contributionID, locale: context.locale))
         }
         guard case let .markdown(markdown) = content.representation else {
-            return .rejected(rejectedHTMLMessage(contributionID: result.contributionID))
+            return .rejected(rejectedHTMLMessage(contributionID: result.contributionID, locale: context.locale))
         }
         guard !markdown.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty else {
             return .rejected(
-                String(localized: "\(result.contributionID) produced empty content; authored source preserved")
+                String(localized: "\(result.contributionID) produced empty content; authored source preserved",
+                       bundle: bundle, locale: context.locale)
             )
         }
         guard context.document.sourceMap.utf16Length == context.sourceUTF16Length else {
-            return .rejected(rejectedDocumentMismatchMessage(contributionID: result.contributionID))
+            return .rejected(rejectedDocumentMismatchMessage(contributionID: result.contributionID,
+                                                             locale: context.locale))
         }
 
         let range = content.sourceRange
@@ -70,17 +75,20 @@ extension PreviewContributionAdapter {
               range.upperBound <= context.sourceUTF16Length
         else {
             return .rejected(
-                String(localized: "\(result.contributionID) has an invalid source range; authored source preserved")
+                String(localized: "\(result.contributionID) has an invalid source range; authored source preserved",
+                       bundle: bundle, locale: context.locale)
             )
         }
         guard let blockIndex = containingBlockIndex(for: range, in: context.baseIntervals) else {
-            return .rejected(rejectedRangeNotInBlockMessage(contributionID: result.contributionID))
+            return .rejected(rejectedRangeNotInBlockMessage(contributionID: result.contributionID,
+                                                            locale: context.locale))
         }
         if let reason = placementRejectionReason(
             content: content, markdown: markdown, containingBlock: context.base[blockIndex],
             containingInterval: context.baseIntervals[blockIndex], context: context
         ) {
-            return .rejected(String(localized: "\(result.contributionID) \(reason); authored source preserved"))
+            return .rejected(String(localized: "\(result.contributionID) \(reason); authored source preserved",
+                                    bundle: bundle, locale: context.locale))
         }
 
         return .accepted(PreviewContributionCandidate(
@@ -89,23 +97,26 @@ extension PreviewContributionAdapter {
         ))
     }
 
-    private static func rejectedHTMLMessage(contributionID: String) -> String {
+    private static func rejectedHTMLMessage(contributionID: String, locale: Locale) -> String {
         String(
-            localized: "\(contributionID) produced HTML, which Preview does not support; authored source preserved"
+            localized: "\(contributionID) produced HTML, which Preview does not support; authored source preserved",
+            bundle: ViewLocalizationBundle.resolve(locale: locale, in: .main), locale: locale
         )
     }
 
-    private static func rejectedDocumentMismatchMessage(contributionID: String) -> String {
+    private static func rejectedDocumentMismatchMessage(contributionID: String, locale: Locale) -> String {
         String(
-            localized: "\(contributionID)'s document does not match the current source; authored source preserved"
+            localized: "\(contributionID)'s document does not match the current source; authored source preserved",
+            bundle: ViewLocalizationBundle.resolve(locale: locale, in: .main), locale: locale
         )
     }
 
-    private static func rejectedRangeNotInBlockMessage(contributionID: String) -> String {
+    private static func rejectedRangeNotInBlockMessage(contributionID: String, locale: Locale) -> String {
         String(
             localized: """
             \(contributionID)'s range does not fall inside exactly one preview block; authored source preserved
-            """
+            """,
+            bundle: ViewLocalizationBundle.resolve(locale: locale, in: .main), locale: locale
         )
     }
 
@@ -114,12 +125,13 @@ extension PreviewContributionAdapter {
     /// returns the markup unresolved. `PreviewContributionDiagnostic.message`
     /// is a plain `String` shown via `Text(verbatim:)`, so the count-correct
     /// text must be resolved here, once, before it is stored.
-    private static func omittedPlacementsMessage(count: Int) -> AttributedString {
+    private static func omittedPlacementsMessage(count: Int, locale: Locale) -> AttributedString {
         AttributedString(
             localized: """
             ^[\(count) valid placement](inflect: true) exceeded the preview budget \
             and remain as authored source
-            """
+            """,
+            bundle: ViewLocalizationBundle.resolve(locale: locale, in: .main), locale: locale
         )
     }
 
@@ -151,7 +163,9 @@ extension PreviewContributionAdapter {
             guard !replaced.contains("\n"), !replaced.contains("\r"),
                   !markdown.contains("\n"), !markdown.contains("\r")
             else {
-                return String(localized: "has an inline placement that is not confined to one physical line")
+                return String(localized: "has an inline placement that is not confined to one physical line",
+                              bundle: ViewLocalizationBundle.resolve(locale: context.locale, in: .main),
+                              locale: context.locale)
             }
             return nil
         case .block:
@@ -159,14 +173,18 @@ extension PreviewContributionAdapter {
                 return nil
             }
             guard case .paragraph = containingBlock.kind else {
-                return String(localized: "has a partial block placement outside a top-level paragraph")
+                return String(localized: "has a partial block placement outside a top-level paragraph",
+                              bundle: ViewLocalizationBundle.resolve(locale: context.locale, in: .main),
+                              locale: context.locale)
             }
             let sourceMap = context.document.sourceMap
             let startLine = sourceMap.line(atUTF16Offset: range.lowerBound)
             let endLine = sourceMap.line(atUTF16Offset: range.upperBound - 1)
             let exact = sourceMap.utf16Range(ofLines: startLine ... endLine)
             guard exact.location == range.lowerBound, exact.location + exact.length == range.upperBound else {
-                return String(localized: "has a partial block placement that does not align with whole physical lines")
+                return String(localized: "has a partial block placement that does not align with whole physical lines",
+                              bundle: ViewLocalizationBundle.resolve(locale: context.locale, in: .main),
+                              locale: context.locale)
             }
             return nil
         }
@@ -178,7 +196,8 @@ extension PreviewContributionAdapter {
     /// (architecture pass 7/10).
     static func resolveOverlapAndBudget(
         candidates: [PreviewContributionCandidate],
-        budget: PreviewContributionBudget
+        budget: PreviewContributionBudget,
+        locale: Locale = .current
     ) -> (accepted: [PreviewContributionCandidate], diagnostics: [PreviewContributionDiagnostic]) {
         let sorted = candidates.sorted {
             $0.sourceRange.lowerBound == $1.sourceRange.lowerBound
@@ -194,7 +213,8 @@ extension PreviewContributionAdapter {
                 diagnostics.append(PreviewContributionDiagnostic(
                     contributionID: candidate.contributionID, severity: .warning,
                     message: String(
-                        localized: "\(candidate.contributionID) overlaps another placement; authored source preserved"
+                        localized: "\(candidate.contributionID) overlaps another placement; authored source preserved",
+                        bundle: ViewLocalizationBundle.resolve(locale: locale, in: .main), locale: locale
                     )
                 ))
                 continue
@@ -207,7 +227,7 @@ extension PreviewContributionAdapter {
         if omittedByBudget > 0 {
             diagnostics.append(PreviewContributionDiagnostic(
                 contributionID: "preview-budget", severity: .warning,
-                message: String(omittedPlacementsMessage(count: omittedByBudget).characters)
+                message: String(omittedPlacementsMessage(count: omittedByBudget, locale: locale).characters)
             ))
         }
         return (accepted, diagnostics)

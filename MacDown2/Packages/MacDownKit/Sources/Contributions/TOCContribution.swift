@@ -13,15 +13,21 @@ import MarkdownEngine
 public struct TOCContribution: Contributing {
     public let id = "toc"
     private let headingIndex: HeadingAnchorIndex?
+    private let locale: Locale
 
-    public init(headingIndex: HeadingAnchorIndex? = nil) {
+    public init(headingIndex: HeadingAnchorIndex? = nil, locale: Locale = .current) {
         self.headingIndex = headingIndex
+        self.locale = locale
     }
 
     public static var navigationUnavailableMessage: String {
+        navigationUnavailableMessage(locale: .current)
+    }
+
+    public static func navigationUnavailableMessage(locale: Locale) -> String {
         String(
             localized: "Table-of-contents navigation could not be verified; authored source preserved.",
-            bundle: .module
+            bundle: ContributionLocalization.bundle(for: locale), locale: locale
         )
     }
 
@@ -43,7 +49,8 @@ public struct TOCContribution: Contributing {
                   headingIndex.identity.parseRevision == document.revision,
                   headingIndex.identity.parseOptions == document.options else {
                 let diagnostic = ContributionDiagnostic(
-                    severity: .error, message: Self.navigationUnavailableMessage, preventsPublication: true
+                    severity: .error, message: Self.navigationUnavailableMessage(locale: locale),
+                    preventsPublication: true
                 )
                 let result = ContributionResult(
                     contributionID: id, content: nil, sourceGeneration: sourceGeneration, diagnostics: [diagnostic]
@@ -52,9 +59,9 @@ public struct TOCContribution: Contributing {
             }
             // Preview's placement token is a parse revision; Export's token is
             // a model generation. Neither changes this index's source identity.
-            list = Self.linkedMarkdownList(for: headingIndex)
+            list = Self.linkedMarkdownList(for: headingIndex, locale: locale)
         } else {
-            list = Self.markdownList(for: document.headings)
+            list = Self.markdownList(for: document.headings, locale: locale)
         }
         return markers.map { range in
             ContributionResult(
@@ -121,22 +128,23 @@ public struct TOCContribution: Contributing {
     /// the nearest shallower heading already seen, not clamped or rejected
     /// — a document's own heading structure is never "invalid" to this
     /// contribution.
-    static func markdownList(for headings: [HeadingItem]) -> String {
-        list(headings.map { (level: $0.level, content: escaped($0.title)) })
+    static func markdownList(for headings: [HeadingItem], locale: Locale = .current) -> String {
+        list(headings.map { (level: $0.level, content: escaped($0.title)) }, locale: locale)
     }
 
     /// Serializes only an already-allocated index. The caller must first
     /// verify those fragments against its destination before publishing links.
-    static func linkedMarkdownList(for index: HeadingAnchorIndex) -> String {
+    static func linkedMarkdownList(for index: HeadingAnchorIndex, locale: Locale = .current) -> String {
         list(index.headings.map { heading in
             let destination = encodedFragment(heading.fragment)
             return (level: heading.level, content: "[\(escaped(heading.title))](#\(destination))")
-        })
+        }, locale: locale)
     }
 
-    private static func list(_ entries: [(level: Int, content: String)]) -> String {
+    private static func list(_ entries: [(level: Int, content: String)], locale: Locale) -> String {
         guard !entries.isEmpty else {
-            let message = String(localized: "No headings found.", bundle: .module)
+            let message = String(localized: "No headings found.",
+                                 bundle: ContributionLocalization.bundle(for: locale), locale: locale)
             return "*(\(escaped(message)))*"
         }
 

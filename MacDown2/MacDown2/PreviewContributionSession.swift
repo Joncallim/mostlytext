@@ -1,4 +1,5 @@
 import Contributions
+import FileCore
 import Foundation
 import MarkdownEngine
 import Preview
@@ -13,11 +14,14 @@ struct PreviewContributionTaskID: Hashable {
     let documentIdentity: UUID
     let parsedRevision: Int?
     let headingBindingID: UUID?
+    let localeIdentifier: String
 
-    init(documentIdentity: UUID, parsedRevision: Int?, headingBindingID: UUID? = nil) {
+    init(documentIdentity: UUID, parsedRevision: Int?, headingBindingID: UUID? = nil,
+         localeIdentifier: String = Locale.current.identifier) {
         self.documentIdentity = documentIdentity
         self.parsedRevision = parsedRevision
         self.headingBindingID = headingBindingID
+        self.localeIdentifier = localeIdentifier
     }
 }
 
@@ -45,23 +49,25 @@ final class PreviewContributionSession {
         document: MarkdownDocument,
         text: String,
         baseBlocks: [PreviewBlock],
-        headingState: PreviewContributionAdapter.HeadingState? = nil
+        headingState: PreviewContributionAdapter.HeadingState? = nil,
+        locale: Locale = .current
     ) async {
         guard !Task.isCancelled else { return }
         currentTaskID = taskID
         guard let sourceGeneration = UInt(exactly: document.revision) else {
-            publishIfCurrent(taskID: taskID, invalidRevisionComposition(document.revision))
+            publishIfCurrent(taskID: taskID, invalidRevisionComposition(document.revision, locale: locale))
             return
         }
 
         do {
             let results = try await PreviewContributionAdapter.results(
-                document: document, text: text, generation: sourceGeneration, headingState: headingState
+                document: document, text: text, generation: sourceGeneration, headingState: headingState,
+                locale: locale
             )
             try Task.checkCancellation()
             let composed = PreviewContributionAdapter.compose(
                 base: baseBlocks, document: document, sourceText: text,
-                contributions: results, sourceGeneration: sourceGeneration
+                contributions: results, sourceGeneration: sourceGeneration, locale: locale
             )
             try Task.checkCancellation()
             publishIfCurrent(taskID: taskID, composed)
@@ -79,9 +85,13 @@ final class PreviewContributionSession {
 
     /// The blocks Preview should actually render right now.
     func displayedBlocks(
-        baseBlocks: [PreviewBlock]?, currentRevision: Int?, documentIdentity: UUID? = nil
+        baseBlocks: [PreviewBlock]?, currentRevision: Int?, documentIdentity: UUID? = nil,
+        localeIdentifier: String? = nil
     ) -> [PreviewBlock]? {
         if let documentIdentity, publishedTaskID?.documentIdentity != documentIdentity {
+            return baseBlocks
+        }
+        if let localeIdentifier, publishedTaskID?.localeIdentifier != localeIdentifier {
             return baseBlocks
         }
         return PreviewCompositionDisplay.blocks(
@@ -93,9 +103,12 @@ final class PreviewContributionSession {
 
     /// The diagnostics Preview should actually show right now.
     func displayedDiagnostics(
-        currentRevision: Int?, documentIdentity: UUID? = nil
+        currentRevision: Int?, documentIdentity: UUID? = nil, localeIdentifier: String? = nil
     ) -> [PreviewContributionDiagnostic] {
         if let documentIdentity, publishedTaskID?.documentIdentity != documentIdentity {
+            return []
+        }
+        if let localeIdentifier, publishedTaskID?.localeIdentifier != localeIdentifier {
             return []
         }
         return PreviewCompositionDisplay.diagnostics(composition: composition, currentRevision: currentRevision)
@@ -112,10 +125,11 @@ final class PreviewContributionSession {
     /// `MarkdownParseSession`'s monotonically increasing counter never
     /// produces — kept as an explicit, never-silently-wrapped diagnostic
     /// path rather than an assumed invariant.
-    private func invalidRevisionComposition(_ revision: Int) -> PreviewContributionComposition {
+    private func invalidRevisionComposition(_ revision: Int, locale: Locale) -> PreviewContributionComposition {
         let diagnostic = PreviewContributionDiagnostic(
             contributionID: "preview", severity: .error,
-            message: String(localized: "parsed revision \(revision) could not be represented; contributions skipped")
+            message: String(localized: "parsed revision \(revision) could not be represented; contributions skipped",
+                            bundle: ViewLocalizationBundle.resolve(locale: locale, in: .main), locale: locale)
         )
         return PreviewContributionComposition(sourceGeneration: nil, blocks: nil, diagnostics: [diagnostic])
     }
