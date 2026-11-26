@@ -15,18 +15,26 @@ extension WindowCoordinator {
 
     /// A one-line explanation when the user's snippet file could not be used
     /// in full, so a bad file is never a silent "built-ins only".
-    static func snippetNotice(for result: SnippetLoadResult) -> String? {
-        switch result {
+    static func snippetNotice(
+        for result: SnippetLoadResult,
+        locale: Locale = Locale(identifier: Bundle.main.preferredLocalizations.first ?? Locale.current.identifier),
+        bundle: Bundle = .main
+    ) -> String? {
+        let bundle = ViewLocalizationBundle.resolve(locale: locale, in: bundle)
+        return switch result {
         case .missing:
             nil
         case let .loaded(library):
             library.skippedCount > 0
-                ? String(localized: "\(library.skippedCount) entries in snippets.json were skipped.")
+                ? String(localized: "\(library.skippedCount) entries in snippets.json were skipped.",
+                         bundle: bundle, locale: locale)
                 : nil
         case .unreadable:
-            String(localized: "snippets.json could not be read; showing built-in snippets only.")
+            String(localized: "snippets.json could not be read; showing built-in snippets only.",
+                   bundle: bundle, locale: locale)
         case .unsupportedVersion:
-            String(localized: "snippets.json is from a newer version; showing built-in snippets only.")
+            String(localized: "snippets.json is from a newer version; showing built-in snippets only.",
+                   bundle: bundle, locale: locale)
         }
     }
 
@@ -50,13 +58,19 @@ extension WindowCoordinator {
               origin.editorStore.existingSystem(for: activeTab.id.uuidString) != nil
         else { return }
 
+        let locale = Locale(identifier: Bundle.main.preferredLocalizations.first ?? Locale.current.identifier)
         let loaded = snippetStore.load()
-        let snippets = SnippetCatalog.snippets(user: loaded.snippets, formatID: activeTab.syntaxFormat.id)
+        let snippets = SnippetCatalog.snippets(
+            user: loaded.snippets,
+            formatID: activeTab.syntaxFormat.id,
+            builtIn: BuiltInSnippets.localized(for: locale)
+        )
         let created = SnippetPickerPanel(
             coordinator: self,
             originController: origin,
             snippets: snippets,
-            notice: Self.snippetNotice(for: loaded)
+            notice: Self.snippetNotice(for: loaded, locale: locale),
+            locale: locale
         )
         snippetPanel = created
 
