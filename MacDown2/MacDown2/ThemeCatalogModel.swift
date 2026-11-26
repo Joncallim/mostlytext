@@ -18,7 +18,7 @@ final class ThemeCatalogModel {
     var status = Status.idle
     var state: ThemeCatalogState?
     var isBusy = false
-    var problem: String?
+    var problem: ThemeCatalogProblem?
     var pendingImport: PreparedThemeImport?
     var pendingDeletion: PreparedThemeDeletion?
     var operationID = UUID()
@@ -81,7 +81,7 @@ final class ThemeCatalogModel {
                     await store.stopObserving()
                 }
                 status = .unavailable
-                problem = Self.message(for: error)
+                problem = ThemeCatalogProblem(error: error)
                 startupTask = nil
             }
         }
@@ -120,7 +120,7 @@ final class ThemeCatalogModel {
                 switch result {
                 case let .success(value): publish(value)
                 case let .failure(error):
-                    problem = Self.message(for: error)
+                    problem = ThemeCatalogProblem(error: error)
                     status = .unavailable
                     await store.stopObserving()
                     refreshRequested = false
@@ -166,7 +166,7 @@ final class ThemeCatalogModel {
 
     func revealDirectory() async {
         guard let url = try? await store?.currentDirectoryURL() else {
-            problem = Self.message(for: ThemeStorageError.directoryChanged)
+            problem = .directoryChanged
             return
         }
         NSWorkspace.shared.open(url)

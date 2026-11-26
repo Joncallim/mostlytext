@@ -64,7 +64,8 @@ struct ThemeManagementSection: View {
                     .font(.callout).fixedSize(horizontal: false, vertical: true)
             }
             if let problem = model.problem {
-                Text(verbatim: problem).font(.callout).fixedSize(horizontal: false, vertical: true)
+                Text(verbatim: problem.message(locale: locale))
+                    .font(.callout).fixedSize(horizontal: false, vertical: true)
                     .accessibilityIdentifier("themeStorageProblem")
             }
             if custom != nil, ThemeReadability(theme: selected).hasLowContrastText {
@@ -128,6 +129,6 @@ struct ThemeManagementSection: View {
     private func record(_ error: Error) {
         let native = error as NSError
         guard native.domain != NSCocoaErrorDomain || native.code != NSUserCancelledError else { return }
-        model.problem = ThemeCatalogModel.message(for: error)
+        model.problem = ThemeCatalogProblem(error: error)
     }
 }

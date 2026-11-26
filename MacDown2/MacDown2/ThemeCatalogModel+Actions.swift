@@ -45,8 +45,7 @@ extension ThemeCatalogModel {
             accept(result, select: true, selectionAtStart: selectionAtStart)
         } catch {
             if generation == token, !(error is CancellationError) {
-                problem = error as? ResourceReadError == .oversized
-                    ? String(localized: "Theme files are limited to 64 KiB.") : Self.message(for: error)
+                problem = ThemeCatalogProblem(error: error)
             }
         }
     }
@@ -68,7 +67,7 @@ extension ThemeCatalogModel {
                 accept(result, select: true, selectionAtStart: selectionAtStart)
             } catch {
                 if generation == token, !(error is CancellationError) {
-                    problem = Self.message(for: error)
+                    problem = ThemeCatalogProblem(error: error)
                 }
             }
         }
@@ -92,7 +91,7 @@ extension ThemeCatalogModel {
             accept(result, select: true, selectionAtStart: selectionAtStart)
         } catch {
             if generation == token {
-                problem = Self.message(for: error)
+                problem = ThemeCatalogProblem(error: error)
             }
         }
     }
@@ -109,7 +108,7 @@ extension ThemeCatalogModel {
             pendingDeletion = prepared
         } catch {
             if generation == token {
-                problem = Self.message(for: error)
+                problem = ThemeCatalogProblem(error: error)
             }
         }
     }
@@ -129,7 +128,7 @@ extension ThemeCatalogModel {
                 accept(result, select: false, selectionAtStart: nil)
             } catch {
                 if generation == token, !(error is CancellationError) {
-                    problem = Self.message(for: error)
+                    problem = ThemeCatalogProblem(error: error)
                 }
             }
         }
@@ -155,10 +154,7 @@ extension ThemeCatalogModel {
             status = .unavailable
         }
         if !mutation.warnings.isEmpty {
-            problem =
-                String(
-                    localized: "The theme operation completed, but storage needs attention. Review the Themes folder."
-                )
+            problem = .operationNeedsAttention
         }
     }
 
