@@ -28,7 +28,8 @@ final class CommandPalettePanel: NSPanel, NSWindowDelegate {
     convenience init(
         coordinator: WindowCoordinator,
         originController: WindowController?,
-        appCommands: [AppPaletteCommand] = AppPaletteCommand.standard,
+        appCommands: [AppPaletteCommand]? = nil,
+        locale: Locale = Locale(identifier: Bundle.main.preferredLocalizations.first ?? Locale.current.identifier),
         discoverTextFilters: @escaping () -> [TextFilterCommand] = { TextFilterCommandDiscovery.discoverCommands() }
     ) {
         self.init(
@@ -46,7 +47,7 @@ final class CommandPalettePanel: NSPanel, NSWindowDelegate {
         delegate = self
 
         let model = CommandPaletteModel(
-            appCommands: appCommands,
+            appCommands: appCommands ?? AppPaletteCommand.standard(locale: locale),
             discoverTextFilters: discoverTextFilters,
             isAppCommandAvailable: { [weak coordinator, weak originController] command in
                 guard let coordinator else { return false }
@@ -69,7 +70,7 @@ final class CommandPalettePanel: NSPanel, NSWindowDelegate {
             originController: originController,
             onDismiss: { [weak self] in self?.close() }
         )
-        contentView = NSHostingView(rootView: view)
+        contentView = NSHostingView(rootView: view.environment(\.locale, locale))
     }
 
     func windowWillClose(_: Notification) {

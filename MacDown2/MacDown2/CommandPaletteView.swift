@@ -1,3 +1,4 @@
+import FileCore
 import SwiftUI
 
 /// The command palette's content (epic-14-implementation.md §12, §17
@@ -98,7 +99,8 @@ struct CommandPaletteView: View {
     }
 }
 
-private struct CommandPaletteRowView: View {
+struct CommandPaletteRowView: View {
+    @Environment(\.locale) private var locale
     let row: CommandPaletteRow
     let isSelected: Bool
 
@@ -121,7 +123,13 @@ private struct CommandPaletteRowView: View {
         .accessibilityElement(children: .combine)
         .accessibilityIdentifier("commandPaletteRow.\(row.id)")
         .accessibilityAddTraits(.isButton)
-        .accessibilityLabel(row.kind == .textFilter ? String(localized: "\(row.title), user command") : row.title)
+        .accessibilityLabel(Self.accessibilityLabel(for: row, locale: locale))
+    }
+
+    static func accessibilityLabel(for row: CommandPaletteRow, locale: Locale, bundle: Bundle = .main) -> String {
+        guard row.kind == .textFilter else { return row.title }
+        let bundle = ViewLocalizationBundle.resolve(locale: locale, in: bundle)
+        return String(localized: "\(row.title), user command", bundle: bundle, locale: locale)
     }
 }
 
