@@ -94,7 +94,7 @@ if args.verify:
                     or proof['compiled_inputs_unchanged_after'] is not True
                     or proof['actual_owned_app_matches_captured_executable'] is not True):
                 raise SystemExit('Compiled phase was omitted, changed or retargeted')
-            count = ((64 if args.configuration == 'Release' else 63) if phase == 'initial' else
+            count = ((65 if args.configuration == 'Release' else 64) if phase == 'initial' else
                      1 if phase == 'selection' or args.pair == 'viewport' else 4)
             failed = 1 if phase.endswith('-mutant') else 0
             wanted = {'totalTestCount': count, 'passedTests': count - failed, 'failedTests': failed,
@@ -129,7 +129,7 @@ if args.verify:
         for suite in suites:
             if not re.search(r'Suite "' + re.escape(suite) + r'" passed' , log):
                 raise SystemExit(suite + " did not execute successfully")
-        count = 64 if args.configuration == "Release" else 63
+        count = 65 if args.configuration == "Release" else 64
         if not re.search(r"Test run with " + str(count) + r" tests in " + str(len(suites)) + r" suites passed", log):
             raise SystemExit("Every selected consumer test must finish; partial restarts are not accepted")
         ownership = re.findall(
@@ -161,6 +161,7 @@ if args.verify:
             "cancellationAfterBackingAcquisitionCannotPublishAFolderGrant",
             "identicalVisibleBlocksFromAnotherParserCannotKeepThePreviousSourceFrame",
             "equalRevisionsFromAnotherParserCannotReusePublishedContributions",
+            "selectedLanguageChangeHidesOldContributionUntilRecomposed",
         ]:
             if not re.search(r"Test " + re.escape(function) + r"\(\) passed", log):
                 raise SystemExit("Required production resource control did not pass: " + function)
