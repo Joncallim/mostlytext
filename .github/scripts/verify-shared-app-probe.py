@@ -41,7 +41,7 @@ if args.verify:
                       "HeadingPreviewAppTests", "HeadingExportActivationTests", "EditorStatusBarThemeTests"]:
             if not re.search(r"Suite " + re.escape(suite) + r" passed", log):
                 raise SystemExit(suite + " did not execute successfully")
-        if not re.search(r"Test run with 30 tests in 10 suites passed", log):
+        if not re.search(r"Test run with 31 tests in 10 suites passed", log):
             raise SystemExit("The complete selected actual app controls did not pass")
         if "TOC-PHASE configuration=" + args.configuration not in log:
             raise SystemExit("The production export phase measurement did not execute in this configuration")
