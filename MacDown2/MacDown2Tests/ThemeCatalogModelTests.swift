@@ -258,6 +258,25 @@ struct ThemeCatalogModelTests {
         }
         await model.shutdown()
     }
+
+    @Test func storedThemeFailureFollowsThePresentingLanguageWithoutRetryingTheOperation() async throws {
+        let fixture = try ThemeModelFixture(); defer { fixture.cleanup() }
+        let model = try await fixture.start()
+        let source = fixture.root.appendingPathComponent("oversized-theme.json")
+        let bytes = Data(repeating: 32, count: ThemeFile.maximumFileBytes + 1)
+        try bytes.write(to: source)
+        await model.importTheme(from: source)
+
+        let problem = try #require(model.problem)
+        #expect(problem == .fileTooLarge)
+        #expect(problem.message(locale: Locale(identifier: "en")).contains("Theme files are limited"))
+        #expect(problem.message(locale: Locale(identifier: "fr")).contains("Les fichiers de thème"))
+        #expect(ThemeCatalogProblem.operationNeedsAttention.message(locale: Locale(identifier: "fr"))
+            .contains("L’opération sur le thème"))
+        #expect(try Data(contentsOf: source) == bytes)
+        #expect(model.customThemes.isEmpty)
+        await model.shutdown()
+    }
 }
 
 @MainActor
