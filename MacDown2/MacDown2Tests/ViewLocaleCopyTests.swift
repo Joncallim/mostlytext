@@ -50,6 +50,8 @@ struct ViewLocaleCopyTests {
         #expect(SidebarSection.folder.title(locale: locale, bundle: bundle) == "FR_FOLDER")
         #expect(SidebarSection.outline.title(locale: locale, bundle: bundle) == "FR_OUTLINE")
         #expect(SidebarSection.search.title(locale: locale, bundle: bundle) == "FR_SEARCH")
+        #expect(FolderAvailability.rootVanished.message(locale: locale) == "Le dossier n'est plus disponible.")
+        #expect(FolderAvailability.rootUnreadable(reason: "Disk error").message(locale: locale) == "Disk error")
         let empty = LineEndingStatusItemView(profile: LineEndingProfile(detecting: "text"), onConvert: { _ in })
         #expect(empty.label(locale: locale, bundle: bundle) == "FR_NO_ENDINGS")
         #expect(LineEndingChoice.crlf.menuTitle(locale: locale, bundle: bundle) == "FR_CRLF")

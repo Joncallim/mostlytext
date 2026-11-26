@@ -37,9 +37,11 @@ extension SidebarView {
             .accessibilityIdentifier("folderSection")
         case .loading:
             ProgressView("Loading folder…")
-        case let .rootUnreadable(reason):
+        case .rootUnreadable, .rootVanished:
             VStack(alignment: .leading) {
-                Text(verbatim: reason).foregroundStyle(.secondary)
+                if let reason = fileTreeModel.availability.message(locale: locale) {
+                    Text(verbatim: reason).foregroundStyle(.secondary)
+                }
                 Button("Choose Another Folder…", action: chooseFolderForSidebar)
                     .accessibilityIdentifier("openFolderButton")
             }
