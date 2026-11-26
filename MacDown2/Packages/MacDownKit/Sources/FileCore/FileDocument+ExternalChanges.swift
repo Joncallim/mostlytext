@@ -58,6 +58,15 @@ public extension FileDocument {
             return reconcilingMatchingExternalText(snapshot)
         }
 
+        // A failed read makes even a clean tab temporarily dirty to protect
+        // its recovery copy. That is not an authored edit: if the cached text
+        // remains exact, the next readable disk version is authoritative.
+        if case .unavailable = backingState,
+           let cleanText = unavailableCleanText,
+           text.isExactlyEqual(to: cleanText) {
+            return ExternalReconciliation(document: reloadedFromExternal(snapshot), disposition: .reloaded)
+        }
+
         // `baselineSHA256` also covers a document restored while its file was missing, which has no revision yet.
         if let baseline = baselineSHA256, snapshot.revision.sha256 == baseline {
             var copy = self
@@ -161,6 +170,12 @@ public extension FileDocument {
 
     func markingBackingUnavailable(_ issue: FileBackingIssue) -> FileDocument {
         var copy = self
+        if state == .clean {
+            copy.unavailableCleanText = text
+        } else if let cleanText = unavailableCleanText,
+                  !text.isExactlyEqual(to: cleanText) {
+            copy.unavailableCleanText = nil
+        }
         copy.applyExternalState(
             pendingExternalRevision: nil,
             setPendingExternalRevision: true,

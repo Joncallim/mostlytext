@@ -3,6 +3,60 @@ import Foundation
 import Testing
 
 extension ExternalFileChangesRecoveryTests {
+    @Test func cleanTextSurvivesReadFailureThenAdoptsTheNextReadableDiskSnapshot() throws {
+        let fixture = try FixtureFile(text: "disk v1")
+        let loaded = try FileDocument(fileURL: fixture.url).load()
+        let unavailable = loaded.markingBackingUnavailable(.readFailed("temporary read failure"))
+        try "disk v2".write(to: fixture.url, atomically: true, encoding: .utf8)
+
+        let outcome = try unavailable.reconcilingExternalSnapshot(FileStore().readSnapshot(from: fixture.url))
+
+        #expect(unavailable.text == "disk v1")
+        #expect(unavailable.state == .dirty) // Retain the existing close/recovery protection.
+        #expect(outcome.disposition == .reloaded)
+        #expect(outcome.document.text == "disk v2")
+        #expect(outcome.document.state == .clean)
+        #expect(outcome.document.pendingExternalRevision == nil)
+    }
+
+    @Test func anEditAfterReadFailureStillConflictsWithTheNextDiskSnapshot() throws {
+        let fixture = try FixtureFile(text: "disk v1")
+        let loaded = try FileDocument(fileURL: fixture.url).load()
+        let edited = loaded.markingBackingUnavailable(.readFailed("temporary read failure"))
+            .edited(text: "my edit")
+        try "disk v2".write(to: fixture.url, atomically: true, encoding: .utf8)
+
+        let outcome = try edited.reconcilingExternalSnapshot(FileStore().readSnapshot(from: fixture.url))
+
+        #expect(outcome.disposition == .conflicted)
+        #expect(outcome.document.text == "my edit")
+        #expect(outcome.document.state == .conflict)
+    }
+
+    @Test func repeatedReadFailuresKeepTheCleanBaselineButANoopEditRetiresIt() throws {
+        let fixture = try FixtureFile(text: "disk v1")
+        let loaded = try FileDocument(fileURL: fixture.url).load()
+        let first = loaded.markingBackingUnavailable(.readFailed("first"))
+        let second = first.markingBackingUnavailable(.readFailed("second"))
+        try "disk v2".write(to: fixture.url, atomically: true, encoding: .utf8)
+        let snapshot = try FileStore().readSnapshot(from: fixture.url)
+
+        #expect(second.reconcilingExternalSnapshot(snapshot).disposition == .reloaded)
+        #expect(second.edited(text: second.text).reconcilingExternalSnapshot(snapshot).disposition == .conflicted)
+    }
+
+    @Test func unchangedDiskAfterReadFailureClearsTheProtectiveDirtyState() throws {
+        let fixture = try FixtureFile(text: "disk v1")
+        let loaded = try FileDocument(fileURL: fixture.url).load()
+        let unavailable = loaded.markingBackingUnavailable(.readFailed("temporary read failure"))
+
+        let outcome = try unavailable.reconcilingExternalSnapshot(FileStore().readSnapshot(from: fixture.url))
+
+        #expect(outcome.disposition == .localNowMatchesDisk)
+        #expect(outcome.document.state == .clean)
+        #expect(outcome.document.unavailableCleanText == nil)
+    }
+
     @Test func migrationRedirectSurvivesRestartUntilPublishedIdentityIsAcknowledged() async throws {
         let fixture = try FixtureFile(text: "disk")
         let recoveryDirectory = fixture.directory.appendingPathComponent("Recovery")
