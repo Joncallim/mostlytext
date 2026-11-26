@@ -58,7 +58,7 @@ struct FileTreePreviewRootBoundaryTests {
         model.setRootAccessWillChange {
             guard !didSignal else { return }
             didSignal = true
-            let wasNonterminal = if case .rootUnreadable = model.availability {
+            let wasNonterminal = if case .rootVanished = model.availability {
                 false
             } else {
                 true
@@ -86,6 +86,11 @@ struct FileTreePreviewRootBoundaryTests {
 
         #expect(observedBeforeTerminal)
         #expect(model.rootAccessURL == nil)
+        #expect(model.availability == .rootVanished)
+        #expect(model.availability.message(locale: Locale(identifier: "en")) == "The folder is no longer available.")
+        #expect(FolderAvailability.rootUnreadable(reason: "Disk error").message(
+            locale: Locale(identifier: "fr")
+        ) == "Disk error")
     }
 
     private func makeModel(root: URL) -> FileTreeModel {

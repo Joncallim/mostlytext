@@ -14,7 +14,7 @@
     "MacDown2/MacDown2/LegacyImportWindowController.swift": "d39f33bf027f93975ee61088ae362951ff651f32b35f7f99612a10c31763fc9f",
     "MacDown2/MacDown2/NSFilePanelProvider.swift": "4c271f2082313934cb2f9cf51a82407a04e203211dcf2698fa99bdce09184eb8",
     "MacDown2/MacDown2/SidebarFileTreeSupport.swift": "9545033163b356ed7def9fd59f9178997a00e6d2447886a9ab2b0c662e4e6d7c",
-    "MacDown2/MacDown2/SidebarView+Folder.swift": "66e9979c553701a92f2d0bb00fa37e46fd6781e44793bd6bfcfb2a407883534a",
+    "MacDown2/MacDown2/SidebarView+Folder.swift": "75fd5e5f8c942e8b14b153028b1b4abb00c54050e8c6d22e1901353b1a4a5dc2",
     "MacDown2/MacDown2/TextFilterCommands.swift": "cb5766a60b190f486d73581c454871a7c365cf9524d772e9d09da71bc15d0bca",
     "MacDown2/MacDown2/TextFilterCoordinator.swift": "c5de2d59e224e101231a3d02ff0b42790fcabb4b12514c372b2a15a693d6edff",
     "MacDown2/MacDown2/ThemeExportDocument.swift": "6384ff057496e0c505f04c70bbb5ef77d4bdada0ede2ebd4e7ab9afecec553c4",
@@ -104,7 +104,7 @@
     },
     {
       "path": "MacDown2/MacDown2/SidebarView+Folder.swift",
-      "line": 153,
+      "line": 155,
       "kind": "folder_error",
       "literal": "\"Untrusted folder move.\"",
       "route": "localized"
