@@ -5,11 +5,9 @@ import MarkdownEngine
 import Preview
 
 /// Identifies one `.task(id:)` cycle for Preview's contribution
-/// composition: a document/tab identity plus the parsed revision it is
-/// composing for. Two cycles with the same identity and revision are the
-/// same logical unit of work even if unrelated `FileDocument` state (dirty,
-/// save, URL, encoding) changed in between (architecture takeover, pass
-/// 1/10).
+/// composition: document/tab identity, parsed revision, heading preparation,
+/// and selected language. Unrelated `FileDocument` state (dirty, save, URL,
+/// encoding) does not restart the work (architecture takeover, pass 1/10).
 struct PreviewContributionTaskID: Hashable {
     let documentIdentity: UUID
     let parsedRevision: Int?

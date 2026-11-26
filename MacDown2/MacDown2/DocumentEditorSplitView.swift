@@ -301,9 +301,9 @@ struct DocumentEditorSplitView: View {
         previewDisplayCache.update(revision: parseSession.document?.revision, blocks: displayed, frame: liveFrame)
     }
 
-    /// Keyed to document/tab identity + parsed revision only — never save
-    /// state, dirty state, URL, or encoding — so a non-text `FileDocument`
-    /// mutation neither restarts this task nor invalidates a valid composed
+    /// Keyed to document/tab identity, parsed revision, heading preparation,
+    /// and selected language — never save state, dirty state, URL, or encoding.
+    /// A non-text `FileDocument` mutation cannot invalidate a valid composed
     /// TOC (architecture takeover, pass 1/10).
     private var contributionTaskID: PreviewContributionTaskID {
         PreviewContributionTaskID(
