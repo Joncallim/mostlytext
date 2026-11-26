@@ -11,6 +11,28 @@ import Workspace
 @MainActor
 @Suite("View locale copy")
 struct ViewLocaleCopyTests {
+    @Test func commandPaletteTitlesSearchAndAccessibilityUseOneViewLanguage() throws {
+        let (root, bundle) = try makeMultilingualBundle()
+        defer { try? FileManager.default.removeItem(at: root) }
+        let locale = Locale(identifier: "fr")
+        let commands = AppPaletteCommand.standard(locale: locale, bundle: bundle)
+        #expect(commands.count == 12)
+        #expect(commands.map(\.id) == AppPaletteCommand.standard(locale: Locale(identifier: "en"), bundle: bundle)
+            .map(\.id))
+        #expect(commands.first { $0.id == "open" }?.title == "FR_OPEN")
+        #expect(commands.first { $0.id == "showCommandsFolder" }?.title == "FR_COMMANDS_FOLDER")
+        #expect(AppPaletteCommand.standard(locale: locale).first { $0.id == "newFile" }?.title == "Nouveau fichier")
+        #expect(CommandPaletteModel.filteredRows(query: "FR_", appCommands: commands, textFilters: []).count == 12)
+        #expect(CommandPaletteModel.filteredRows(query: "FR_NEW_FILE", appCommands: commands, textFilters: [])
+            .map(\.id) == ["app.newFile"])
+        #expect(CommandPaletteModel.filteredRows(query: "EN_NEW_FILE", appCommands: commands, textFilters: []).isEmpty)
+        let user = CommandPaletteRow(id: "filter.user", title: "Authored script", kind: .textFilter)
+        let app = CommandPaletteRow(id: "app.open", title: "FR_OPEN", kind: .appCommand)
+        #expect(CommandPaletteRowView.accessibilityLabel(for: user, locale: locale, bundle: bundle)
+            == "FR_USER_Authored script")
+        #expect(CommandPaletteRowView.accessibilityLabel(for: app, locale: locale, bundle: bundle) == "FR_OPEN")
+    }
+
     @Test func statusOutlineAndLineEndingCopyUseThePresentedLocale() throws {
         let (root, bundle) = try makeMultilingualBundle()
         defer { try? FileManager.default.removeItem(at: root) }
@@ -180,6 +202,19 @@ struct ViewLocaleCopyTests {
             "No Line Endings": "FR_NO_ENDINGS",
             "CRLF (Windows)": "FR_CRLF",
             "Auto-detect (%@)": "FR_AUTO_%@",
+            "New File": "FR_NEW_FILE",
+            "New Tab": "FR_NEW_TAB",
+            "Open…": "FR_OPEN",
+            "Open with Encoding…": "FR_OPEN_ENCODING",
+            "Open Folder…": "FR_OPEN_FOLDER",
+            "Save": "FR_SAVE",
+            "Save As…": "FR_SAVE_AS",
+            "Close Tab": "FR_CLOSE_TAB",
+            "Toggle Sidebar": "FR_SIDEBAR",
+            "Insert Snippet…": "FR_INSERT_SNIPPET",
+            "Edit Snippets…": "FR_EDIT_SNIPPETS",
+            "Show Commands Folder": "FR_COMMANDS_FOLDER",
+            "%@, user command": "FR_USER_%@",
             "The backing file is unavailable. Save As to keep this copy.": "FR_UNAVAILABLE",
             "MostlyText cannot access the backing file. Save As to keep this copy.": "FR_PERMISSION",
             "The backing path is no longer a regular file. Save As to keep this copy.": "FR_NOT_FILE",
