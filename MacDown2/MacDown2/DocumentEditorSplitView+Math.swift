@@ -7,6 +7,7 @@ extension DocumentEditorSplitView {
     struct MathPresentationTaskID: Equatable {
         let evaluationID: UUID?
         let blocks: [PreviewBlock]?
+        let localeIdentifier: String
     }
 
     var mathTaskID: MathPreviewSourceStamp? {
@@ -14,7 +15,8 @@ extension DocumentEditorSplitView {
     }
 
     var mathPresentationTaskID: MathPresentationTaskID {
-        .init(evaluationID: mathSession.evaluationID, blocks: previewDisplayCache.output)
+        .init(evaluationID: mathSession.evaluationID, blocks: previewDisplayCache.output,
+              localeIdentifier: locale.identifier)
     }
 
     var currentMathDisplay: MathPreviewDisplay? {
@@ -48,16 +50,20 @@ extension DocumentEditorSplitView {
                                                  !mathSession.analysisFailed {
                 try await MathPreviewDisplayBuilder.prepare(.init(
                     source: binding.source, document: document, blocks: blocks,
-                    evaluation: evaluation, presentation: presentation
+                    evaluation: evaluation, presentation: presentation, locale: locale
                 ), bindingID: binding.id)
             } else {
-                MathPreviewDisplayBuilder.fallback(blocks: blocks, bindingID: binding.id)
+                MathPreviewDisplayBuilder.fallback(blocks: blocks, bindingID: binding.id, locale: locale)
             }
             installMathDisplay(display)
         } catch is CancellationError {
             // A replacement task owns the next frame; never publish partial work.
         } catch {
-            installMathDisplay(MathPreviewDisplayBuilder.fallback(blocks: blocks, bindingID: binding.id))
+            installMathDisplay(MathPreviewDisplayBuilder.fallback(
+                blocks: blocks,
+                bindingID: binding.id,
+                locale: locale
+            ))
         }
     }
 

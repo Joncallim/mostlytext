@@ -29,7 +29,7 @@ struct SharedMathActivationTests {
         .init(source: "> - $$a % unchanged comment\n>   +b$$", expressions: ["a % unchanged comment\n+b"]),
     ]
 
-    private func request(_ source: String) async throws -> MathPreviewSourceRequest {
+    private func request(_ source: String, locale: Locale = .current) async throws -> MathPreviewSourceRequest {
         let document = try await ParseEngine().parse(source, revision: 1)
         let analysis = try MathAnalysis.analyze(source: source, document: document,
                                                 sourceIdentity: .init(rawValue: UUID()), maximumSpanCount: 512)
@@ -39,7 +39,30 @@ struct SharedMathActivationTests {
         )
         return try .init(source: source, document: document, blocks: PreviewBlock.blocks(from: document, text: source),
                          evaluation: evaluation, presentation: MathPresentationPlan(evaluation: evaluation,
-                                                                                    document: document))
+                                                                                    document: document), locale: locale)
+    }
+
+    @Test func mathPreviewPresentationUsesTheSelectedLocaleForActionsAndDiagnostics() async throws {
+        let source = "Good $x$.\n\nBad $\\unknowncommand$."
+        let french = Locale(identifier: "fr")
+        let frenchRequest = try await request(source, locale: french)
+        let englishRequest = MathPreviewSourceRequest(
+            source: frenchRequest.source, document: frenchRequest.document, blocks: frenchRequest.blocks,
+            evaluation: frenchRequest.evaluation, presentation: frenchRequest.presentation,
+            locale: Locale(identifier: "en")
+        )
+        let frenchDisplay = try await MathPreviewDisplayBuilder.prepare(frenchRequest, bindingID: UUID())
+        let englishDisplay = try await MathPreviewDisplayBuilder.prepare(englishRequest, bindingID: UUID())
+        let frenchAttachment = try #require(frenchDisplay.content.attachments.values.first)
+        let englishAttachment = try #require(englishDisplay.content.attachments.values.first)
+        #expect(frenchAttachment.accessibility?.label == "Équation dans le texte : x")
+        #expect(frenchAttachment.accessibility?.actionName == "Afficher le code source de l’équation")
+        #expect(englishAttachment.accessibility?.label == "Inline equation: x")
+        #expect(englishAttachment.accessibility?.actionName == "Show equation source")
+        #expect(frenchDisplay.notices.contains { $0.message.contains("Équation à la ligne") })
+        #expect(englishDisplay.notices.contains { $0.message.contains("Equation at line") })
+        #expect(frenchDisplay.locations == englishDisplay.locations)
+        #expect(MathDiagnosticText.noticesTitle(locale: french) == "Informations sur les équations")
     }
 
     @Test(arguments: grammar)

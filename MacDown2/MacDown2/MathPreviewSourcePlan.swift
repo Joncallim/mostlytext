@@ -17,6 +17,19 @@ struct MathPreviewSourceRequest: Sendable {
     let blocks: [PreviewBlock]
     let evaluation: MathEvaluation
     let presentation: MathPresentationPlan
+    let locale: Locale
+
+    init(
+        source: String, document: MarkdownDocument, blocks: [PreviewBlock],
+        evaluation: MathEvaluation, presentation: MathPresentationPlan, locale: Locale = .current
+    ) {
+        self.source = source
+        self.document = document
+        self.blocks = blocks
+        self.evaluation = evaluation
+        self.presentation = presentation
+        self.locale = locale
+    }
 }
 
 /// Source planning stays separate from native geometry and attachment creation.
@@ -73,7 +86,7 @@ enum MathPreviewSourcePlanner {
                     if !result.notices.contains(where: { $0.id == equation.id }) {
                         result.notices.append(notice(.init(equationID: equation.id, kind: kind,
                                                            sourceOffset: equation.syntax.bodyRange.lowerBound),
-                                                     document: request.document))
+                                                     document: request.document, locale: request.locale))
                     }
                 }
             }
@@ -87,7 +100,7 @@ enum MathPreviewSourcePlanner {
         for entry in request.evaluation.entries {
             let offset: Int
             if case let .rejected(problem) = entry.outcome {
-                result.notices.append(notice(problem, document: request.document))
+                result.notices.append(notice(problem, document: request.document, locale: request.locale))
                 offset = problem.sourceOffset
             } else {
                 offset = entry.equation.syntax.bodyRange.lowerBound
@@ -98,7 +111,7 @@ enum MathPreviewSourcePlanner {
             result.locations[id] = .init(range: range, diagnosticOffset: range.lowerBound)
             result.notices.append(.init(
                 id: id,
-                message: MathDiagnosticText.remainder,
+                message: MathDiagnosticText.remainder(locale: request.locale),
                 kind: .resourceLimit,
                 sourceID: id
             ))
@@ -106,11 +119,13 @@ enum MathPreviewSourcePlanner {
         return result
     }
 
-    static func notice(_ problem: MathEquationDiagnostic, document: MarkdownDocument) -> MathPreviewNotice {
+    static func notice(
+        _ problem: MathEquationDiagnostic, document: MarkdownDocument, locale: Locale = .current
+    ) -> MathPreviewNotice {
         let line = document.sourceMap.line(atUTF16Offset: problem.sourceOffset)
         let column = problem.sourceOffset - document.sourceMap.lineStartOffsets[line - 1] + 1
         return .init(id: problem.equationID,
-                     message: MathDiagnosticText.located(problem.kind, line: line, column: column),
+                     message: MathDiagnosticText.located(problem.kind, line: line, column: column, locale: locale),
                      kind: problem.kind, sourceID: problem.equationID)
     }
 

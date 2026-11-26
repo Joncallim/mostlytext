@@ -7,6 +7,7 @@ import SwiftUI
 /// typing. Sits beside `PreviewBusyIndicator` in one overlay container so
 /// the two never overlap each other.
 struct PreviewContributionDiagnosticsBadge: View {
+    @Environment(\.locale) private var locale
     let diagnostics: [PreviewContributionDiagnostic]
 
     @State private var isPresented = false
@@ -43,8 +44,8 @@ struct PreviewContributionDiagnosticsBadge: View {
 
     private func accessibilityLabel(for severity: ContributionDiagnostic.Severity) -> String {
         switch severity {
-        case .error: PreviewDiagnosticLabel.error(count: diagnostics.count).message()
-        case .warning: PreviewDiagnosticLabel.warning(count: diagnostics.count).message()
+        case .error: PreviewDiagnosticLabel.error(count: diagnostics.count).message(locale: locale)
+        case .warning: PreviewDiagnosticLabel.warning(count: diagnostics.count).message(locale: locale)
         }
     }
 }
