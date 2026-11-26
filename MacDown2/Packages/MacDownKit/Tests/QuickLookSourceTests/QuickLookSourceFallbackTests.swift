@@ -174,7 +174,7 @@ struct QuickLookSourceFallbackTests {
         let invalidUTF16 = Data([0xFF, 0xFE, 0x00, 0xD8]) // Unpaired high surrogate.
         let legacySingleByte = Data([0x63, 0x61, 0x66, 0xE9]) // No explicit encoding metadata.
         for bytes in [invalidUTF16, legacySingleByte] {
-            try withFile(bytes) { file in
+            _ = try withFile(bytes) { file in
                 #expect(throws: FileStoreError.self) {
                     try QuickLookSourceFallback.replyHTML(for: file)
                 }

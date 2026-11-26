@@ -155,6 +155,9 @@ struct ViewLocaleCopyTests {
         #expect(ExportPhase.cancelling.label(locale: locale, bundle: bundle) == "FR_CANCELLING")
         #expect(FileTreeOperationError.nameEmpty.message(locale: locale, bundle: bundle) == "FR_NAME_REQUIRED")
         #expect(FileTreeOperationError.sourceMissing.message(locale: locale, bundle: bundle) == "FR_ITEM_MISSING")
+        #expect(FileTreeOperationError.untrustedMove.message(locale: locale, bundle: bundle) == "FR_UNTRUSTED_MOVE")
+        #expect(FileTreeOperationError.untrustedMove.message(locale: Locale(identifier: "en"), bundle: bundle)
+            == "EN_UNTRUSTED_MOVE")
         #expect(FileTreeOperationError.underlying("authored detail").message(locale: locale, bundle: bundle)
             == "authored detail")
         #expect(WorkspaceError.textNotRepresentableCopy(
@@ -243,6 +246,7 @@ struct ViewLocaleCopyTests {
             "Cancelling export…": "FR_CANCELLING",
             "A name is required.": "FR_NAME_REQUIRED",
             "The item no longer exists.": "FR_ITEM_MISSING",
+            "Untrusted folder move.": "FR_UNTRUSTED_MOVE",
             encodingKey: "FR_ENCODING_%@",
         ]
     }

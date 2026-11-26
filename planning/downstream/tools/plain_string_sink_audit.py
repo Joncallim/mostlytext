@@ -113,10 +113,13 @@ def check(repo: Path, ledger: Path) -> dict:
     if type(deferred) is not list:
         raise ValueError("malformed deferred review list")
     for row in deferred:
-        if row.get("status") != "open" or not row.get("reason"):
+        if row.get("status") != "open" or not row.get("reason") or type(row.get("sha256")) is not str:
             raise ValueError(f"malformed deferred review: {row}")
-        if not (repo / row["path"]).is_file():
+        source = repo / row["path"]
+        if not source.is_file():
             raise ValueError(f"missing deferred source: {row['path']}")
+        if digest(source.read_bytes()) != row["sha256"]:
+            raise ValueError(f"deferred review source bytes changed: {row['path']}")
     return {"status": "passed", "production_swift_inputs": count,
             "selected_sinks": len(sites), "plain_exceptions": sum(site["route"] == "plain" for site in sites),
             "deferred_review": len(deferred)}
