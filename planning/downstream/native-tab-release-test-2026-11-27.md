@@ -14,4 +14,6 @@ The protected Release checkpoint can run the native tab tests, but one close-and
 
 After selecting b.md through the app's Window menu, the case checks that the visible editor contains b.md, types a local edit, and confirms it appeared. It retains the dirty-close alert, cancellation, termination, saved session and restored-tab assertions. The test uses the same editor interaction already exercised by the external-file UI cases. The Debug menu remains absent from ordinary Release.
 
+The reviewed source change refreshes only the TabLifecycleUITests byte hash in `native-ui-required-cases.json`. The original required case ID, source inventory, and runtime evidence requirements remain intact.
+
 This source change requires a new exact-merge-SHA owner stage. Build and hosted checks cannot substitute for the protected UI rerun. A passing scoped rerun will still leave manual external-file journeys, formal signing, rights/source offers, and publication as separate gates.
