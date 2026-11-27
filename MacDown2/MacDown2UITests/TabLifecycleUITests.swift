@@ -54,7 +54,7 @@ final class TabLifecycleUITests: XCTestCase {
         XCTAssertTrue(waitForInitialTabBatch(until: Date().addingTimeInterval(5)))
         XCTAssertTrue(tabB.exists && tabC.exists, "All three launched files must have native tabs")
 
-        // Activate b.md and dirty it using the debug menu. Use the app's own
+        // Activate b.md and edit it through the normal text view. Use the app's own
         // "Select Tab 2" command so the native tab switch also makes b.md's
         // window key; a raw accessibility click on the tab bar does not reliably
         // update the key window under UI automation.
@@ -70,8 +70,7 @@ final class TabLifecycleUITests: XCTestCase {
         )).firstMatch
         XCTAssertTrue(selectedB.waitForExistence(timeout: 5))
 
-        app.menuBars.menuBarItems["Debug"].click()
-        app.menuBars.menuBarItems["Debug"].menuItems["Mark Active Tab Dirty"].click()
+        editSelectedTabB()
 
         // Close the active tab via the File menu.
         app.menuBars.menuBarItems["File"].click()
@@ -186,6 +185,15 @@ final class TabLifecycleUITests: XCTestCase {
         let editor = app.textViews.firstMatch
         XCTAssertTrue(editor.waitForExistence(timeout: 5))
         XCTAssertTrue((editor.value as? String)?.contains("# File A") == true)
+    }
+
+    private func editSelectedTabB() {
+        let editor = app.textViews.firstMatch
+        XCTAssertTrue(editor.waitForExistence(timeout: 5))
+        XCTAssertTrue((editor.value as? String)?.contains("# File B") == true)
+        editor.click()
+        editor.typeText(" local edit")
+        XCTAssertTrue((editor.value as? String)?.contains("local edit") == true)
     }
 
     private func waitForInitialTabBatch(until deadline: Date) -> Bool {
