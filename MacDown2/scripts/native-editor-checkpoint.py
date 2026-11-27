@@ -210,7 +210,8 @@ def prepare(repo, sha):
             '-configuration', 'Release', '-destination', 'platform=macOS', '-derivedDataPath', str(derived),
             '-onlyUsePackageVersionsFromResolvedFile', '-enableCodeCoverage', 'NO',
             'ENABLE_TESTABILITY=YES', 'CODE_SIGNING_ALLOWED=YES', 'CODE_SIGN_IDENTITY=-',
-            'SWIFT_ACTIVE_COMPILATION_CONDITIONS=$(inherited) RELEASE_PREVIEW_PROBE', 'build-for-testing',
+            'SWIFT_ACTIVE_COMPILATION_CONDITIONS=$(inherited) RELEASE_PREVIEW_PROBE NATIVE_EDITOR_CHECKPOINT',
+            'build-for-testing',
         ], cwd=repo, log=work / 'build.log', timeout=5400)
         command([str(repo / 'MacDown2/scripts/pin-xcode-package-versions.sh'), '--check'], cwd=repo,
                 log=work / 'pin-check.log')
