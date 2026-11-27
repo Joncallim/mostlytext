@@ -5,6 +5,15 @@ import Testing
 
 @Suite("UI test launch guard")
 struct UITestLaunchGuardTests {
+    @Test func checkpointRequiresTheDisposableTestAccount() {
+        for (realUID, effectiveUID) in [(uid_t(501), uid_t(501)), (0, 0), (502, 501), (503, 503)] {
+            #expect(UITestLaunchGuard.checkpointAccountRejection(
+                realUID: realUID, effectiveUID: effectiveUID
+            ) != nil)
+        }
+        #expect(UITestLaunchGuard.checkpointAccountRejection(realUID: 502, effectiveUID: 502) == nil)
+    }
+
     @Test func rejectsUITestRequestWhenHooksAreUnavailable() {
         let arguments = ["MacDown2", "-UITesting", "-sessionDir", "/tmp/fixture"]
         #expect(UITestLaunchGuard.rejection(arguments: arguments, testHooksEnabled: false) != nil)

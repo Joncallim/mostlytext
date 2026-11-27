@@ -5,6 +5,13 @@ import Foundation
 enum UITestLaunchGuard {
     static let isolatedBundlePrefix = "com.joncallim.MacDown2.UITestIsolated."
 
+    static func checkpointAccountRejection(realUID: uid_t, effectiveUID: uid_t) -> String? {
+        guard realUID == 502, effectiveUID == 502 else {
+            return "The native editor checkpoint requires the disposable test account."
+        }
+        return nil
+    }
+
     /// The protected UID is baked into this attempt's signed app metadata,
     /// rather than supplied by a launch argument or mutable runtime default.
     static func accountRejection(protectedOwnerUID: String?, realUID: uid_t, effectiveUID: uid_t) -> String? {

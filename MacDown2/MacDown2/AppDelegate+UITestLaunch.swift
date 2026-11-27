@@ -23,7 +23,7 @@ extension AppDelegate {
         // when a UI runner requests an isolated test session.
         // MATH_UI_DIAGNOSTIC is supplied only to the hosted Release probe;
         // shipping Release builds continue to reject test launch arguments.
-        #if DEBUG || ISSUE117_NATIVE_ACCEPTANCE || MATH_UI_DIAGNOSTIC
+        #if DEBUG || ISSUE117_NATIVE_ACCEPTANCE || MATH_UI_DIAGNOSTIC || NATIVE_EDITOR_CHECKPOINT
             let testHooksEnabled = true
         #else
             let testHooksEnabled = false
@@ -42,6 +42,15 @@ extension AppDelegate {
         ) {
             fatalError(reason)
         }
+        #if NATIVE_EDITOR_CHECKPOINT
+            // This private Release build may open disposable test state only
+            // from the protected test account, never the source owner's desktop.
+            if let reason = UITestLaunchGuard.checkpointAccountRejection(
+                realUID: getuid(), effectiveUID: geteuid()
+            ) {
+                fatalError(reason)
+            }
+        #endif
         #if UITEST_ISOLATED
             if let reason = UITestLaunchGuard.accountRejection(
                 protectedOwnerUID: Bundle.main.object(forInfoDictionaryKey: "MostlyTextUITestOwnerUID") as? String,
